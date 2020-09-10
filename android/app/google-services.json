@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "999637295786",
+    "firebase_url": "https://coody-f21eb.firebaseio.com",
+    "project_id": "coody-f21eb",
+    "storage_bucket": "coody-f21eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999637295786:android:500a02eea62a11b58b66d3",
+        "android_client_info": {
+          "package_name": "coodyproj.coodyproj"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999637295786-h4mv7h4gvn2i9t4mesefrq0uf6amjpp7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "coodyproj.coodyproj",
+            "certificate_hash": "8551f12c578b604ac1177561f65a88526bc7e652"
+          }
+        },
+        {
+          "client_id": "999637295786-okbrrdr4ggdo9d2grdtcrc1tlf4v3eil.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5EqN1hk3CYYCc8YGuFO9kEQ7VqVi3G1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999637295786-okbrrdr4ggdo9d2grdtcrc1tlf4v3eil.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
