@@ -47,7 +47,7 @@ class _KakaoLoginState extends State<KakaoLogin> {
 
     setState(() {
       _isKakaoTalkInstalled = installed;
-    });
+    });  
   }
 
   _issueAccessToken(String authCode) async {
