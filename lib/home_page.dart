@@ -9,8 +9,24 @@ class _homePageState extends State<homePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("AppBar"),),
-      body: Text("hello world"),
+        appBar: AppBar(title: Text("AppBar"),),
+        body: _buildBody()
+    );
+  }
+
+  Widget _buildBody() {
+    return Center(
+      child: Column(
+        children: [
+          Text('Hello world'),
+          RaisedButton(
+            child: Text("logout"),
+            onPressed: () {
+
+            },
+          )
+        ],
+      ),
     );
   }
 }
