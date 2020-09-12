@@ -1,5 +1,5 @@
-import 'package:coodyproj/root_page.dart';
 import 'package:flutter/material.dart';
+import 'root_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,9 +13,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        primaryColor: Colors.white,
+        accentColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: rootPage(),
+      home: RootPage(),
     );
   }
 }

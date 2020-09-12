@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class homePage extends StatefulWidget {
+  final FirebaseUser user;
+  homePage(this.user);
+
+
   @override
   _homePageState createState() => _homePageState();
 }
 
 class _homePageState extends State<homePage> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +29,8 @@ class _homePageState extends State<homePage> {
           RaisedButton(
             child: Text("logout"),
             onPressed: () {
-
+              FirebaseAuth.instance.signOut();
+              _googleSignIn.signOut();
             },
           )
         ],
