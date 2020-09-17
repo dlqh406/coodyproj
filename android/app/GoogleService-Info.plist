@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>999637295786-1t1afmgl75dhu8j31spnidgad5k4jka8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.999637295786-1t1afmgl75dhu8j31spnidgad5k4jka8</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>999637295786-h4mv7h4gvn2i9t4mesefrq0uf6amjpp7.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD1htS1Agu7gKG_AntiFhH40-FC5r6jLME</string>
+	<key>GCM_SENDER_ID</key>
+	<string>999637295786</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>coodyproj.coodyproj</string>
+	<key>PROJECT_ID</key>
+	<string>coody-f21eb</string>
+	<key>STORAGE_BUCKET</key>
+	<string>coody-f21eb.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:999637295786:ios:3641ed9a44121a048b66d3</string>
+	<key>DATABASE_URL</key>
+	<string>https://coody-f21eb.firebaseio.com</string>
+</dict>
+</plist>

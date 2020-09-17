@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'customized_page.dart';
 
-class homePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final FirebaseUser user;
-  homePage(this.user);
-
+  HomePage(this.user);
 
   @override
-  _homePageState createState() => _homePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _homePageState extends State<homePage> {
+class _HomePageState extends State<HomePage> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  FacebookLogin facebookLogin = FacebookLogin();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +34,15 @@ class _homePageState extends State<homePage> {
             onPressed: () {
               FirebaseAuth.instance.signOut();
               _googleSignIn.signOut();
+              facebookLogin.logOut();
             },
+          ),
+          RaisedButton(
+            child: Text("Customized PIC"),
+            onPressed: () {
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CustomPage(widget.user)));
+          },
           )
         ],
       ),
