@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math';
 
 class CustomPage extends StatefulWidget {
   final FirebaseUser user;
   CustomPage(this.user);
+
+
 
   @override
   _CustomPageState createState() => _CustomPageState();
 }
 
 class _CustomPageState extends State<CustomPage> {
+  var randomNumber =0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Random random = new Random();
+    setState(() {
+      randomNumber = random.nextInt(2);
+    });
+
+
+  }
   @override
   Widget build(BuildContext context) {
     return  Container(
@@ -25,7 +40,7 @@ class _CustomPageState extends State<CustomPage> {
 
   Widget _bodyBuilder() {
     return StreamBuilder(
-      stream: Firestore.instance.collection('postProduct').snapshots(),
+      stream: _commentStream(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(!snapshot.hasData){
           return Center(child:  CircularProgressIndicator());
@@ -38,7 +53,8 @@ class _CustomPageState extends State<CustomPage> {
                 mainAxisSpacing: 2.0,
                 crossAxisSpacing: 2.0),
             itemCount: items.length,
-            itemBuilder: (BuildContext context, int index) {return _buildListItem(context, items[index]);
+            itemBuilder: (BuildContext context, int index) {
+              return _buildListItem(context, items[index]);
             });
       },
     );
@@ -58,4 +74,23 @@ class _CustomPageState extends State<CustomPage> {
 //    );
 
   }
+
+  Stream<QuerySnapshot> _commentStream(){
+    // random 구현
+
+    if(randomNumber == 2){
+      return Firestore.instance.collection('postProduct').orderBy('uploadDate',descending: true).snapshots();
+    }
+    else if(randomNumber == 1){
+      return Firestore.instance.collection('postProduct').orderBy('uploadDate',descending: false).snapshots();
+    }
+    else{
+     return Firestore.instance.collection('postProduct').snapshots();
+
+//      Firestore.instance.collection('postProduct').where("season", isEqualTo: "FW").snapshots();
+//      where("field name", isEqualTo:  "conditional Text")
+    }
+  }
 }
+
+
