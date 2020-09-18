@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
+
 class CustomPage extends StatefulWidget {
   final FirebaseUser user;
   CustomPage(this.user);
@@ -75,21 +76,9 @@ class _CustomPageState extends State<CustomPage> {
 
   }
 
-  Stream<QuerySnapshot> _commentStream(){
-    // random 구현
+  Stream<QuerySnapshot> _commentStream() {
+   return Firestore.instance.collection("postProduct").where("season",whereIn:["FW","WI","SU"]).snapshots();
 
-    if(randomNumber == 2){
-      return Firestore.instance.collection('postProduct').orderBy('uploadDate',descending: true).snapshots();
-    }
-    else if(randomNumber == 1){
-      return Firestore.instance.collection('postProduct').orderBy('uploadDate',descending: false).snapshots();
-    }
-    else{
-     return Firestore.instance.collection('postProduct').snapshots();
-
-//      Firestore.instance.collection('postProduct').where("season", isEqualTo: "FW").snapshots();
-//      where("field name", isEqualTo:  "conditional Text")
-    }
   }
 }
 
