@@ -40,22 +40,28 @@ class _CustomPageState extends State<CustomPage> {
   }
 
   Widget _bodyBuilder() {
-    return StreamBuilder(
+    return StreamBuilder <QuerySnapshot>(
       stream: _commentStream(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(!snapshot.hasData){
           return Center(child:  CircularProgressIndicator());
         }
         var items =  snapshot.data?.documents ??[];
+//        converting
+
+        var fF = items.where((doc)=> doc['season'] == "WI").toList();
+        var sF = items.where((doc)=> doc['season'] == "SU").toList();
+        fF.addAll(sF);
+//
         return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: 0.6,
                 mainAxisSpacing: 2.0,
                 crossAxisSpacing: 2.0),
-            itemCount: items.length,
+            itemCount: fF.length,
             itemBuilder: (BuildContext context, int index) {
-              return _buildListItem(context, items[index]);
+              return _buildListItem(context, fF[index]);
             });
       },
     );
