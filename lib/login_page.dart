@@ -42,10 +42,10 @@ class _LoginPageState extends State<LoginPage> {
             SignInButton(
               Buttons.Facebook,
               onPressed: () {
-                _handleF_SignIn().then((user) {
-                  print(user);
-                  print('111');
-                });
+                _handleF_SignIn().then((user) => print(user)).catchError((e)=> {
+                  _showMyDialog()
+                }
+                );
               },
             ),
           ],
@@ -71,5 +71,35 @@ class _LoginPageState extends State<LoginPage> {
     print(user);
     print("signed in " + user.displayName);
     return user;
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text("확인해주세요 🙏"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('이미 가입이 되어있는 이메일입니다'),
+                Text('다른 SNS계정으로 시도해보세요'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

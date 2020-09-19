@@ -23,4 +23,3 @@ class RootPage extends StatelessWidget {
     );
   }
 }
-
