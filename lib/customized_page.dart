@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
 
+
 class CustomPage extends StatefulWidget {
   final FirebaseUser user;
   CustomPage(this.user);
@@ -22,7 +23,7 @@ class _CustomPageState extends State<CustomPage> {
     super.initState();
     Random random = new Random();
     setState(() {
-      randomNumber = random.nextInt(2);
+      randomNumber =random.nextInt(2);
     });
 
 
@@ -47,22 +48,28 @@ class _CustomPageState extends State<CustomPage> {
           return Center(child:  CircularProgressIndicator());
         }
         var items =  snapshot.data?.documents ??[];
-//        converting
+//        TODO:  (완)합치기 => 리스트.length 구해서 .take(리스트.length)로 가져오기 => (완성)랜덤으로 섞기
 
-        var fF = items.where((doc)=> doc['season'] == "WI").toList();
-        var sF = items.where((doc)=> doc['season'] == "SU").toList();
+        var fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
+        var half_length = (fF.length/2).round();
+        print(half_length);
+        var sF = items.where((doc)=> doc['style'] == "로맨틱").take(half_length).toList();
+        var tF = items.where((doc)=> doc['style'] == "에스레저").take(half_length).toList();
         fF.addAll(sF);
-//
+        fF.addAll(tF);
+        fF.shuffle();
+
         return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 0.6,
-                mainAxisSpacing: 2.0,
-                crossAxisSpacing: 2.0),
-            itemCount: fF.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _buildListItem(context, fF[index]);
-            });
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.6,
+                  mainAxisSpacing: 2.0,
+                  crossAxisSpacing: 2.0),
+              itemCount: fF.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _buildListItem(context, fF[index]);
+              });
+
       },
     );
   }
@@ -83,7 +90,8 @@ class _CustomPageState extends State<CustomPage> {
   }
 
   Stream<QuerySnapshot> _commentStream() {
-   return Firestore.instance.collection("postProduct").where("season",whereIn:["FW","WI","SU"]).snapshots();
+   return Firestore.instance.collection("uploaded_product").snapshots();
+//    .where("season",whereIn:["FW","WI","SU"])
 
   }
 }
