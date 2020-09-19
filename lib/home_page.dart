@@ -3,10 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'customized_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'favorite_Analysis_page.dart';
+
 
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
   HomePage(this.user);
+
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -18,17 +22,28 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text("AppBar"),),
-        body: _buildBody()
+    // 여기에 스트림
+    return StreamBuilder<DocumentSnapshot>(
+      stream: Firestore.instance.collection("user_data").document(widget.user.email).snapshots(),
+      builder: (context, snapshot) {
+        if(snapshot.data.data == null){
+//          print(snapshot.data.data["field1"]);
+            return FavoriteAnalysisPage(widget.user);
+        }else{
+        return Scaffold(
+            appBar: AppBar(title: Text("AppBar"),),
+            body: _buildBody()
+        );
+        }
+      }
     );
-  }
+    }
 
   Widget _buildBody() {
     return Center(
       child: Column(
         children: [
-          Text('Hello world'),
+          Text(widget.user.displayName),
           RaisedButton(
             child: Text("logout"),
             onPressed: () {

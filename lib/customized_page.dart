@@ -90,6 +90,7 @@ class _CustomPageState extends State<CustomPage> {
   }
 
   Stream<QuerySnapshot> _commentStream() {
+    // 여기에 계절분류 코드를 넣으면 됨
    return Firestore.instance.collection("uploaded_product").snapshots();
 //    .where("season",whereIn:["FW","WI","SU"])
 
