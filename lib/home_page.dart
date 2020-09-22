@@ -27,8 +27,13 @@ class _HomePageState extends State<HomePage> {
       stream: Firestore.instance.collection("user_data").document(widget.user.email).snapshots(),
       builder: (context, snapshot) {
         if(snapshot.data.data == null){
-//          print(snapshot.data.data["field1"]);
-            return FavoriteAnalysisPage(widget.user);
+          // return FavoriteAnalysisPage(widget.user);
+          // 임시적으로 막아놓음 : 스택오버플로우 보고 위 주석만 풀면됨
+          return  Scaffold(
+              appBar: AppBar(title: Text("AppBar"),),
+              body: _buildBody()
+          );
+          //여기 까지
         }else{
         return Scaffold(
             appBar: AppBar(title: Text("AppBar"),),

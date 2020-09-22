@@ -1,7 +1,18 @@
+import 'package:coodyproj/product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coodyproj/product_detail.dart';
+
 import 'dart:math';
+
+//class CustomPage extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return Container();
+//  }
+//}
+
 
 
 
@@ -9,25 +20,12 @@ class CustomPage extends StatefulWidget {
   final FirebaseUser user;
   CustomPage(this.user);
 
-
-
   @override
   _CustomPageState createState() => _CustomPageState();
 }
 
 class _CustomPageState extends State<CustomPage> {
-  var randomNumber =0;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    Random random = new Random();
-    setState(() {
-      randomNumber =random.nextInt(2);
-    });
 
-
-  }
   @override
   Widget build(BuildContext context) {
     return  Container(
@@ -74,18 +72,18 @@ class _CustomPageState extends State<CustomPage> {
     );
   }
 
-  Widget _buildListItem(context, document) {
+  Widget _buildListItem(context, DocumentSnapshot document) {
     return
-//      InkWell(
-//      onTap: (){
-//        Navigator.push(context, MaterialPageRoute(builder: (context){
-//          return DetailPostPage(document);
-//        }));
-//      },
-       Image.network(
+      InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return ProductDetail(widget.user, document);
+        }));
+      },
+       child: Image.network(
           document['thumbnail_img'],
-          fit : BoxFit.cover);
-//    );
+          fit : BoxFit.cover)
+    );
 
   }
 

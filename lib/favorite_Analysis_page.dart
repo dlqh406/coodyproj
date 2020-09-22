@@ -37,7 +37,7 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
 
         var fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
         var sF = items.where((doc)=> doc['style'] == "로맨틱").toList();
-        var tF = items.where((doc)=> doc['style'] == "캐주").toList();
+        var tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
         fF.addAll(sF);
         fF.addAll(tF);
         fF.shuffle();
