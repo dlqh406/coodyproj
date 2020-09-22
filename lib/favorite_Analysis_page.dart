@@ -62,29 +62,6 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
      fit : BoxFit.cover,
       child: new InkWell(
         onTap: (){
-          if(style_List.length == 10){
-            var _C =0;
-            var _R =0;
-            var _O =0;
-
-            print("complete!");
-            for(int i=0; i<10; i++){
-              if(style_List[i]== "오피스룩"){
-                _O +=1;
-              }else if(style_List[i] == "캐주얼"){
-                _C +=1;
-              }else{
-                _R +=1;
-              }
-            }
-            print(_C);
-            print(_R);
-            print(_O);
-
-          }else{
-            style_List.add(document['style']);
-            print(style_List);
-          }
 
         },
       ),
