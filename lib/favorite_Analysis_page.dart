@@ -13,6 +13,9 @@ class FavoriteAnalysisPage extends StatefulWidget {
 }
 
 class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
+  List style_List = [];
+  var styleCode = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +37,7 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
 
         var fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
         var sF = items.where((doc)=> doc['style'] == "로맨틱").toList();
-        var tF = items.where((doc)=> doc['style'] == "에스레저").toList();
+        var tF = items.where((doc)=> doc['style'] == "캐주").toList();
         fF.addAll(sF);
         fF.addAll(tF);
         fF.shuffle();
@@ -49,23 +52,43 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
             itemBuilder: (BuildContext context, int index) {
               return _buildListItem(context, fF[index]);
             });
-
       },
     );
-
-
   }
 
-
-
   Widget _buildListItem(context, document) {
-    return InkWell(
-        splashColor: Colors.brown.withOpacity(0.5),
-     child:Image.network(
-         document['thumbnail_img'],
-         fit : BoxFit.cover
-     )
-    );
+    return Ink.image(
+     image : NetworkImage(document['thumbnail_img']),
+     fit : BoxFit.cover,
+      child: new InkWell(
+        onTap: (){
+          if(style_List.length == 10){
+            var _C =0;
+            var _R =0;
+            var _O =0;
+
+            print("complete!");
+            for(int i=0; i<10; i++){
+              if(style_List[i]== "오피스룩"){
+                _O +=1;
+              }else if(style_List[i] == "캐주얼"){
+                _C +=1;
+              }else{
+                _R +=1;
+              }
+            }
+            print(_C);
+            print(_R);
+            print(_O);
+
+          }else{
+            style_List.add(document['style']);
+            print(style_List);
+          }
+
+        },
+      ),
+     );
   }
 
   Stream<QuerySnapshot> _commentStream() {
