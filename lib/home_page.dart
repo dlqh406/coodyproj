@@ -5,6 +5,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'customized_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'favorite_Analysis_page.dart';
+import 'loading_page.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -26,20 +27,24 @@ class _HomePageState extends State<HomePage> {
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection("user_data").document(widget.user.email).snapshots(),
       builder: (context, snapshot) {
-        if(snapshot.data.data == null){
-          // return FavoriteAnalysisPage(widget.user);
-          // 임시적으로 막아놓음 : 스택오버플로우 보고 위 주석만 풀면됨
-          return  Scaffold(
-              appBar: AppBar(title: Text("AppBar"),),
-              body: _buildBody()
-          );
-          //여기 까지
+        if(snapshot.hasData){
+          if(snapshot.data.data == null){
+            // return FavoriteAnalysisPage(widget.user);
+            // 임시적으로 막아놓음 : 스택오버플로우 보고 위 주석만 풀면됨
+            return  Scaffold(
+                appBar: AppBar(title: Text("AppBar"),),
+                body: _buildBody()
+            );
+          }else{
+            return Scaffold(
+                appBar: AppBar(title: Text("AppBar"),),
+                body: _buildBody()
+            );
+          }
         }else{
-        return Scaffold(
-            appBar: AppBar(title: Text("AppBar"),),
-            body: _buildBody()
-        );
+          return LoadingPage();
         }
+
       }
     );
     }

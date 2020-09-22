@@ -12,7 +12,7 @@ class RootPage extends StatelessWidget {
       stream : FirebaseAuth.instance.onAuthStateChanged,
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.hasData){
-                print("login successed");
+                print("login succeeded");
                 return HomePage(snapshot.data);
         }
         else{
