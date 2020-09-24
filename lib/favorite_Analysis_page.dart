@@ -128,30 +128,31 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
                   daily += 1;
                 }
              }
-            print("페미닌: ${feminine}, 캐주얼: ${casual}, 데일리: ${daily}");
+            print("페미닌: ${feminine}, 데일리: ${daily}, 캐주얼: ${casual},");
             var styleCodeTep = [feminine,casual,daily];
-            var final_styleCode = [];
+//            var final_styleCode = [];
+            var final_styleCode;
             styleCodeTep.sort();
             print(styleCodeTep);
 
             if(styleCodeTep[2] == feminine ){
               if(styleCodeTep[1] == daily){
-                final_styleCode.addAll(["feminine","daily","casual"]);
+                final_styleCode="FDC";
               }else{
-                final_styleCode.addAll(["feminine","casual","daily"]);
+                final_styleCode="FCD";
               }
 
             }else if(styleCodeTep[2] == daily ){
                if(styleCodeTep[1] == feminine){
-                 final_styleCode.addAll(["daily","feminine","casual"]);
+                 final_styleCode="DFC";
                }else{
-                 final_styleCode.addAll(["daily","casual","feminine"]);
+                 final_styleCode="DCF";
                }
              }else if(styleCodeTep[2] == casual){
               if(styleCodeTep[1] == feminine){
-                final_styleCode.addAll(["casual","feminine","daily"]);
+                final_styleCode="CFD";
               }else{
-                final_styleCode.addAll(["casual","daily","feminine"]);
+                final_styleCode="CDF";
               }
             }
              print(final_styleCode);
