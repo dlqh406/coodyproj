@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -72,7 +70,7 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
       },
     );
   }
-  Widget _buildListItem(context, document,index) {
+  Widget _buildListItem(context,document,index) {
 
     return InkWell(
       child: Container(
@@ -156,6 +154,16 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
               }
             }
              print(final_styleCode);
+
+            final _updateData = {
+              'userStyleCode': final_styleCode,
+            };
+
+            Firestore.instance
+                .collection('user_data')
+                .document(widget.user.email)
+                .setData(_updateData);
+
           }
           print("count: ${count}");
           print("styleCode: ${widget.styleList}");
