@@ -8,6 +8,8 @@ class FavoriteAnalysisPage extends StatefulWidget {
   var stopTrigger = 1;
   var unchanging ;
   List<bool>bool_list_each_GridSell =[];
+  List<String> styleCode = [];
+  var tf_copy = [];
 
   final FirebaseUser user;
   FavoriteAnalysisPage(this.user);
@@ -50,7 +52,9 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
         var tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
         fF.addAll(sF);
         fF.addAll(tF);
-//        fF.shuffle();
+        widget.tf_copy.addAll(fF);
+
+
 
         return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -94,7 +98,41 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
       ),
       onTap: (){
         setState(() {
+          var count = 0;
+          var daily =0;
+          var casual =0;
+          var Feminine =0;
           widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
+
+          for(var i=0; i<widget.bool_list_each_GridSell.length; i++){
+            if(widget.bool_list_each_GridSell[i] == true){
+              count +=1;
+
+              if(count == 10) {
+                for(var i=0; i< widget.bool_list_each_GridSell.length; i++){
+                  if(widget.bool_list_each_GridSell[i] == true){
+                      widget.styleCode.add(widget.tf_copy[i]["style"]);
+                  }
+                }
+              }
+            }
+          }
+          if(widget.styleCode.length == 10){
+             for(var i =0; i< widget.styleCode.length; i++){
+                if(widget.styleCode[i] == "오피스룩"){
+                  Feminine +=1;
+                }else if(widget.styleCode[i] == "로맨틱"){
+                  casual +=1;
+                }
+                else{
+                  daily += 1;
+                }
+             }
+             print("페미닌: ${Feminine}, 캐주얼: ${casual}, 데일리: ${daily}");
+          }
+          print("count: ${count}");
+          print("styleCode: ${widget.styleCode}");
+
         });
       },
     );
@@ -102,8 +140,6 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
 
   Stream<QuerySnapshot> _commentStream() {
     widget.stopTrigger +=1;
-    print("start");
-    print(widget.stopTrigger);
     if(widget.stopTrigger == 2 ){
       return widget.unchanging;
     }
