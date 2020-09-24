@@ -21,7 +21,7 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(widget.stopTrigger == 2){
+    if(widget.stopTrigger == 1){
       setState(() {
        widget.unchanging = Firestore.instance.collection("uploaded_product").snapshots();
       });
@@ -80,15 +80,15 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
         ),
         child: widget.bool_list_each_GridSell[index]?Container(
             alignment: Alignment.center,
-            color: Colors.black38,
+            color: Colors.black54,
             child:Container(
-                height: 120,
-                width: 120,
+                height: 50,
+                width: 50,
                 decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: Colors.blue,
                     borderRadius: BorderRadius.all(Radius.circular(60))
                 ),
-                child:Icon(Icons.check,color: Colors.white,size: 60,)
+                child:Icon(Icons.check,color: Colors.white,size: 30,)
             )
         ):Container(),
       ),
@@ -102,8 +102,9 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
 
   Stream<QuerySnapshot> _commentStream() {
     widget.stopTrigger +=1;
+    print("start");
     print(widget.stopTrigger);
-    if(widget.unchanging == 2 ){
+    if(widget.stopTrigger == 2 ){
       return widget.unchanging;
     }
 
