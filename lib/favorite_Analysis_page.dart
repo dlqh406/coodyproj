@@ -154,7 +154,7 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
               }
             }
              print(final_styleCode);
-
+            _showMyDialog();
             final _updateData = {
               'userStyleCode': final_styleCode,
             };
@@ -164,10 +164,9 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
                 .document(widget.user.email)
                 .setData(_updateData);
 
-          }
+          };
           print("count: ${count}");
           print("styleCode: ${widget.styleList}");
-
         });
       },
     );
@@ -180,6 +179,39 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
     }
 
   }
+
+Future<void> _showMyDialog() async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        title: Text("🎊 스타일 데이터 저장완료 🎊"),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('${widget.user.displayName}님 반가워요💙'),
+              Text('쿠디에 오신걸 환영해요'),
+
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          Center(
+            child: FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 }
 
 
