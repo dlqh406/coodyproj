@@ -8,7 +8,7 @@ class FavoriteAnalysisPage extends StatefulWidget {
   var stopTrigger = 1;
   var unchanging ;
   List<bool>bool_list_each_GridSell =[];
-  List<String> styleCode = [];
+  List<String> styleList = [];
   var tf_copy = [];
 
   final FirebaseUser user;
@@ -101,7 +101,7 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
           var count = 0;
           var daily =0;
           var casual =0;
-          var Feminine =0;
+          var feminine =0;
           widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
 
           for(var i=0; i<widget.bool_list_each_GridSell.length; i++){
@@ -111,27 +111,53 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
               if(count == 10) {
                 for(var i=0; i< widget.bool_list_each_GridSell.length; i++){
                   if(widget.bool_list_each_GridSell[i] == true){
-                      widget.styleCode.add(widget.tf_copy[i]["style"]);
+                      widget.styleList.add(widget.tf_copy[i]["style"]);
                   }
                 }
               }
             }
           }
-          if(widget.styleCode.length == 10){
-             for(var i =0; i< widget.styleCode.length; i++){
-                if(widget.styleCode[i] == "오피스룩"){
-                  Feminine +=1;
-                }else if(widget.styleCode[i] == "로맨틱"){
+          if(widget.styleList.length == 10){
+             for(var i =0; i< widget.styleList.length; i++){
+                if(widget.styleList[i] == "오피스룩"){
+                  feminine +=1;
+                }else if(widget.styleList[i] == "로맨틱"){
                   casual +=1;
                 }
                 else{
                   daily += 1;
                 }
              }
-             print("페미닌: ${Feminine}, 캐주얼: ${casual}, 데일리: ${daily}");
+            print("페미닌: ${feminine}, 캐주얼: ${casual}, 데일리: ${daily}");
+            var styleCodeTep = [feminine,casual,daily];
+            var final_styleCode = [];
+            styleCodeTep.sort();
+            print(styleCodeTep);
+
+            if(styleCodeTep[2] == feminine ){
+              if(styleCodeTep[1] == daily){
+                final_styleCode.addAll(["feminine","daily","casual"]);
+              }else{
+                final_styleCode.addAll(["feminine","casual","daily"]);
+              }
+
+            }else if(styleCodeTep[2] == daily ){
+               if(styleCodeTep[1] == feminine){
+                 final_styleCode.addAll(["daily","feminine","casual"]);
+               }else{
+                 final_styleCode.addAll(["daily","casual","feminine"]);
+               }
+             }else if(styleCodeTep[2] == casual){
+              if(styleCodeTep[1] == feminine){
+                final_styleCode.addAll(["casual","feminine","daily"]);
+              }else{
+                final_styleCode.addAll(["casual","daily","feminine"]);
+              }
+            }
+             print(final_styleCode);
           }
           print("count: ${count}");
-          print("styleCode: ${widget.styleCode}");
+          print("styleCode: ${widget.styleList}");
 
         });
       },
