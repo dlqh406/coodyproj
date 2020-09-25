@@ -15,8 +15,12 @@ import 'dart:math';
 
 
 
-
 class CustomPage extends StatefulWidget {
+  var stopTrigger = 1;
+  var unchanging ;
+  List<bool>bool_list_each_GridSell =[];
+  List<String> styleList = [];
+  var tf_copy = [];
   final FirebaseUser user;
   CustomPage(this.user);
 
@@ -25,6 +29,15 @@ class CustomPage extends StatefulWidget {
 }
 
 class _CustomPageState extends State<CustomPage> {
+  @override
+  void initState() {
+    super.initState();
+    if(widget.stopTrigger == 1){
+      setState(() {
+        widget.unchanging = Firestore.instance.collection("uploaded_product").snapshots();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +50,6 @@ class _CustomPageState extends State<CustomPage> {
       ),
     );
   }
-
   Widget _bodyBuilder() {
     return StreamBuilder <QuerySnapshot>(
       stream: _commentStream(),
@@ -46,33 +58,37 @@ class _CustomPageState extends State<CustomPage> {
           return Center(child:  CircularProgressIndicator());
         }
         var items =  snapshot.data?.documents ??[];
-//        TODO:  (완)합치기 => 리스트.length 구해서 .take(리스트.length)로 가져오기 => (완성)랜덤으로 섞기
-
         var fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
-        var half_length = (fF.length/2).round();
-        print(half_length);
-        var sF = items.where((doc)=> doc['style'] == "로맨틱").take(half_length).toList();
-        var tF = items.where((doc)=> doc['style'] == "에스레저").take(half_length).toList();
+        var sF = items.where((doc)=> doc['style'] == "로맨틱").toList();
+        var tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
         fF.addAll(sF);
         fF.addAll(tF);
-        fF.shuffle();
-
+        widget.tf_copy.addAll(fF);
+        if(widget.stopTrigger == 2 ){
+          fF.shuffle();
+          widget.unchanging = fF;
+        }
         return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 0.6,
-                  mainAxisSpacing: 2.0,
-                  crossAxisSpacing: 2.0),
-              itemCount: fF.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _buildListItem(context, fF[index]);
-              });
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 0.6,
+            mainAxisSpacing: 2.0,
+            crossAxisSpacing: 2.0,),
+            itemCount: fF.length,
+            itemBuilder: (BuildContext context, int index) {
+              for(var i=0; i<fF.length; i++){
+                widget.bool_list_each_GridSell.add(false);
+              }
+              return _buildListItem(context,widget.unchanging[index]);
+            }
+        );
+
 
       },
     );
   }
 
-  Widget _buildListItem(context, DocumentSnapshot document) {
+  Widget _buildListItem(context, document) {
     return
       InkWell(
       onTap: (){
@@ -88,10 +104,10 @@ class _CustomPageState extends State<CustomPage> {
   }
 
   Stream<QuerySnapshot> _commentStream() {
-    // 여기에 계절분류 코드를 넣으면 됨
-   return Firestore.instance.collection("uploaded_product").snapshots();
-//    .where("season",whereIn:["FW","WI","SU"])
-
+    widget.stopTrigger +=1;
+    if(widget.stopTrigger == 2 ){
+      return widget.unchanging;
+    }
   }
 }
 
