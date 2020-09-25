@@ -21,7 +21,6 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
 
 @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if(widget.stopTrigger == 1){
       setState(() {
@@ -53,7 +52,10 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
         fF.addAll(sF);
         fF.addAll(tF);
         widget.tf_copy.addAll(fF);
-
+        if(widget.stopTrigger == 2 ){
+          fF.shuffle();
+          widget.unchanging = fF;
+        }
         return Container(
           margin: EdgeInsets.all(16),
           child: StaggeredGridView.countBuilder(
@@ -66,7 +68,7 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
                 for(var i=0; i<fF.length; i++){
                   widget.bool_list_each_GridSell.add(false);
                 }
-                return _buildListItem(context,fF[index],index);
+                return _buildListItem(context,widget.unchanging[index],index);
               }
               ),
         );
