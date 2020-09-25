@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:coodyproj/bloc/state_bloc.dart';
+import 'package:coodyproj/bloc/state_provider.dart';
+import 'model/car.dart';
+
+var currentCar = carList.cars[0];
 
 class FavoriteAnalysisPage extends StatefulWidget {
   var stopTrigger = 1;
@@ -9,7 +14,6 @@ class FavoriteAnalysisPage extends StatefulWidget {
   List<bool>bool_list_each_GridSell =[];
   List<String> styleList = [];
   var tf_copy = [];
-
   final FirebaseUser user;
   FavoriteAnalysisPage(this.user);
 
@@ -28,17 +32,20 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
       });
     }
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("favorite Analysis Page")),
-      body:  _bodyBuilder(),
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        bottomOpacity: 0.0,
+        elevation: 0.0,
+      ),
+      backgroundColor: Colors.blue,
+      body:  LayoutStarts(),
     );
   }
 
-  Widget _bodyBuilder() {
+  Widget _StreamBuilder() {
     return StreamBuilder <QuerySnapshot>(
       stream: _commentStream(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
@@ -224,5 +231,262 @@ Future<void> _showMyDialog() async {
   );
 }
 }
+class LayoutStarts extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        CarDetailsAnimation(),
+        CustomBottomSheet(),
+        RentButton(),
+      ],
+    );
+  }
+}
 
+
+class RentButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+    );
+  }
+}
+
+class CarDetailsAnimation extends StatefulWidget {
+  @override
+  _CarDetailsAnimationState createState() => _CarDetailsAnimationState();
+}
+
+class _CarDetailsAnimationState extends State<CarDetailsAnimation>
+    with TickerProviderStateMixin {
+  AnimationController fadeController;
+  AnimationController scaleController;
+
+  Animation fadeAnimation;
+  Animation scaleAnimation;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    fadeController =
+        AnimationController(duration: Duration(milliseconds: 180), vsync: this);
+
+    scaleController =
+        AnimationController(duration: Duration(milliseconds: 350), vsync: this);
+
+    fadeAnimation = Tween(begin: 0.0, end: 1.0).animate(fadeController);
+    scaleAnimation = Tween(begin: 0.8, end: 1.0).animate(CurvedAnimation(
+      parent: scaleController,
+      curve: Curves.easeInOut,
+      reverseCurve: Curves.easeInOut,
+    ));
+  }
+
+  forward() {
+    scaleController.forward();
+    fadeController.forward();
+  }
+
+  reverse() {
+    scaleController.reverse();
+    fadeController.reverse();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<Object>(
+        initialData: StateProvider().isAnimating,
+        stream: stateBloc.animationStatus,
+        builder: (context, snapshot) {
+          snapshot.data ? forward() : reverse();
+
+          return ScaleTransition(
+            scale: scaleAnimation,
+            child: FadeTransition(
+              opacity: fadeAnimation,
+              child: CarDetails(),
+            ),
+          );
+        });
+  }
+}
+
+class CarDetails extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 30),
+              child: _carTitle(),
+            ),
+          ],
+        ));
+  }
+
+  _carTitle() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        RichText(
+          text: TextSpan(
+              style: TextStyle(color: Colors.white, fontSize: 38),
+              children: [
+                TextSpan(text: "고객님 취향에 맞는",style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700)),
+                TextSpan(text: "\n"),
+                TextSpan(
+                    text: "스타일을 탭해주세요!!",
+                    style: TextStyle(fontSize: 30,fontWeight: FontWeight.w700)),
+              ]),
+        ),
+        SizedBox(height: 10),
+        // 이미지 파일
+        Container(child: Image.asset('assets/favorite_Analysis_page/illustration_FApage.png',width: 300),
+            // 가운데 일러스트 위치 조절
+            padding: EdgeInsets.only(top:20 ,left: 2, right: 25, bottom: 1))
+      ],
+    );
+  }
+}
+
+class CustomBottomSheet extends StatefulWidget {
+  @override
+  _CustomBottomSheetState createState() => _CustomBottomSheetState();
+}
+
+class _CustomBottomSheetState extends State<CustomBottomSheet>
+    with SingleTickerProviderStateMixin {
+  double sheetTop = 500;
+  double minSheetTop = 30;
+
+  Animation<double> animation;
+  AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 200), vsync: this);
+    animation = Tween<double>(begin: sheetTop, end: minSheetTop)
+        .animate(CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeInOut,
+      reverseCurve: Curves.easeInOut,
+    ))
+      ..addListener(() {
+        setState(() {});
+      });
+  }
+
+  forwardAnimation() {
+    controller.forward();
+    stateBloc.toggleAnimation();
+  }
+
+  reverseAnimation() {
+    controller.reverse();
+    stateBloc.toggleAnimation();
+  }
+
+  bool isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: animation.value,
+      left: 0,
+      child: GestureDetector(
+        onTap: () {
+          controller.isCompleted ? reverseAnimation() : forwardAnimation();
+        },
+        onVerticalDragEnd: (DragEndDetails dragEndDetails) {
+          //upward drag
+          if (dragEndDetails.primaryVelocity < 0.0) {
+            forwardAnimation();
+            controller.forward();
+          } else if (dragEndDetails.primaryVelocity > 0.0) {
+            //downward drag
+            reverseAnimation();
+          } else {
+            return;
+          }
+        },
+        child: SheetContainer(),
+      ),
+    );
+  }
+}
+
+class SheetContainer extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    double sheetItemHeight = 110;
+    return Container(
+      padding: EdgeInsets.only(top: 5),
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+          color: Colors.white),
+      child: Column(
+        children: <Widget>[
+          drawerHandle(),
+          Expanded(
+            flex: 1,
+            child: ListView(
+              children: <Widget>[
+                offerDetails(sheetItemHeight),
+                SizedBox(height: 220),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  drawerHandle() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 25),
+      height: 3,
+      width: 65,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15), color: Color(0xffd9dbdb)),
+    );
+  }
+
+// streambuilder가 들어갈곳
+  offerDetails(double sheetItemHeight) {
+    return Container(
+      padding: EdgeInsets.only(top: 15, left: 20,right:20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Offer Details",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 25),
+            height: sheetItemHeight,
+            // 여기에 스트림 빌더
+            child: Text("Text")
+          )
+        ],
+      ),
+    );
+  }
+}
 

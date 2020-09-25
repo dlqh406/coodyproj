@@ -4,17 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/product_detail.dart';
 
-import 'dart:math';
-
-//class CustomPage extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Container();
-//  }
-//}
-
-
-
 class CustomPage extends StatefulWidget {
   var stopTrigger = 1;
   var unchanging ;
