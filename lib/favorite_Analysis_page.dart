@@ -18,6 +18,7 @@ class FavoriteAnalysisPage extends StatefulWidget {
 }
 
 class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
+
 @override
   void initState() {
     // TODO: implement initState
@@ -53,21 +54,24 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
         fF.addAll(tF);
         widget.tf_copy.addAll(fF);
 
-
-
-        return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 0.6,
-                mainAxisSpacing: 2.0,
-                crossAxisSpacing: 2.0),
-            itemCount: fF.length,
-            itemBuilder: (BuildContext context, int index) {
-              for(var i=0; i<fF.length; i++){
-                widget.bool_list_each_GridSell.add(false);
+        return Container(
+          margin: EdgeInsets.all(16),
+          child: StaggeredGridView.countBuilder(
+              crossAxisCount: 2,
+              mainAxisSpacing: 12.0,
+              crossAxisSpacing: 12.0,
+              itemCount: fF.length,
+              staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?1.2 : 1.8),
+              itemBuilder: (context,index) {
+                for(var i=0; i<fF.length; i++){
+                  widget.bool_list_each_GridSell.add(false);
+                }
+                return _buildListItem(context,fF[index],index);
               }
-              return _buildListItem(context,fF[index],index);
-            });
+              ),
+        );
+
+
       },
     );
   }
@@ -76,14 +80,18 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
     return InkWell(
       child: Container(
         decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             image: DecorationImage(
               image : NetworkImage(document['thumbnail_img']),
               fit : BoxFit.cover,
             )
         ),
         child: widget.bool_list_each_GridSell[index]?Container(
-            alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             color: Colors.black54,
+          ),   alignment: Alignment.center,
+
             child:Container(
                 height: 50,
                 width: 50,
