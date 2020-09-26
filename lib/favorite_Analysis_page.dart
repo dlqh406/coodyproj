@@ -4,16 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:coodyproj/bloc/state_bloc.dart';
 import 'package:coodyproj/bloc/state_provider.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'model/car.dart';
 
 var currentCar = carList.cars[0];
 
 class FavoriteAnalysisPage extends StatefulWidget {
-  var stopTrigger = 1;
-  var unchanging ;
-  List<bool>bool_list_each_GridSell =[];
-  List<String> styleList = [];
-  var tf_copy = [];
   final FirebaseUser user;
   FavoriteAnalysisPage(this.user);
 
@@ -23,15 +19,7 @@ class FavoriteAnalysisPage extends StatefulWidget {
 
 class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
 
-@override
-  void initState() {
-    super.initState();
-    if(widget.stopTrigger == 1){
-      setState(() {
-       widget.unchanging = Firestore.instance.collection("uploaded_product").snapshots();
-      });
-    }
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,203 +29,22 @@ class _FavoriteAnalysisPageState extends State<FavoriteAnalysisPage> {
         elevation: 0.0,
       ),
       backgroundColor: Colors.blue,
-      body:  LayoutStarts(),
+      body:  LayoutStarts(widget.user),
     );
   }
 
-  Widget _StreamBuilder() {
-    return StreamBuilder <QuerySnapshot>(
-      stream: _commentStream(),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        if(!snapshot.hasData){
-          return Center(child:  CircularProgressIndicator());
-        }
-        var items =  snapshot.data?.documents ??[];
-        var fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
-        var sF = items.where((doc)=> doc['style'] == "로맨틱").toList();
-        var tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
-        fF.addAll(sF);
-        fF.addAll(tF);
-        widget.tf_copy.addAll(fF);
-        if(widget.stopTrigger == 2 ){
-          fF.shuffle();
-          widget.unchanging = fF;
-        }
-        return Container(
-          margin: EdgeInsets.all(16),
-          child: StaggeredGridView.countBuilder(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12.0,
-              crossAxisSpacing: 12.0,
-              itemCount: fF.length,
-              staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?1.2 : 1.8),
-              itemBuilder: (context,index) {
-                for(var i=0; i<fF.length; i++){
-                  widget.bool_list_each_GridSell.add(false);
-                }
-                return _buildListItem(context,widget.unchanging[index],index);
-              }
-              ),
-        );
-
-
-      },
-    );
-  }
-  Widget _buildListItem(context,document,index) {
-
-    return InkWell(
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-            image: DecorationImage(
-              image : NetworkImage(document['thumbnail_img']),
-              fit : BoxFit.cover,
-            )
-        ),
-        child: widget.bool_list_each_GridSell[index]?Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-            color: Colors.black54,
-          ),   alignment: Alignment.center,
-
-            child:Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.all(Radius.circular(60))
-                ),
-                child:Icon(Icons.check,color: Colors.white,size: 30,)
-            )
-        ):Container(),
-      ),
-      onTap: (){
-        setState(() {
-          var count = 0;
-          var daily =0;
-          var casual =0;
-          var feminine =0;
-          widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
-
-          for(var i=0; i<widget.bool_list_each_GridSell.length; i++){
-            if(widget.bool_list_each_GridSell[i] == true){
-              count +=1;
-
-              if(count == 10) {
-                for(var i=0; i< widget.bool_list_each_GridSell.length; i++){
-                  if(widget.bool_list_each_GridSell[i] == true){
-                      widget.styleList.add(widget.tf_copy[i]["style"]);
-                  }
-                }
-              }
-            }
-          }
-          if(widget.styleList.length == 10){
-             for(var i =0; i< widget.styleList.length; i++){
-                if(widget.styleList[i] == "오피스룩"){
-                  feminine +=1;
-                }else if(widget.styleList[i] == "로맨틱"){
-                  casual +=1;
-                }
-                else{
-                  daily += 1;
-                }
-             }
-            print("페미닌: ${feminine}, 데일리: ${daily}, 캐주얼: ${casual},");
-            var styleCodeTep = [feminine,casual,daily];
-//            var final_styleCode = [];
-            var final_styleCode;
-            styleCodeTep.sort();
-            print(styleCodeTep);
-
-            if(styleCodeTep[2] == feminine ){
-              if(styleCodeTep[1] == daily){
-                final_styleCode="FDC";
-              }else{
-                final_styleCode="FCD";
-              }
-
-            }else if(styleCodeTep[2] == daily ){
-               if(styleCodeTep[1] == feminine){
-                 final_styleCode="DFC";
-               }else{
-                 final_styleCode="DCF";
-               }
-             }else if(styleCodeTep[2] == casual){
-              if(styleCodeTep[1] == feminine){
-                final_styleCode="CFD";
-              }else{
-                final_styleCode="CDF";
-              }
-            }
-             print(final_styleCode);
-            _showMyDialog();
-            final _updateData = {
-              'userStyleCode': final_styleCode,
-            };
-
-            Firestore.instance
-                .collection('user_data')
-                .document(widget.user.email)
-                .setData(_updateData);
-
-          };
-          print("count: ${count}");
-          print("styleCode: ${widget.styleList}");
-        });
-      },
-    );
-  }
-
-  Stream<QuerySnapshot> _commentStream() {
-    widget.stopTrigger +=1;
-    if(widget.stopTrigger == 2 ){
-      return widget.unchanging;
-    }
-
-  }
-
-Future<void> _showMyDialog() async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false, // user must tap button!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0))),
-        title: Text("🎊 스타일 데이터 저장완료 🎊"),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text('${widget.user.displayName}님 반가워요💙'),
-              Text('쿠디에 오신걸 환영해요'),
-
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          Center(
-            child: FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ],
-      );
-    },
-  );
-}
 }
 class LayoutStarts extends StatelessWidget {
+  final FirebaseUser user;
+  LayoutStarts(this.user);
+
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         CarDetailsAnimation(),
-        CustomBottomSheet(),
+        CustomBottomSheet(user),
         RentButton(),
       ],
     );
@@ -349,13 +156,18 @@ class CarDetails extends StatelessWidget {
         // 이미지 파일
         Container(child: Image.asset('assets/favorite_Analysis_page/illustration_FApage.png',width: 300),
             // 가운데 일러스트 위치 조절
-            padding: EdgeInsets.only(top:20 ,left: 2, right: 25, bottom: 1))
+            padding: EdgeInsets.only(top:60))
       ],
     );
   }
 }
 
 class CustomBottomSheet extends StatefulWidget {
+  bool drawerSelect;
+  final FirebaseUser user;
+  CustomBottomSheet(this.user);
+
+
   @override
   _CustomBottomSheetState createState() => _CustomBottomSheetState();
 }
@@ -417,20 +229,47 @@ class _CustomBottomSheetState extends State<CustomBottomSheet>
             return;
           }
         },
-        child: SheetContainer(),
+        child: SheetContainer(widget.user,controller.isCompleted),
       ),
     );
   }
 }
 
-class SheetContainer extends StatelessWidget {
+class SheetContainer extends StatefulWidget {
+  var stopTrigger = 1;
+  var unchanging;
+  var final_count=0;
+  bool selectedDrawer;
+  List<bool>bool_list_each_GridSell = [];
+  List<String> styleList = [];
+  var tf_copy = [];
+
+  final FirebaseUser user;
+  SheetContainer(this.user, this.selectedDrawer);
 
 
   @override
+  _SheetContainerState createState() => _SheetContainerState();
+}
+
+class _SheetContainerState extends State<SheetContainer>{
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.stopTrigger == 1) {
+      setState(() {
+        widget.unchanging =
+            Firestore.instance.collection("uploaded_product").snapshots();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    double sheetItemHeight = 110;
+    double sheetItemHeight = 640.0;
     return Container(
-      padding: EdgeInsets.only(top: 5),
+      padding: EdgeInsets.only(top: 1),
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -439,6 +278,19 @@ class SheetContainer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           drawerHandle(),
+          Padding(
+            padding: const EdgeInsets.only(top:20.0,bottom: 10.0),
+            child: Center(
+              child: Text(
+                widget.final_count==0?"고객님 취향의 옷을 골라주세요!!":"현재까지 ${widget.final_count}/10개 선택하셨습니다",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 22,
+                ),
+              ),
+            ),
+          ),
           Expanded(
             flex: 1,
             child: ListView(
@@ -455,37 +307,215 @@ class SheetContainer extends StatelessWidget {
 
   drawerHandle() {
     return Container(
-      margin: EdgeInsets.only(bottom: 25),
-      height: 3,
-      width: 65,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: Color(0xffd9dbdb)),
+      child:widget.selectedDrawer?Icon(Icons.keyboard_arrow_down,color: Colors.blue,size: 30,):Icon(Icons.keyboard_arrow_up,color: Colors.blue,size: 30,),
+      margin: EdgeInsets.only(top: 17),
     );
   }
 
-// streambuilder가 들어갈곳
   offerDetails(double sheetItemHeight) {
     return Container(
-      padding: EdgeInsets.only(top: 15, left: 20,right:20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "Offer Details",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
+        padding: EdgeInsets.only(top: 5, left: 1,right:1),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+
+            Container(
+              margin: EdgeInsets.only(top: 5),
+              height: sheetItemHeight,
+              // 여기에 스트림 빌더
+              child: _StreamBuilder()
+            )
+          ],
+        ),
+      );
+  }
+
+
+  Widget _StreamBuilder() {
+    return StreamBuilder <QuerySnapshot>(
+      stream: _commentStream(),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if(!snapshot.hasData){
+          return Center(child:  CircularProgressIndicator());
+        }
+        var items =  snapshot.data?.documents ??[];
+        var fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
+        var sF = items.where((doc)=> doc['style'] == "로맨틱").toList();
+        var tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
+        fF.addAll(sF);
+        fF.addAll(tF);
+        widget.tf_copy.addAll(fF);
+        if(widget.stopTrigger == 2 ){
+          fF.shuffle();
+          widget.unchanging = fF;
+        }
+        return Container(
+          margin: EdgeInsets.all(16),
+          child: StaggeredGridView.countBuilder(
+              crossAxisCount: 2,
+              mainAxisSpacing: 12.0,
+              crossAxisSpacing: 12.0,
+              itemCount: fF.length,
+              staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?1.2 : 1.8),
+              itemBuilder: (context,index) {
+                for(var i=0; i<fF.length; i++){
+                  widget.bool_list_each_GridSell.add(false);
+                }
+                return _buildListItem(context,widget.unchanging[index],index);
+              }
+          ),
+        );
+
+
+      },
+    );
+  }
+
+  Widget _buildListItem(context,document,index) {
+
+    return InkWell(
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            image: DecorationImage(
+              image : NetworkImage(document['thumbnail_img']),
+              fit : BoxFit.cover,
+            )
+        ),
+        child: widget.bool_list_each_GridSell[index]?Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+              color: Colors.black54,
+            ),   alignment: Alignment.center,
+
+            child:Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.all(Radius.circular(60))
+                ),
+                child:Icon(Icons.check,color: Colors.white,size: 30,)
+            )
+        ):Container(),
+      ),
+      onTap: (){
+        setState(() {
+          var count = 0;
+          var daily =0;
+          var casual =0;
+          var feminine =0;
+          widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
+
+          for(var i=0; i<widget.bool_list_each_GridSell.length; i++){
+            if(widget.bool_list_each_GridSell[i] == true){
+              count +=1;
+
+              if(count == 10) {
+                for(var i=0; i< widget.bool_list_each_GridSell.length; i++){
+                  if(widget.bool_list_each_GridSell[i] == true){
+                    widget.styleList.add(widget.tf_copy[i]["style"]);
+                  }
+                }
+              }
+            }
+          }
+          if(widget.styleList.length == 10){
+            for(var i =0; i< widget.styleList.length; i++){
+              if(widget.styleList[i] == "오피스룩"){
+                feminine +=1;
+              }else if(widget.styleList[i] == "로맨틱"){
+                casual +=1;
+              }
+              else{
+                daily += 1;
+              }
+            }
+            print("페미닌: ${feminine}, 데일리: ${daily}, 캐주얼: ${casual},");
+            var styleCodeTep = [feminine,casual,daily];
+//            var final_styleCode = [];
+            var final_styleCode;
+            styleCodeTep.sort();
+            print(styleCodeTep);
+
+            if(styleCodeTep[2] == feminine ){
+              if(styleCodeTep[1] == daily){
+                final_styleCode="FDC";
+              }else{
+                final_styleCode="FCD";
+              }
+
+            }else if(styleCodeTep[2] == daily ){
+              if(styleCodeTep[1] == feminine){
+                final_styleCode="DFC";
+              }else{
+                final_styleCode="DCF";
+              }
+            }else if(styleCodeTep[2] == casual){
+              if(styleCodeTep[1] == feminine){
+                final_styleCode="CFD";
+              }else{
+                final_styleCode="CDF";
+              }
+            }
+            print(final_styleCode);
+            _showMyDialog();
+            final _updateData = {
+              'userStyleCode': final_styleCode,
+            };
+
+            Firestore.instance
+                .collection('user_data')
+                .document(widget.user.email)
+                .setData(_updateData);
+
+          };
+          print("count: ${count}");
+          widget.final_count = count;
+          print("styleCode: ${widget.styleList}");
+        });
+      },
+    );
+  }
+
+  Stream<QuerySnapshot> _commentStream() {
+    widget.stopTrigger +=1;
+    if(widget.stopTrigger == 2 ){
+      return widget.unchanging;
+    }
+
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text("🎊 스타일 데이터 저장완료 🎊"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('${widget.user.displayName}님 반가워요💙'),
+                Text('쿠디에 오신걸 환영해요'),
+
+              ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 25),
-            height: sheetItemHeight,
-            // 여기에 스트림 빌더
-            child: Text("Text")
-          )
-        ],
-      ),
+          actions: <Widget>[
+            Center(
+              child: FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
