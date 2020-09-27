@@ -33,6 +33,7 @@ flutter:
   uses-material-design: true
   assets:
     -  assets/favorite_Analysis_page/illustration_FApage.png
+    -  assets/loading.gif
   fonts:
     - family: Kopup
       fonts:

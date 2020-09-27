@@ -5,9 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:coodyproj/bloc/state_bloc.dart';
 import 'package:coodyproj/bloc/state_provider.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
-import 'model/car.dart';
 
-var currentCar = carList.cars[0];
 
 class FavoriteAnalysisPage extends StatefulWidget {
   final FirebaseUser user;
@@ -288,7 +286,7 @@ class _SheetContainerState extends State<SheetContainer>{
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
-                  fontSize: 22,
+                  fontSize: 20,
                 ),
               ),
             ),
@@ -374,13 +372,12 @@ class _SheetContainerState extends State<SheetContainer>{
   }
 
   Widget _buildListItem(context,document,index) {
-
     return InkWell(
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(12)),
             image: DecorationImage(
-              image : NetworkImage(document['thumbnail_img']),
+              image : NetworkImage (document['thumbnail_img']),
               fit : BoxFit.cover,
             )
         ),
@@ -402,7 +399,6 @@ class _SheetContainerState extends State<SheetContainer>{
         ):Container(),
       ),
       onTap: (){
-        _showMyDialog();
         setState(() {
           var count = 0;
           var daily =0;
@@ -508,11 +504,10 @@ class _SheetContainerState extends State<SheetContainer>{
             '안녕하세요 ${widget.user.displayName}님 반가워요! \n 쿠디에 오신걸 환영합니다🎊',
             textAlign: TextAlign.center,
           ),
-          buttonOkColor: Colors.blue,
-          onlyOkButton: true,
-          onOkButtonPressed: () {
-            Navigator.of(context).pop();
-          },
+          buttonCancelColor: Colors.blue,
+          onlyCancelButton: true,
+          buttonCancelText: Text("OK",style: TextStyle(color: Colors.white),),
+
         ));
   }
 
