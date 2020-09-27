@@ -33,3 +33,13 @@ flutter:
   uses-material-design: true
   assets:
     -  assets/favorite_Analysis_page/illustration_FApage.png
+  fonts:
+    - family: Kopup
+      fonts:
+        - asset: assets/fonts/KoPubDotumLight.ttf
+          weight: 300
+        - asset: assets/fonts/KoPubDotumMedium.ttf
+
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-ExtraBold.ttf

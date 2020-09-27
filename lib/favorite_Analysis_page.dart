@@ -145,7 +145,7 @@ class CarDetails extends StatelessWidget {
           text: TextSpan(
               style: TextStyle(color: Colors.white, fontSize: 38),
               children: [
-                TextSpan(text: "고객님 취향에 맞는",style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700)),
+                TextSpan(text: "고객님 취향에 맞는",style: TextStyle(fontSize: 25)),
                 TextSpan(text: "\n"),
                 TextSpan(
                     text: "스타일을 탭해주세요!!",
@@ -215,7 +215,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet>
       left: 0,
       child: GestureDetector(
         onTap: () {
-          controller.isCompleted ? reverseAnimation() : forwardAnimation();
+          if(controller.isCompleted == false) {
+            forwardAnimation();
+          }
         },
         onVerticalDragEnd: (DragEndDetails dragEndDetails) {
           //upward drag
@@ -267,7 +269,7 @@ class _SheetContainerState extends State<SheetContainer>{
 
   @override
   Widget build(BuildContext context) {
-    double sheetItemHeight = 640.0;
+    double sheetItemHeight = 610.0;
     return Container(
       padding: EdgeInsets.only(top: 1),
       height: MediaQuery.of(context).size.height,
@@ -279,13 +281,13 @@ class _SheetContainerState extends State<SheetContainer>{
         children: <Widget>[
           drawerHandle(),
           Padding(
-            padding: const EdgeInsets.only(top:20.0,bottom: 10.0),
+            padding: const EdgeInsets.only(top:22.0,bottom: 10.0),
             child: Center(
               child: Text(
                 widget.final_count==0?"고객님 취향의 옷을 골라주세요!!":"현재까지 ${widget.final_count}/10개 선택하셨습니다",
                 style: TextStyle(
                   color: Colors.black,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   fontSize: 22,
                 ),
               ),
@@ -307,7 +309,7 @@ class _SheetContainerState extends State<SheetContainer>{
 
   drawerHandle() {
     return Container(
-      child:widget.selectedDrawer?Icon(Icons.keyboard_arrow_down,color: Colors.blue,size: 30,):Icon(Icons.keyboard_arrow_up,color: Colors.blue,size: 30,),
+      child:widget.selectedDrawer?Icon(Icons.brightness_1,color: Colors.blue,size: 8,):Icon(Icons.keyboard_arrow_up,color: Colors.blue,size: 30,),
       margin: EdgeInsets.only(top: 17),
     );
   }
@@ -494,12 +496,18 @@ class _SheetContainerState extends State<SheetContainer>{
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text("🎊 스타일 데이터 저장완료 🎊"),
+          title: Text("스타일 데이터 저장완료 👍", style: TextStyle(
+            fontWeight: FontWeight.w700, // light
+          ),),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('${widget.user.displayName}님 반가워요💙'),
-                Text('쿠디에 오신걸 환영해요'),
+                Text('안녕하세요 ${widget.user.displayName}님 반가워요!',style: TextStyle(
+                  fontSize: 15, // light
+                )),
+                Text('쿠디에 오신걸 환영합니다🎊🎊',style: TextStyle(
+                  fontSize: 15, // light
+                )),
 
               ],
             ),
