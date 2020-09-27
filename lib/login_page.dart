@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -72,34 +73,31 @@ class _LoginPageState extends State<LoginPage> {
     print("signed in " + user.displayName);
     return user;
   }
-
   Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text("확인해주세요 🙏"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('이미 가입이 되어있는 이메일입니다'),
-                Text('다른 SNS계정으로 시도해보세요'),
-              ],
-            ),
+    return  showDialog(
+        context: context,
+        builder: (_) => NetworkGiffyDialog(
+          image: Image.network(
+            "https://raw.githubusercontent.com/Shashank02051997/FancyGifDialog-Android/master/GIF's/gif14.gif",
+            fit: BoxFit.cover,
           ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+          entryAnimation: EntryAnimation.TOP_LEFT,
+          title: Text(
+            '확인해주세요',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 22.0, fontWeight: FontWeight.w700),
+          ),
+          description: Text(
+            '이미 가입이 되어있는 이메일입니다 \n 다른 SNS계정으로 시도해보세요',
+            textAlign: TextAlign.center,
+          ),
+          buttonOkColor: Colors.blue,
+          onlyOkButton: true,
+          onOkButtonPressed: () {
+            Navigator.of(context).pop();
+          },
+        ));
   }
+
 }

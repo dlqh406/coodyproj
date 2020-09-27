@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:coodyproj/bloc/state_bloc.dart';
 import 'package:coodyproj/bloc/state_provider.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'model/car.dart';
 
 var currentCar = carList.cars[0];
@@ -402,6 +402,7 @@ class _SheetContainerState extends State<SheetContainer>{
         ):Container(),
       ),
       onTap: (){
+        _showMyDialog();
         setState(() {
           var count = 0;
           var daily =0;
@@ -489,42 +490,31 @@ class _SheetContainerState extends State<SheetContainer>{
   }
 
   Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text("스타일 데이터 저장완료 👍", style: TextStyle(
-            fontWeight: FontWeight.w700, // light
-          ),),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('안녕하세요 ${widget.user.displayName}님 반가워요!',style: TextStyle(
-                  fontSize: 15, // light
-                )),
-                Text('쿠디에 오신걸 환영합니다🎊🎊',style: TextStyle(
-                  fontSize: 15, // light
-                )),
-
-              ],
-            ),
+    return  showDialog(
+        context: context,
+        builder: (_) => NetworkGiffyDialog(
+          image: Image.network(
+            "https://raw.githubusercontent.com/Shashank02051997/FancyGifDialog-Android/master/GIF's/gif14.gif",
+            fit: BoxFit.cover,
           ),
-          actions: <Widget>[
-            Center(
-              child: FlatButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-          ],
-        );
-      },
-    );
+          entryAnimation: EntryAnimation.TOP_LEFT,
+          title: Text(
+            '스타일 데이터 저장완료',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 22.0, fontWeight: FontWeight.w700),
+          ),
+          description: Text(
+            '안녕하세요 ${widget.user.displayName}님 반가워요! \n 쿠디에 오신걸 환영합니다🎊',
+            textAlign: TextAlign.center,
+          ),
+          buttonOkColor: Colors.blue,
+          onlyOkButton: true,
+          onOkButtonPressed: () {
+            Navigator.of(context).pop();
+          },
+        ));
   }
+
 }
 
