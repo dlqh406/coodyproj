@@ -21,6 +21,7 @@ class Favorite extends StatefulWidget {
 
 class _FavoriteState extends State<Favorite> {
 
+  // 여기서
   @override
   void initState() {
     super.initState();
@@ -55,7 +56,30 @@ class _FavoriteState extends State<Favorite> {
                            padding: const EdgeInsets.only(top:3.0),
                            child: Image.asset('assets/icons/bar.png'),
                          ),
-                         Center(child: Text("aaa"))
+                         Center(
+                           child: Row(
+                           children: <Widget>[
+                             SizedBox(
+                               width: 20.0,
+                               height: 100.0,
+                             ),
+                             Icon(Icons.search,color:Colors.black),
+                             SizedBox(
+                               width: 10.0,
+                               height: 100.0,
+                             ),
+                             RotateAnimatedTextKit(
+                               onTap: () {
+                                 print("Tap Event");
+                               },
+                               isRepeatingAnimation: true,
+                               totalRepeatCount: 300,
+                               text: ["두번보는 쿠디사용설명서", "카디건 활용,잘입는 방법", "Hello World"],
+                               // alignment: Alignment(1.0, 0.5),
+                               textStyle: TextStyle(fontSize: 15.0,color: Colors.white),
+                             ),
+                           ],
+                         ),)
                        ],
                         ),),
                   InkWell(
