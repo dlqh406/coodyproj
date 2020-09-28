@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'detail_product.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Favorite extends StatefulWidget {
   var stopTrigger = 1;
@@ -38,16 +39,34 @@ class _FavoriteState extends State<Favorite> {
            child:AppBar(
                 backgroundColor: Colors.white,
                 elevation: 0,
-                title: Center(child: Image.asset('assets/loading.gif',width: 100, fit: BoxFit.cover)),
+//                Center(child: Image.asset('assets/loading.gif',width: 100, fit: BoxFit.cover)),
+                title: Center(child: SizedBox(width: 100, height: 8,),),
                 leading: IconButton(icon : Icon(Icons.arrow_back_ios,color:Colors.black),
                   onPressed: (){
                     Navigator.of(context).pop();
                 },),
                 actions: <Widget>[
                   new Container(
-                    width: 20,
-                    child: Image.asset('assets/icons/filter.png'),),
-                  new IconButton( icon: new Icon(Icons.more_vert,size: 28,), onPressed: () => {}, ),],
+                    margin: EdgeInsets.only(right: 13),
+                    width: 240,
+                    child: Stack(
+                       children: [
+                         Padding(
+                           padding: const EdgeInsets.only(top:3.0),
+                           child: Image.asset('assets/icons/bar.png'),
+                         ),
+                         Center(child: Text("aaa"))
+                       ],
+                        ),),
+                  InkWell(
+                    child: new Container(
+                      width: 20,
+                      child: Image.asset('assets/icons/filter.png'),)
+                    ,onTap: () => {print("click")},
+                  ),
+                  new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
+                      onPressed: () => {}),
+                ],
 
             )
         ),
