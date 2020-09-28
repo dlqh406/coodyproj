@@ -44,6 +44,9 @@ class _FavoriteState extends State<Favorite> {
                     Navigator.of(context).pop();
                 },),
                 actions: <Widget>[
+                  new Container(
+                    width: 20,
+                    child: Image.asset('assets/icons/filter.png'),),
                   new IconButton( icon: new Icon(Icons.more_vert,size: 28,), onPressed: () => {}, ),],
 
             )
@@ -51,7 +54,7 @@ class _FavoriteState extends State<Favorite> {
         body: _bodyBuilder(),
         floatingActionButton: FloatingActionButton(
          backgroundColor: Colors.blue,
-         child: Image.asset('assets/cart.png',width: 34),
+         child: Image.asset('assets/icons/cart.png',width: 34),
           onPressed: (){
            // cart page
           },
