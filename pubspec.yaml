@@ -34,6 +34,9 @@ flutter:
   assets:
     -  assets/favorite_Analysis_page/illustration_FApage.png
     -  assets/loading.gif
+    -  assets/blue.png
+    -  assets/cart.png
+    -  assets/menu.png
   fonts:
     - family: Kopup
       fonts:

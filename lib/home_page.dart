@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'favorite_Analysis_page.dart';
+import 'favorite_analysis_page.dart';
 import 'loading_page.dart';
-import 'detail_home_page.dart';
+import 'favorite.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
             child: Text("Customized PIC"),
             onPressed: () {
               Navigator.push(context,
-                MaterialPageRoute(builder: (context) => HomeScreen(widget.user)));
+                MaterialPageRoute(builder: (context) => Favorite(widget.user)));
           },
           )
         ],

@@ -17,6 +17,10 @@ class ProductDetail extends StatelessWidget {
         children: [
           Row(
             children: [
+              IconButton(icon : Icon(Icons.arrow_back_ios,color:Colors.black),
+              onPressed: (){
+                Navigator.of(context).pop();
+              },),
               Expanded(child: Column(),),
               Container(
                 height: size.height *0.8,

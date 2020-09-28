@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coodyproj/product_detail.dart';
+import 'package:coodyproj/detail_product.dart';
 
 class gridViewOfCustomizedView extends StatefulWidget {
   var stopTrigger = 1;
@@ -57,7 +57,9 @@ class _gridViewOfCustomizedViewState extends State<gridViewOfCustomizedView> {
             ],
           ),
         ),
-        _bodyBuilder()
+         Container(
+             height: 700,
+             child: _bodyBuilder())
       ],
     );
   }

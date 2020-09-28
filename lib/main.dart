@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'root_page.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,9 +10,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.white));
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Coody',
       theme: ThemeData(
         fontFamily: 'Kopup',
         primarySwatch: Colors.blue,
