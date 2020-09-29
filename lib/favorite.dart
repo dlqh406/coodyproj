@@ -20,8 +20,13 @@ class Favorite extends StatefulWidget {
 }
 
 class _FavoriteState extends State<Favorite> {
+  Map<String, bool> values = {
+    '브라우스': false,
+    '원피스': false,
+    '바지' : false,
+  };
 
-  // 여기서
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +59,6 @@ class _FavoriteState extends State<Favorite> {
                     child: Stack(
                       children: [
                         Padding(
-
                           padding: const EdgeInsets.only(top:1.5,right: 10,left: 5),
                           child: GestureDetector(
                             onTap: (){print("Tap GTD");},
@@ -89,8 +93,10 @@ class _FavoriteState extends State<Favorite> {
                   InkWell(
                     child: new Container(
                       width: 20,
-                      child: Image.asset('assets/icons/filter.png'),)
-                    ,onTap: () => {print("click")},
+                      child: Image.asset('assets/icons/filter.png'),),
+                      onTap: () => {
+//                      _categoryFilterAlert()
+                      },
                   ),
                   new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
                       onPressed: () => {}),
@@ -123,7 +129,7 @@ class _FavoriteState extends State<Favorite> {
       child: Container(
         height: 760,
         child: StreamBuilder <QuerySnapshot>(
-          stream: _commentStream(),
+          stream: _productStream(),
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if(!snapshot.hasData){
               return Center(child:  CircularProgressIndicator());
@@ -178,12 +184,12 @@ class _FavoriteState extends State<Favorite> {
 
   }
 
-  Stream<QuerySnapshot> _commentStream() {
+  Stream<QuerySnapshot> _productStream() {
     widget.stopTrigger +=1;
+    print(widget.stopTrigger);
     if(widget.stopTrigger == 2 ){
       return widget.unchanging;
     }
   }
-
 
 }
