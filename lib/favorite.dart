@@ -38,50 +38,54 @@ class _FavoriteState extends State<Favorite> {
       child: Scaffold(
         appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
            child:AppBar(
+               titleSpacing: 6.0,
                 backgroundColor: Colors.white,
                 elevation: 0,
-//                Center(child: Image.asset('assets/loading.gif',width: 100, fit: BoxFit.cover)),
-                title: Center(child: SizedBox(width: 100, height: 8,),),
-                leading: IconButton(icon : Icon(Icons.arrow_back_ios,color:Colors.black),
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                },),
-                actions: <Widget>[
-                  new Container(
-                    margin: EdgeInsets.only(right: 13),
-                    width: 240,
+                leading: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Container(
+                    child: GestureDetector(
+                        child: Image.asset('assets/logo/blacklogo.png'),
+                        onTap: (){Navigator.of(context).pop();}),
+                  ),
+                ),
+                title: Container(
+                  child: Container(
                     child: Stack(
-                       children: [
-                         Padding(
-                           padding: const EdgeInsets.only(top:3.0),
-                           child: Image.asset('assets/icons/bar.png'),
-                         ),
-                         Center(
-                           child: Row(
-                           children: <Widget>[
-                             SizedBox(
-                               width: 20.0,
-                               height: 100.0,
-                             ),
-                             Icon(Icons.search,color:Colors.black),
-                             SizedBox(
-                               width: 10.0,
-                               height: 100.0,
-                             ),
-                             RotateAnimatedTextKit(
-                               onTap: () {
-                                 print("Tap Event");
-                               },
-                               isRepeatingAnimation: true,
-                               totalRepeatCount: 300,
-                               text: ["두번보는 쿠디사용설명서", "카디건 활용,잘입는 방법", "Hello World"],
-                               // alignment: Alignment(1.0, 0.5),
-                               textStyle: TextStyle(fontSize: 15.0,color: Colors.white),
-                             ),
-                           ],
-                         ),)
-                       ],
-                        ),),
+                      children: [
+                        Padding(
+
+                          padding: const EdgeInsets.only(top:1.5,right: 10,left: 5),
+                          child: GestureDetector(
+                            onTap: (){print("Tap GTD");},
+                            child: Image.asset('assets/icons/bar.png',height: 40,),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left:11.0),
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(left:27.0),
+                                child: RotateAnimatedTextKit(
+                                  onTap: () {
+                                    // 위 GestureDetector 랑 똑같이 구현 해야함
+                                    print("Tap Event");
+                                  },
+                                  isRepeatingAnimation: true,
+                                  totalRepeatCount: 10000,
+                                  text: ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"],
+                                  // alignment: Alignment(1.0, 0.5),
+                                  textStyle: TextStyle(fontSize: 13.0,color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),),
+                ),
+                actions: <Widget>[
                   InkWell(
                     child: new Container(
                       width: 20,
