@@ -27,7 +27,7 @@ class _TestPageState extends State<TestPage> {
 
   }
   Map<String, bool> cityList = {
-    'tkddml ': false, 'Bangalore': false, 'Hyderabad': false, 'Chennai': false,
+    '브라우스 ': false, '원피스': false, '바지': false, 'Chennai': false,
     'Delhi': false, 'Surat': false, 'Junagadh': false,
     'Porbander': false, 'Rajkot': false, 'Pune': false,
   };
