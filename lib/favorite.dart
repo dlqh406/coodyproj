@@ -88,7 +88,7 @@ class _FavoriteState extends State<Favorite> {
                 actions: <Widget>[
                   InkWell(
                     child: new Container(
-                      width: 20,
+                      width: 25,
                       child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/filter.png') ),
                       onTap: () => {
                       _categoryFilterAlert()
@@ -96,9 +96,6 @@ class _FavoriteState extends State<Favorite> {
                   ),
                   new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
                       onPressed: () => {
-                  setState((){
-                    widget.filter = true;
-                  })
                       }),
                 ],
 
