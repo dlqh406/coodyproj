@@ -7,7 +7,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Favorite extends StatefulWidget {
   var stopTrigger = 1;
-  var unchanging ;
   List<bool>bool_list_each_GridSell =[];
   List<String> styleList = [];
   var tf_copy = [];
@@ -42,11 +41,11 @@ class _FavoriteState extends State<Favorite> {
   @override
   void initState() {
     super.initState();
-    if(widget.stopTrigger == 1){
-      setState(() {
-        widget.unchanging = Firestore.instance.collection("uploaded_product").snapshots();
-      });
-    }
+//    if(widget.stopTrigger == 1){
+//      setState(() {
+//        widget.unchanging = Firestore.instance.collection("uploaded_product").snapshots();
+//      });
+//    }
   }
 
   @override
@@ -142,7 +141,6 @@ class _FavoriteState extends State<Favorite> {
   Widget _gridBuilder() {
     return Expanded(
       child: Container(
-        height: 760,
         child: StreamBuilder <QuerySnapshot>(
           stream: _productStream(),
           builder: (BuildContext context, AsyncSnapshot snapshot){
@@ -154,6 +152,7 @@ class _FavoriteState extends State<Favorite> {
             var sF;
             var tF;
             print("pass");
+
             if(widget.filter == false){
               items =  snapshot.data?.documents ??[];
               fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
@@ -161,22 +160,11 @@ class _FavoriteState extends State<Favorite> {
               tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
               fF.addAll(sF);
               fF.addAll(tF);
-              widget.tf_copy.addAll(fF);
-              if(widget.stopTrigger == 2 ){
-                fF.shuffle();
-                widget.unchanging = fF;
-              }
+              fF.shuffle();
             }
             else if(widget.filter == true){
               items =  snapshot.data?.documents ??[];
-              fF = items.where((doc)=> doc['category'] == "자켓").toList();
-//              tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
-//              fF.addAll(tF);
-//              widget.tf_copy.addAll(fF);
-//              if(widget.stopTrigger == 2 ){
-//                fF.shuffle();
-//                widget.unchanging = fF;
-//              }
+              fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
             }
             return StaggeredGridView.countBuilder(
                 crossAxisCount: 3,
@@ -185,10 +173,7 @@ class _FavoriteState extends State<Favorite> {
                 itemCount: fF.length,
                 staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?1.2 : 1.8),
                 itemBuilder: (BuildContext context, int index) {
-                  for(var i=0; i<fF.length; i++){
-                    widget.bool_list_each_GridSell.add(false);
-                  }
-                  return _buildListItem(context,widget.unchanging[index]);
+                  return _buildListItem(context,fF[index]);
                 }
             );
 
@@ -220,9 +205,7 @@ class _FavoriteState extends State<Favorite> {
   Stream<QuerySnapshot> _productStream() {
     widget.stopTrigger +=1;
     print("stopTrigger : ${widget.stopTrigger} from _productStream"   );
-    if(widget.stopTrigger == 2 ){
-      return widget.unchanging;
-    }
+    return Firestore.instance.collection("uploaded_product").snapshots();
   }
 
   Map<String, bool> top = {
