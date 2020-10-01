@@ -6,10 +6,7 @@ import 'detail_product.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Favorite extends StatefulWidget {
-  var stopTrigger = 1;
-  List<bool>bool_list_each_GridSell =[];
-  List<String> styleList = [];
-  var tf_copy = [];
+
   bool filter = false;
 
   bool top_downbtn = false;
@@ -31,21 +28,10 @@ class Favorite extends StatefulWidget {
 }
 
 class _FavoriteState extends State<Favorite> {
-  Map<String, bool> values = {
-    '브라우스': false,
-    '원피스': false,
-    '바지' : false,
-  };
-
 
   @override
   void initState() {
     super.initState();
-//    if(widget.stopTrigger == 1){
-//      setState(() {
-//        widget.unchanging = Firestore.instance.collection("uploaded_product").snapshots();
-//      });
-//    }
   }
 
   @override
@@ -151,7 +137,7 @@ class _FavoriteState extends State<Favorite> {
             var fF;
             var sF;
             var tF;
-            print("pass");
+            print("passed");
 
             if(widget.filter == false){
               items =  snapshot.data?.documents ??[];
@@ -203,8 +189,6 @@ class _FavoriteState extends State<Favorite> {
   }
 
   Stream<QuerySnapshot> _productStream() {
-    widget.stopTrigger +=1;
-    print("stopTrigger : ${widget.stopTrigger} from _productStream"   );
     return Firestore.instance.collection("uploaded_product").snapshots();
   }
 
@@ -609,11 +593,7 @@ class _FavoriteState extends State<Favorite> {
                   FlatButton(
                     onPressed: () {
                       Navigator.pop(context,null);
-                     setState((){
-                       widget.stopTrigger=99;
-                       widget.filter = true;
-                       _productStream();
-                     });
+                      _getDelayForFilter();
                     },
                     child: Text('완료'),
                   ),
@@ -623,6 +603,14 @@ class _FavoriteState extends State<Favorite> {
           );
         });
   }
-
+  Future _getDelayForFilter() {
+    return Future.delayed(Duration(milliseconds: 1))
+        .then((onValue) =>
+        setState((){
+        widget.filter = true;
+        _gridBuilder();
+         })
+    );
+  }
 }
 
