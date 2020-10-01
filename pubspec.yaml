@@ -39,8 +39,10 @@ flutter:
     -  assets/icons/menu.png
     -  assets/icons/filter.png
     -  assets/icons/bar.png
+    -  assets/icons/active_filter.png
     -  assets/logo/blue.png
     -  assets/logo/blacklogo.png
+
   fonts:
     - family: Kopup
       fonts:
