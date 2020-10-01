@@ -35,7 +35,6 @@ flutter:
   uses-material-design: true
   assets:
     -  assets/favorite_Analysis_page/illustration_FApage.png
-    -  assets/loading.gif
     -  assets/icons/cart.png
     -  assets/icons/menu.png
     -  assets/icons/filter.png
