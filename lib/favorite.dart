@@ -8,7 +8,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 class Favorite extends StatefulWidget {
 
   bool filter = false;
-
+  bool VisibiltyTriger=false;
   bool top_downbtn = false;
   bool bottom_downbtn = false;
   bool dress_downbtn = false;
@@ -149,8 +149,16 @@ class _FavoriteState extends State<Favorite> {
               fF.shuffle();
             }
             else if(widget.filter == true){
-              items =  snapshot.data?.documents ??[];
-              fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
+              items =  snapshot.data?.documents??[];
+              for(var i=0; i<widget.selectedCategoryList.length; i++){
+                if(i==0){
+                  fF=items.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
+                }else{
+                  fF.addAll(items.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList());
+                }
+
+              }
+              fF.shuffle();
             }
             return StaggeredGridView.countBuilder(
                 crossAxisCount: 3,
@@ -218,6 +226,43 @@ class _FavoriteState extends State<Favorite> {
     '트레이닝': false, '레깅스': false, '탑': false,
   };
 
+  _reset(){
+    widget.filter = false;
+    widget.VisibiltyTriger=false;
+    widget.top_downbtn = false;
+    widget.bottom_downbtn = false;
+    widget.dress_downbtn = false;
+    widget.beachWear_downbtn = false;
+    widget.outer_downbtn = false;
+    widget.innerWear_downbtn = false;
+    widget.fitnessWear_downbtn = false;
+    top = {
+      '니트': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
+      '브라우스': false, '셔츠': false,'반팔': false,
+      '민소매': false,
+    };
+     bottom = {
+      '롱&미디 스커트': false, '숏 스커트': false, '데님': false, '슬랙스': false,
+      '팬츠': false,
+    };
+     outer = {
+      '코트': false, '패딩': false, '자켓': false, '퍼 자켓': false,
+      '래더': false,
+    };
+     dress = {
+      '롱&미디': false, '숏': false
+    };
+     beachWear = {
+      '비키니': false, '모노키니': false, '로브': false,
+    };
+     innerWear = {
+      '파운데이션': false, '란제리': false,
+    };
+     fitnessWear = {
+      '트레이닝': false, '레깅스': false, '탑': false,
+    };
+  }
+
   Future<Map<String, bool>> _categoryFilterAlert() async {
 
 
@@ -227,7 +272,14 @@ class _FavoriteState extends State<Favorite> {
           return StatefulBuilder(
             builder: (context, setState) {
               return AlertDialog(
-                title: Text('필터 적용'),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('필터 적용',style:TextStyle(fontWeight:FontWeight.w700),),
+                    Text("${widget.selectedCategoryList.length}개 선택됨",style:TextStyle(fontWeight:FontWeight.w300))
+                  ],
+                ),
                 content: SingleChildScrollView(
                   child: Container(
                     width: double.minPositive,
@@ -580,15 +632,25 @@ class _FavoriteState extends State<Favorite> {
                   ),
                 ),
                 actions: <Widget>[
-                  Text("${widget.selectedCategoryList.length}개 선택됨"),
+                  Visibility(
+                    visible: widget.VisibiltyTriger?true:false,
+                    child: FlatButton(
+                      onPressed: () {
+                        _getDelayForReset();
+                        Navigator.pop(context, null);
+                      },
+                      child:Text('필터 해제'),
+                    ),
+                  ),
                   FlatButton(
                     onPressed: () {
-                      setState(() {
+                      setState((){
+                        _reset();
                         widget.selectedCategoryList=[];
                       });
                       Navigator.pop(context, null);
                     },
-                    child: Text('취소'),
+                    child:Text('취소'),
                   ),
                   FlatButton(
                     onPressed: () {
@@ -607,9 +669,20 @@ class _FavoriteState extends State<Favorite> {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
+        widget.VisibiltyTriger = true;
         widget.filter = true;
         _gridBuilder();
          })
+    );
+  }
+  Future _getDelayForReset() {
+    return Future.delayed(Duration(milliseconds: 1))
+        .then((onValue) =>
+        setState((){
+          widget.selectedCategoryList=[];
+          widget.filter = false;
+          _reset();
+        })
     );
   }
 }
