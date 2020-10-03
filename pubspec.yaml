@@ -40,8 +40,12 @@ flutter:
     -  assets/icons/filter.png
     -  assets/icons/bar.png
     -  assets/icons/active_filter.png
+    -  assets/icons/fast-delivery.png
+    -  assets/icons/free-shipping.png
+    -  assets/icons/medal.png
     -  assets/logo/blue.png
     -  assets/logo/blacklogo.png
+    -  assets/icons/
 
   fonts:
     - family: Kopup

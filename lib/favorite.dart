@@ -177,18 +177,23 @@ class _FavoriteState extends State<Favorite> {
 
   Widget _buildListItem(context, document) {
     return
-      InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-              return ProductDetail(widget.user, document);
-            }));
-          },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-                document['thumbnail_img'],
-                fit : BoxFit.cover),
-          )
+      Hero(
+        tag: document['thumbnail_img'],
+        child: Material(
+          child: InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return ProductDetail(widget.user, document);
+                }));
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                    document['thumbnail_img'],
+                    fit : BoxFit.cover),
+              )
+          ),
+        ),
       );
 
   }
