@@ -16,7 +16,7 @@ class ProductDetail extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-  return Column(
+  return ListView(
     children: [
       _buildfirstBody(context),
       _buildSecondBody(context)
@@ -36,7 +36,7 @@ class ProductDetail extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical:6),
                     child: Padding(
-                      padding: const EdgeInsets.only(top : 30.0),
+                      padding: const EdgeInsets.only(top : 10.0),
                       child: Column(
                         // -  당일배송가능 여부// - 우수판매자 // 0핀매자 썸내일 // 소재 // 카테고리종류//- 무료배송
                         children: [
@@ -149,9 +149,16 @@ class ProductDetail extends StatelessWidget {
         ],
       );
  }
+ //https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/data%2F4d30c8d845b4575d7333f2a65e76c232.png?alt=media&token=88bec133-210f-4f9b-a8bf-0e13598c4d9a
 
   Widget _buildSecondBody(BuildContext context) {
-    return Text("this is Second Page");
+    return Scrollbar(
+      child: Column(
+        children: [
+          Image.network(document['detail_img']),
+        ],
+           ),
+    );
   }
 
 
