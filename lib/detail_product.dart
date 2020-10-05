@@ -12,24 +12,100 @@ class ProductDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(context));
+      body: _buildBody(context),
+      floatingActionButtonLocation:
+        FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(top:16.0,left: 17,right: 17),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                  decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular((29))),
+                  boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 7,
+                        offset: Offset(0, 5), // changes position of shadow
+                      ),
+                    ],
+                    gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [Colors.lightBlueAccent, Colors.blueAccent])
+                      ),
+              width: 270.0,
+              height: 50.0,
+              child: new RawMaterialButton(
+                shape: new CircleBorder(),
+                elevation: 0.0,
+                child: Text("구매하기",style: TextStyle(fontWeight: FontWeight.w900,fontSize: 20,color: Colors.white),),
+                onPressed: (){},
+              )),
+
+              Container(
+                height: 50,
+                child: FloatingActionButton(
+                  onPressed: () {},
+                  child: Image.asset('assets/icons/cart_blue.png',width: 30,),
+                ),
+              )
+            ],
+          ),
+        )
+
+    );
   }
 
   Widget _buildBody(BuildContext context) {
   return ListView(
     children: [
+      _buildProdInfoBody(context),
       _buildfirstBody(context),
-      _buildSecondBody(context)
     ],
   );
   }
- Widget _buildfirstBody(context) {
+
+  Widget _buildProdInfoBody(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top:15,right: 20,left: 20,bottom:20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(document['category'],style: TextStyle(fontWeight: FontWeight.bold),),
+              Container(
+                  width: 220,
+                  child: Text(document['productName'],style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)))
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top:12.0),
+            child: Row(
+              children: [
+                Text('₩ '),
+                Text('39,000',style: TextStyle(fontWeight: FontWeight.w500,fontStyle:  FontStyle.italic,fontSize: 20)),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildfirstBody(context) {
    Size size = MediaQuery.of(context).size;
     return Column(
         children: [
           SizedBox(
             height: size.height *0.8,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width:93,
@@ -120,27 +196,30 @@ class ProductDetail extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(child: Column(),),
-                Hero(
-                  tag: document['thumbnail_img'],
-                  child: Container(
-                      height: size.height *0.8,
-                      width: size.width *0.75,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(63),
-                              bottomLeft: Radius.circular(63)
-                          ),
-                          boxShadow: [BoxShadow(
-                              offset:  Offset(0,10),
-                              blurRadius: 60,
-                              color: Colors.black38
-                          )],
-                          image: DecorationImage(
-                              alignment: Alignment.centerLeft,
-                              fit: BoxFit.cover,
-                              image: NetworkImage(document['thumbnail_img'])
-                          ))
+
+                Expanded(
+                  child: Hero(
+                    tag: document['thumbnail_img'],
+                    child:
+                    Container(
+                        height: size.height *0.7,
+                        width: size.width *0.75,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(63),
+                                bottomLeft: Radius.circular(63)
+                            ),
+                            boxShadow: [BoxShadow(
+                                offset:  Offset(0,10),
+                                blurRadius: 60,
+                                color: Colors.black38
+                            )],
+                            image: DecorationImage(
+                                alignment: Alignment.centerLeft,
+                                fit: BoxFit.cover,
+                                image: NetworkImage(document['thumbnail_img'])
+                            ))
+                    ),
                   ),
                 )
               ],
@@ -149,17 +228,6 @@ class ProductDetail extends StatelessWidget {
         ],
       );
  }
- //https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/data%2F4d30c8d845b4575d7333f2a65e76c232.png?alt=media&token=88bec133-210f-4f9b-a8bf-0e13598c4d9a
-
-  Widget _buildSecondBody(BuildContext context) {
-    return Scrollbar(
-      child: Column(
-        children: [
-          Image.network(document['detail_img']),
-        ],
-           ),
-    );
-  }
 
 
 
