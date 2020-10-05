@@ -11,12 +11,13 @@ class ProductDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: _buildBody(context),
       floatingActionButtonLocation:
         FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Padding(
-          padding: const EdgeInsets.only(top:16.0,left: 17,right: 17),
+          padding: const EdgeInsets.only(bottom: 15,left: 17,right: 17),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -37,8 +38,8 @@ class ProductDetail extends StatelessWidget {
                         end: Alignment.bottomLeft,
                         colors: [Colors.lightBlueAccent, Colors.blueAccent])
                       ),
-              width: 270.0,
-              height: 50.0,
+              width: size.width*0.73,
+              height: 60.0,
               child: new RawMaterialButton(
                 shape: new CircleBorder(),
                 elevation: 0.0,
@@ -47,7 +48,7 @@ class ProductDetail extends StatelessWidget {
               )),
 
               Container(
-                height: 50,
+                height: 60,
                 child: FloatingActionButton(
                   onPressed: () {},
                   child: Image.asset('assets/icons/cart_blue.png',width: 30,),
@@ -202,7 +203,7 @@ class ProductDetail extends StatelessWidget {
                     tag: document['thumbnail_img'],
                     child:
                     Container(
-                        height: size.height *0.7,
+                        height: size.height *0.70,
                         width: size.width *0.75,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
