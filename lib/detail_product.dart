@@ -238,8 +238,9 @@ class ProductDetail extends StatelessWidget {
       stream:Firestore.instance.collection('uploaded_product').document(document.documentID).collection('review').snapshots(),
       builder: (context, snapshot){
         if(snapshot.hasData){
-          return _buildHasReview(context);
+          return _buildHasReview(context,snapshot.data.documents.length);
         }else{
+          print("here");
           return _buildNoReview();
         }
       },
@@ -262,7 +263,7 @@ class ProductDetail extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("아직 후기가 없습니다",style: TextStyle(fontSize: 38,color: Colors.grey),),
+                Text("아직 후기가 없습니다",style: TextStyle(fontSize: 13,color: Colors.grey)),
               ],
             ),
           ),
@@ -271,12 +272,12 @@ class ProductDetail extends StatelessWidget {
     );
   }
 
-  Widget _buildHasReview(context) {
+  Widget _buildHasReview(context, length) {
     Size size = MediaQuery.of(context).size;
-    var commentCount = document['reviewCount']??0;
+    var reviewCount = length;
 
     return Padding(
-      padding: const EdgeInsets.only(top:30.0,right: 10.0,left: 10.0),
+      padding: const EdgeInsets.only(top:30.0,right: 10.0,left: 10.0,bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -296,18 +297,18 @@ class ProductDetail extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right:8.0,left:20),
-                  child:commentCount>0
+                  child:reviewCount>0
                     ?Text("4.7",style: TextStyle(fontSize: 38))
                       :Text("아직 후기가 없습니다",style: TextStyle(fontSize: 13,color: Colors.grey)),
                     ),
-                if(commentCount>0)
+                if(reviewCount>0)
                  Padding(
                   padding: const EdgeInsets.only(left:4.0),
                   child: Column(
                     // ignore: sdk_version_ui_as_code, sdk_version_ui_as_code
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('총 ${commentCount}개 리뷰'),
+                      Text('총 ${reviewCount}개 리뷰'),
                       Image.asset('assets/star/star1.png',width: 110,)
                     ],
                   ),
@@ -316,95 +317,102 @@ class ProductDetail extends StatelessWidget {
             ),
           ),
 
-          Scrollbar(
-            child: Container(
-              height: 280,
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: _commentStream(),
-                  builder: (context, snapshot){
-                    if(!snapshot.hasData){
-                      return Center(
-                        child:  CircularProgressIndicator(),
+          Visibility(
+            visible: reviewCount>0?true:false,
+            child: Scrollbar(
+              child: Container(
+                height: 280,
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: _commentStream(),
+                    builder: (context, snapshot){
+                      if(!snapshot.hasData){
+                        return Center(
+                          child:  CircularProgressIndicator(),
+                        );
+                      }
+                      return ListView(
+                        children: snapshot.data.documents.map((doc) {
+                          return ListTile(
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(doc['writer'],style: TextStyle(fontWeight: FontWeight.bold),),
+                                Padding(
+                                  padding: const EdgeInsets.only(top:4.0),
+                                  child: Row(
+                                    children: [
+                                      Image.asset('assets/star/star1.png',width: 75),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left:5.0),
+                                        child: Text(_timeStampToString(doc['date']),style: TextStyle(fontSize: 12),),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top:8.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+
+                                      doc['img']==null?Visibility(visible: false,child: Text(""),):Padding(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: Container(
+                                            width:60,
+                                            height:60,
+                                            child: Image.network(doc['img'],fit: BoxFit.cover,)),
+                                      ),
+                                      SizedBox(
+                                           width: doc['img']==null?size.width*0.77:size.width*0.58,
+                                           height: 60,
+                                           child: Text(doc['review'],
+                                             maxLines: 4,
+                                             overflow: TextOverflow.ellipsis,
+                                           softWrap: false,)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle:Opacity(
+                              opacity: 0.3,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top:10.0,bottom: 5.0),
+                                child: Container(
+                                  width: size.width*0.8,
+                                  height: 1,
+                                  color: Colors.black38,
+                                ),
+                              ),
+                            ),
+                            trailing: Padding(
+                              padding: const EdgeInsets.only(top:40),
+                              child: Container(
+                                  child:Icon(Icons.arrow_forward_ios,size: 10,)
+                              ),
+                            ) ,
+                            dense: true,
+                          );
+                        }).toList(),
                       );
                     }
-                    return ListView(
-                      children: snapshot.data.documents.map((doc) {
-                        return ListTile(
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(doc['writer'],style: TextStyle(fontWeight: FontWeight.bold),),
-                              Padding(
-                                padding: const EdgeInsets.only(top:4.0),
-                                child: Row(
-                                  children: [
-                                    Image.asset('assets/star/star1.png',width: 75),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left:5.0),
-                                      child: Text(_timeStampToString(doc['date']),style: TextStyle(fontSize: 12),),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top:8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-
-                                    doc['img']==null?Visibility(visible: false,child: Text(""),):Padding(
-                                      padding: const EdgeInsets.only(right: 10),
-                                      child: Container(
-                                          width:60,
-                                          height:60,
-                                          child: Image.network(doc['img'],fit: BoxFit.cover,)),
-                                    ),
-                                    SizedBox(
-                                         width: doc['img']==null?size.width*0.77:size.width*0.58,
-                                         height: 60,
-                                         child: Text(doc['review'],
-                                           maxLines: 4,
-                                           overflow: TextOverflow.ellipsis,
-                                         softWrap: false,)),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          subtitle:Opacity(
-                            opacity: 0.3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top:10.0,bottom: 5.0),
-                              child: Container(
-                                width: size.width*0.8,
-                                height: 1,
-                                color: Colors.black38,
-                              ),
-                            ),
-                          ),
-                          trailing: Padding(
-                            padding: const EdgeInsets.only(top:40),
-                            child: Container(
-                                child:Icon(Icons.arrow_forward_ios,size: 10,)
-                            ),
-                          ) ,
-                          dense: true,
-                        );
-                      }).toList(),
-                    );
-                  }
-                  ),
+                    ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left:15,right:15),
-            child: SizedBox(
-              width: size.width*1,
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),
-                color: Colors.lightBlue,
-                onPressed: () {},
-                child: const Text('후기 전체 보기', style: TextStyle(color: Colors.white,fontSize: 13)),
+          Visibility(
+            visible: reviewCount>0?true:false,
+            child: Padding(
+              padding: const EdgeInsets.only(top:10,left:15,right:15),
+              child: SizedBox(
+                width: size.width*1,
+                child: RaisedButton(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),
+                  color: Colors.blueAccent,
+                  onPressed: () {},
+                  child: const Text('후기 전체 보기', style: TextStyle(color: Colors.white,fontSize: 13)),
+                ),
               ),
             ),
           ),
