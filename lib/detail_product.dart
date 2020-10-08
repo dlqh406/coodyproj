@@ -14,49 +14,51 @@ class ProductDetail extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: _buildBody(context),
-      floatingActionButtonLocation:
-        FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 15,left: 17,right: 17),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                  decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular((29))),
-                  boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 7,
-                        offset: Offset(0, 5), // changes position of shadow
-                      ),
-                    ],
-                    gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [Colors.lightBlueAccent, Colors.blueAccent])
-                      ),
-              width: size.width*0.73,
-              height: 60.0,
-              child: new RawMaterialButton(
-                shape: new CircleBorder(),
-                elevation: 0.0,
-                child: Text("구매하기",style: TextStyle(fontWeight: FontWeight.w900,fontSize: 20,color: Colors.white),),
-                onPressed: (){},
-              )),
-
-              Container(
-                height: 60,
-                child: FloatingActionButton(
-                  onPressed: () {},
-                  child: Image.asset('assets/icons/cart_blue.png',width: 30,),
-                ),
-              )
-            ],
-          ),
-        )
+//
+//      floatingActionButtonLocation:
+//        FloatingActionButtonLocation.centerDocked,
+//        floatingActionButton: Padding(
+//          padding: const EdgeInsets.only(bottom: 15,left: 17,right: 17),
+//          child: Row(
+//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//            children: <Widget>[
+//              Container(
+//                  decoration: BoxDecoration(
+//                  color: Colors.white,
+//                  borderRadius: BorderRadius.all(Radius.circular((29))),
+//                  boxShadow: [
+//                      BoxShadow(
+//                        color: Colors.grey.withOpacity(0.5),
+//                        spreadRadius: 2,
+//                        blurRadius: 7,
+//                        offset: Offset(0, 5), // changes position of shadow
+//                      ),
+//                    ],
+//                    gradient: LinearGradient(
+//                        begin: Alignment.topRight,
+//                        end: Alignment.bottomLeft,
+//                        colors: [Colors.lightBlueAccent, Colors.blueAccent])
+//                      ),
+//              width: size.width*0.73,
+//              height: 60.0,
+//              child: new RawMaterialButton(
+//                shape: new CircleBorder(),
+//                elevation: 0.0,
+//                child: Text("구매하기",style: TextStyle(fontWeight: FontWeight.w900,fontSize: 20,color: Colors.white),),
+//                onPressed: (){},
+//              )),
+//
+//              Container(
+//                height: 60,
+//                child: FloatingActionButton(
+//                  onPressed: () {},
+//                  child: Image.asset('assets/icons/cart_blue.png',width: 30,),
+//                ),
+//
+//              )
+//            ],
+//          ),
+//        )
 
     );
   }
@@ -64,13 +66,14 @@ class ProductDetail extends StatelessWidget {
   Widget _buildBody(BuildContext context) {
   return ListView(
     children: [
-      _buildProdInfoBody(context),
-      _buildfirstBody(context),
+      _buildPriceInfoBody(context),
+      _buildFirstBody(context),
+      _buildReviewBody(context)
     ],
   );
   }
 
-  Widget _buildProdInfoBody(BuildContext context) {
+  Widget _buildPriceInfoBody(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top:15,right: 20,left: 20,bottom:20),
       child: Row(
@@ -99,12 +102,12 @@ class ProductDetail extends StatelessWidget {
     );
   }
 
-  Widget _buildfirstBody(context) {
+  Widget _buildFirstBody(context) {
    Size size = MediaQuery.of(context).size;
     return Column(
         children: [
           SizedBox(
-            height: size.height *0.8,
+            height: size.height *0.75,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -230,6 +233,197 @@ class ProductDetail extends StatelessWidget {
       );
  }
 
+ Widget _buildReviewBody(context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream:Firestore.instance.collection('uploaded_product').document(document.documentID).collection('review').snapshots(),
+      builder: (context, snapshot){
+        if(snapshot.hasData){
+          return _buildHasReview(context);
+        }else{
+          return _buildNoReview();
+        }
+      },
+    );
 
+ }
 
+  Widget _buildNoReview() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left:8.0),
+            child: Text("실사용 리뷰",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top:14.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("아직 후기가 없습니다",style: TextStyle(fontSize: 38,color: Colors.grey),),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHasReview(context) {
+    Size size = MediaQuery.of(context).size;
+    var commentCount = document['reviewCount']??0;
+
+    return Padding(
+      padding: const EdgeInsets.only(top:30.0,right: 10.0,left: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left:8.0),
+                child: Text("실사용 리뷰",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top:17.0,bottom: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right:8.0,left:20),
+                  child:commentCount>0
+                    ?Text("4.7",style: TextStyle(fontSize: 38))
+                      :Text("아직 후기가 없습니다",style: TextStyle(fontSize: 13,color: Colors.grey)),
+                    ),
+                if(commentCount>0)
+                 Padding(
+                  padding: const EdgeInsets.only(left:4.0),
+                  child: Column(
+                    // ignore: sdk_version_ui_as_code, sdk_version_ui_as_code
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('총 ${commentCount}개 리뷰'),
+                      Image.asset('assets/star/star1.png',width: 110,)
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+
+          Scrollbar(
+            child: Container(
+              height: 280,
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: _commentStream(),
+                  builder: (context, snapshot){
+                    if(!snapshot.hasData){
+                      return Center(
+                        child:  CircularProgressIndicator(),
+                      );
+                    }
+                    return ListView(
+                      children: snapshot.data.documents.map((doc) {
+                        return ListTile(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(doc['writer'],style: TextStyle(fontWeight: FontWeight.bold),),
+                              Padding(
+                                padding: const EdgeInsets.only(top:4.0),
+                                child: Row(
+                                  children: [
+                                    Image.asset('assets/star/star1.png',width: 75),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left:5.0),
+                                      child: Text(_timeStampToString(doc['date']),style: TextStyle(fontSize: 12),),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top:8.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+
+                                    doc['img']==null?Visibility(visible: false,child: Text(""),):Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: Container(
+                                          width:60,
+                                          height:60,
+                                          child: Image.network(doc['img'],fit: BoxFit.cover,)),
+                                    ),
+                                    SizedBox(
+                                         width: doc['img']==null?size.width*0.77:size.width*0.58,
+                                         height: 60,
+                                         child: Text(doc['review'],
+                                           maxLines: 4,
+                                           overflow: TextOverflow.ellipsis,
+                                         softWrap: false,)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          subtitle:Opacity(
+                            opacity: 0.3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top:10.0,bottom: 5.0),
+                              child: Container(
+                                width: size.width*0.8,
+                                height: 1,
+                                color: Colors.black38,
+                              ),
+                            ),
+                          ),
+                          trailing: Padding(
+                            padding: const EdgeInsets.only(top:40),
+                            child: Container(
+                                child:Icon(Icons.arrow_forward_ios,size: 10,)
+                            ),
+                          ) ,
+                          dense: true,
+                        );
+                      }).toList(),
+                    );
+                  }
+                  ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left:15,right:15),
+            child: SizedBox(
+              width: size.width*1,
+              child: RaisedButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),
+                color: Colors.lightBlue,
+                onPressed: () {},
+                child: const Text('후기 전체 보기', style: TextStyle(color: Colors.white,fontSize: 13)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Stream<QuerySnapshot> _commentStream() {
+    return Firestore.instance.collection('uploaded_product')
+        .document(document.documentID).collection('review').orderBy('date',descending: true)
+        .snapshots();
+
+  }
+
+  String _timeStampToString(date) {
+    Timestamp t = date;
+    DateTime d = t.toDate();
+    var list = d.toString().replaceAll('-', '.').split(" ");
+    return list[0];
+  }
 }
