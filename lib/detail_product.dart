@@ -1,13 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 
 class ProductDetail extends StatelessWidget {
   final DocumentSnapshot document;
   final FirebaseUser user;
-
   ProductDetail(this.user,this.document);
+
+  final ScrollController _controllerOne = ScrollController();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +73,9 @@ class ProductDetail extends StatelessWidget {
     children: [
       _buildPriceInfoBody(context),
       _buildFirstBody(context),
-      _buildReviewBody(context)
+      _buildReviewBody(context),
+      _buildMainInfoBody(context),
+      _buildTermsInfoBody(context),
     ],
   );
   }
@@ -137,7 +144,7 @@ class ProductDetail extends StatelessWidget {
                                         padding: const EdgeInsets.only(right:3.0),
                                         child: CircleAvatar(
                                           backgroundColor: Colors.lightBlueAccent,
-                                          backgroundImage: NetworkImage("https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/ml%2FblackB.png?alt=media&token=a457de59-01ef-4dc6-bbab-4ce47f8f9345"),
+                                          backgroundImage: NetworkImage("https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/ml%2Ftensor_logo.png?alt=media&token=86567f17-226a-4a57-9d13-3208433c1042"),
                                         ),
                                       ),
                                       Padding(
@@ -234,13 +241,16 @@ class ProductDetail extends StatelessWidget {
  }
 
  Widget _buildReviewBody(context) {
-    return StreamBuilder<QuerySnapshot>(
+
+
+
+   return StreamBuilder<QuerySnapshot>(
       stream:Firestore.instance.collection('uploaded_product').document(document.documentID).collection('review').snapshots(),
       builder: (context, snapshot){
         if(snapshot.hasData){
           return _buildHasReview(context,snapshot.data.documents.length);
         }else{
-          print("here");
+
           return _buildNoReview();
         }
       },
@@ -273,6 +283,7 @@ class ProductDetail extends StatelessWidget {
   }
 
   Widget _buildHasReview(context, length) {
+
     Size size = MediaQuery.of(context).size;
     var reviewCount = length;
 
@@ -319,7 +330,9 @@ class ProductDetail extends StatelessWidget {
 
           Visibility(
             visible: reviewCount>0?true:false,
-            child: Scrollbar(
+            child: CupertinoScrollbar(
+              isAlwaysShown: true,
+              controller: _controllerOne,
               child: Container(
                 height: 280,
                 child: StreamBuilder<QuerySnapshot>(
@@ -331,8 +344,10 @@ class ProductDetail extends StatelessWidget {
                         );
                       }
                       return ListView(
+                        controller: _controllerOne,
                         children: snapshot.data.documents.map((doc) {
                           return ListTile(
+
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -420,6 +435,40 @@ class ProductDetail extends StatelessWidget {
       ),
     );
   }
+  Widget _buildMainInfoBody(BuildContext context) {
+    final htmlData = """${document['productDecription']}""";
+
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left:17.0,top: 30),
+            child: Text("상세 소개",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: htmlData == "null" ? Text(''):Html(data: htmlData)
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 20),
+          ),
+          for(var i =0; i< document['detail_img'].length; i++)
+            Padding(
+              padding: const EdgeInsets.only(bottom:30.0),
+              child: Image.network(document['detail_img'][i]),
+            ),
+        ],
+      );
+  }
+  Widget _buildTermsInfoBody(BuildContext context) {
+    return Column(
+      children: [
+        Drop
+
+      ],
+    );
+
+  }
 
   Stream<QuerySnapshot> _commentStream() {
     return Firestore.instance.collection('uploaded_product')
@@ -434,4 +483,9 @@ class ProductDetail extends StatelessWidget {
     var list = d.toString().replaceAll('-', '.').split(" ");
     return list[0];
   }
+
+
+
+
+
 }
