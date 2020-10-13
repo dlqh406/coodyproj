@@ -5,19 +5,29 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 
-class ProductDetail extends StatelessWidget {
+class ProductDetail extends StatefulWidget {
+
+  bool deliveryTerm_downbtn = false;
+  bool changeTerm_downbtn = false;
+  bool refundTerm_downbtn = false;
+  bool sellerInfoTerm_downbtn = false;
+  bool productInfoTerm_downbtn = false;
+  bool useTerm_downbtn = false;
+
   final DocumentSnapshot document;
   final FirebaseUser user;
 
   ProductDetail(this.user, this.document);
+
   final ScrollController _controllerOne = ScrollController();
 
+  _ProductDetailState createState() => _ProductDetailState();
+}
 
+class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: _buildBody(context),
 //
@@ -91,11 +101,11 @@ class ProductDetail extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(document['category'],
+              Text(widget.document['category'],
                 style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blue),),
               Container(
                   width: 220,
-                  child: Text(document['productName'], style: TextStyle(
+                  child: Text(widget.document['productName'], style: TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold)))
             ],
           ),
@@ -104,7 +114,7 @@ class ProductDetail extends StatelessWidget {
             child: Row(
               children: [
                 Text('₩ '),
-                Text(document['price'], style: TextStyle(fontWeight: FontWeight.w500,
+                Text(widget.document['price'], style: TextStyle(fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.italic,
                     fontSize: 20)),
               ],
@@ -230,7 +240,7 @@ class ProductDetail extends StatelessWidget {
 
               Expanded(
                 child: Hero(
-                  tag: document['thumbnail_img'],
+                  tag: widget.document['thumbnail_img'],
                   child:
                   Container(
                       height: size.height * 0.70,
@@ -249,7 +259,7 @@ class ProductDetail extends StatelessWidget {
                           image: DecorationImage(
                               alignment: Alignment.centerLeft,
                               fit: BoxFit.cover,
-                              image: NetworkImage(document['thumbnail_img'])
+                              image: NetworkImage(widget.document['thumbnail_img'])
                           ))
                   ),
                 ),
@@ -265,7 +275,7 @@ class ProductDetail extends StatelessWidget {
 
 
     bool _visible;
-    if(document['relatedProduct'] == "null"){
+    if(widget.document['relatedProduct'] == "null"){
       _visible = false;
     }else{
       _visible = true;
@@ -288,8 +298,10 @@ class ProductDetail extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: <Widget>[
+
+                        for(var i =0; i< widget.document['relatedProduct'].length; i++)
                         StreamBuilder<DocumentSnapshot>(
-                            stream: Firestore.instance.collection('uploaded_product').document(document['relatedProduct'][0]).snapshots(),
+                            stream: Firestore.instance.collection('uploaded_product').document(widget.document['relatedProduct'][i]).snapshots(),
                             builder: (context, snapshot) {
                               if(!snapshot.hasData){
                                 return Center(child:  CircularProgressIndicator());
@@ -304,83 +316,6 @@ class ProductDetail extends StatelessWidget {
                                   },
                                 );
                               }
-
-                            }
-                        ),
-                        StreamBuilder<DocumentSnapshot>(
-                            stream: Firestore.instance.collection('uploaded_product').document(document['relatedProduct'][1]).snapshots(),
-                            builder: (context, snapshot) {
-                              if(!snapshot.hasData){
-                                return Center(child:  CircularProgressIndicator());
-                              }
-                              else{
-                                return ReleatedCard(
-                                  image:  snapshot.data.data['thumbnail_img'],
-                                  category: snapshot.data.data['category'],
-                                  productName: snapshot.data.data['productName'],
-                                  price: "12,900",
-                                  press: () {
-                                  },
-                                );
-                              }
-
-                            }
-                        ),
-                        StreamBuilder<DocumentSnapshot>(
-                            stream: Firestore.instance.collection('uploaded_product').document(document['relatedProduct'][2]).snapshots(),
-                            builder: (context, snapshot) {
-                              if(!snapshot.hasData){
-                                return Center(child:  CircularProgressIndicator());
-                              }
-                              else{
-                                return ReleatedCard(
-                                  image:  snapshot.data.data['thumbnail_img'],
-                                  category: snapshot.data.data['category'],
-                                  productName: snapshot.data.data['productName'],
-                                  price: "12,900",
-                                  press: () {
-                                  },
-                                );
-                              }
-
-                            }
-                        ),
-                        StreamBuilder<DocumentSnapshot>(
-                            stream: Firestore.instance.collection('uploaded_product').document(document['relatedProduct'][1]).snapshots(),
-                            builder: (context, snapshot) {
-                              if(!snapshot.hasData){
-                                return Center(child:  CircularProgressIndicator());
-                              }
-                              else{
-                                return ReleatedCard(
-                                  image:  snapshot.data.data['thumbnail_img'],
-                                  category: snapshot.data.data['category'],
-                                  productName: snapshot.data.data['productName'],
-                                  price: "12,900",
-                                  press: () {
-                                  },
-                                );
-                              }
-
-                            }
-                        ),
-                        StreamBuilder<DocumentSnapshot>(
-                            stream: Firestore.instance.collection('uploaded_product').document(document['relatedProduct'][1]).snapshots(),
-                            builder: (context, snapshot) {
-                              if(!snapshot.hasData){
-                                return Center(child:  CircularProgressIndicator());
-                              }
-                              else{
-                                return ReleatedCard(
-                                  image:  snapshot.data.data['thumbnail_img'],
-                                  category: snapshot.data.data['category'],
-                                  productName: snapshot.data.data['productName'],
-                                  price: "12,900",
-                                  press: () {
-                                  },
-                                );
-                              }
-
                             }
                         ),
                       ],
@@ -396,7 +331,7 @@ class ProductDetail extends StatelessWidget {
   Widget _buildReviewBody(context) {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('uploaded_product').document(
-          document.documentID).collection('review').snapshots(),
+          widget.document.documentID).collection('review').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return _buildHasReview(context, snapshot.data.documents.length);
@@ -487,7 +422,7 @@ class ProductDetail extends StatelessWidget {
             visible: reviewCount > 0 ? true : false,
             child: CupertinoScrollbar(
               isAlwaysShown: true,
-              controller: _controllerOne,
+              controller: widget._controllerOne,
               child: Container(
                 height: 280,
                 child: StreamBuilder<QuerySnapshot>(
@@ -499,7 +434,7 @@ class ProductDetail extends StatelessWidget {
                         );
                       }
                       return ListView(
-                        controller: _controllerOne,
+                        controller: widget._controllerOne,
                         children: snapshot.data.documents.map((doc) {
                           return ListTile(
 
@@ -608,7 +543,7 @@ class ProductDetail extends StatelessWidget {
   }
 
   Widget _buildMainInfoBody(BuildContext context) {
-    final htmlData = """${document['productDecription']}""";
+    final htmlData = """${widget.document['productDecription']}""";
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -622,28 +557,329 @@ class ProductDetail extends StatelessWidget {
             padding: const EdgeInsets.all(18.0),
             child: htmlData == "null" ? Text('') : Html(data: htmlData)
         ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 20),
-        ),
-        for(var i = 0; i < document['detail_img'].length; i++)
+        for(var i = 0; i < widget.document['detail_img'].length; i++)
           Padding(
-            padding: const EdgeInsets.only(bottom: 30.0),
-            child: Image.network(document['detail_img'][i]),
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Image.network(widget.document['detail_img'][i]),
           ),
       ],
     );
   }
 
+
   Widget _buildTermsInfoBody(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Column(
       children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(
+                color: Colors.black.withOpacity(0.08)
+              )
+
+            )
+          ),
+          child: SizedBox(
+            width: size.width*1,
+            child: RaisedButton(
+              color: Colors.white,
+              elevation: 0,
+              onPressed: (){
+                setState(() {
+                  widget.deliveryTerm_downbtn = !widget.deliveryTerm_downbtn ;
+                });
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('배송 안내', style: TextStyle(fontSize: 15)),
+                  widget.deliveryTerm_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                ],
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: widget.deliveryTerm_downbtn,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: deliveryTerm.length,
+            itemBuilder: (BuildContext context, int index) {
+              String _key = deliveryTerm.keys.elementAt(index);
+              return ListTile(
+                title: Text(_key),
+              );
+            },
+          ),
+        ),
+
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                  top: BorderSide(
+                      color: Colors.black.withOpacity(0.08)
+                  )
+              )
+          ),
+          child: SizedBox(
+            width: size.width*1,
+            child: RaisedButton(
+              elevation: 0,
+              color: Colors.white,
+              onPressed: (){
+                setState(() {
+                  widget.changeTerm_downbtn = !widget.changeTerm_downbtn ;
+                });
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('교환/반품 안내', style: TextStyle(fontSize: 15)),
+                  widget.changeTerm_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                ],
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: widget.changeTerm_downbtn,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: changeTerm.length,
+            itemBuilder: (BuildContext context, int index) {
+              String _key = changeTerm.keys.elementAt(index);
+              return ListTile(
+                title: Text(_key),
+              );
+            },
+          ),
+        ),
+
+        Container(
+          decoration: BoxDecoration(
+
+              color: Colors.white,
+              border: Border(
+                  top: BorderSide(
+                      color: Colors.black.withOpacity(0.08)
+                  )
+              )
+          ),
+          child: SizedBox(
+            width: size.width*1,
+            child: RaisedButton(
+              elevation: 0,
+              color: Colors.white,
+              onPressed: (){
+                setState(() {
+                  widget.refundTerm_downbtn = !widget.refundTerm_downbtn ;
+                });
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('취소/환불 안내', style: TextStyle(fontSize: 15)),
+                  widget.refundTerm_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                ],
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: widget.refundTerm_downbtn,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: refundTerm.length,
+            itemBuilder: (BuildContext context, int index) {
+              String _key = refundTerm.keys.elementAt(index);
+              return ListTile(
+                title: Text(_key),
+              );
+            },
+          ),
+        ),
+
+
+
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                  top: BorderSide(
+                      color: Colors.black.withOpacity(0.08)
+                  )
+              )
+          ),
+          child: SizedBox(
+            width: size.width*1,
+            child: RaisedButton(
+              elevation: 0,
+              color: Colors.white,
+              onPressed: (){
+                setState(() {
+                  widget.sellerInfoTerm_downbtn = !widget.sellerInfoTerm_downbtn ;
+                });
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('판매자정보 안내', style: TextStyle(fontSize: 15)),
+                  widget.sellerInfoTerm_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                ],
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: widget.sellerInfoTerm_downbtn,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: sellerInfoTerm.length,
+            itemBuilder: (BuildContext context, int index) {
+              String _key = sellerInfoTerm.keys.elementAt(index);
+              return ListTile(
+                title: Text(_key),
+              );
+            },
+          ),
+        ),
+
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                  top: BorderSide(
+                      color: Colors.black.withOpacity(0.08)
+                  )
+              )
+          ),
+          child: SizedBox(
+            width: size.width*1,
+            child: RaisedButton(
+              color: Colors.white,
+              elevation: 0,
+              onPressed: (){
+                setState(() {
+                  widget.productInfoTerm_downbtn = !widget.productInfoTerm_downbtn ;
+                });
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('상품정보 제공공시', style: TextStyle(fontSize: 15)),
+                  widget.productInfoTerm_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                ],
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: widget.productInfoTerm_downbtn,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: productInfoTerm.length,
+            itemBuilder: (BuildContext context, int index) {
+              String _key = productInfoTerm.keys.elementAt(index);
+              return ListTile(
+                title: Text(_key),
+              );
+            },
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                  top: BorderSide(
+                      color: Colors.black.withOpacity(0.08)
+                  ),
+                bottom: BorderSide(
+                    color: Colors.black.withOpacity(0.08)
+                ),
+              )
+          ),
+          child: SizedBox(
+
+            width: size.width*1,
+            child: RaisedButton(
+              elevation: 0,
+              color: Colors.white,
+              onPressed: (){
+                setState(() {
+                  widget.useTerm_downbtn = !widget.useTerm_downbtn ;
+                });
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('이용약관', style: TextStyle(fontSize: 15)),
+                  widget.useTerm_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                ],
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: widget.useTerm_downbtn,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: productInfoTerm.length,
+            itemBuilder: (BuildContext context, int index) {
+              String _key = productInfoTerm.keys.elementAt(index);
+              return ListTile(
+                title: Text(_key),
+              );
+            },
+          ),
+        ),
+
+
+
       ],
     );
   }
-
+  Map<String, bool> deliveryTerm = {
+    '1. 쿠디의 전 제품은 100% 무료배송입니다.': false,
+    '2. 구매한 상품은 입점 업체(쇼핑몰 업체)에서 배송합니다': false,
+    '3. 결제 확인후 1~3일 정도 소요됩니다.(주문 폭주시 배송이 지연될 수 있습니다)': false,
+  };
+  Map<String, bool> changeTerm = {
+    '1. 쿠디의 전 제품은 100% 무료배송입니다.': false,
+    '2. 구매한 상품은 입점 업체(쇼핑몰 업체)에서 배송합니다': false,
+    '3. 결제 확인후 1~3일 정도 소요됩니다.(주문 폭주시 배송이 지연될 수 있습니다)': false,
+  };
+  Map<String, bool> refundTerm = {
+    '1. 쿠디의 전 제품은 100% 무료배송입니다.': false,
+    '2. 구매한 상품은 입점 업체(쇼핑몰 업체)에서 배송합니다': false,
+    '3. 결제 확인후 1~3일 정도 소요됩니다.(주문 폭주시 배송이 지연될 수 있습니다)': false,
+  };
+  Map<String, bool> sellerInfoTerm = {
+    '1. 쿠디의 전 제품은 100% 무료배송입니다.': false,
+    '2. 구매한 상품은 입점 업체(쇼핑몰 업체)에서 배송합니다': false,
+    '3. 결제 확인후 1~3일 정도 소요됩니다.(주문 폭주시 배송이 지연될 수 있습니다)': false,
+  };
+  Map<String, bool> productInfoTerm = {
+    '1. 쿠디의 전 제품은 100% 무료배송입니다.': false,
+    '2. 구매한 상품은 입점 업체(쇼핑몰 업체)에서 배송합니다': false,
+    '3. 결제 확인후 1~3일 정도 소요됩니다.(주문 폭주시 배송이 지연될 수 있습니다)': false,
+  };
+  Map<String, bool> useTerm = {
+    '1. 쿠디의 전 제품은 100% 무료배송입니다.': false,
+    '2. 구매한 상품은 입점 업체(쇼핑몰 업체)에서 배송합니다': false,
+    '3. 결제 확인후 1~3일 정도 소요됩니다.(주문 폭주시 배송이 지연될 수 있습니다)': false,
+  };
   Stream<QuerySnapshot> _commentStream() {
     return Firestore.instance.collection('uploaded_product')
-        .document(document.documentID).collection('review').orderBy(
+        .document(widget.document.documentID).collection('review').orderBy(
         'date', descending: true)
         .snapshots();
   }
