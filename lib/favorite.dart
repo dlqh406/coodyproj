@@ -102,13 +102,7 @@ class _FavoriteState extends State<Favorite> {
             )
         ),
         body: _bodyBuilder(),
-        floatingActionButton: FloatingActionButton(
-         backgroundColor: Colors.blue,
-         child: Image.asset('assets/icons/cart.png',width: 34),
-          onPressed: (){
-           // cart page
-          },
-        ),
+
       ),
     );
   }

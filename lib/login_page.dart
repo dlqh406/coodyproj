@@ -20,36 +20,42 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Instagram Clon',
-              style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
-            ),
-            Container(
-              margin: EdgeInsets.all(50.0),
-            ),
-            SignInButton(
-              Buttons.Google,
-              onPressed: () {
-                _handleG_SignIn().then((user) {
-                  print(user);
-                  print('111');
-                });
-              },
-            ),
-            SignInButton(
-              Buttons.Facebook,
-              onPressed: () {
-                _handleF_SignIn().then((user) => print(user)).catchError((e)=> {
-                  _showMyDialog()
-                }
-                );
-              },
-            ),
-          ],
+      body: Container(
+        decoration: new BoxDecoration(
+        image: new DecorationImage(
+        image: new NetworkImage('https://c.pxhere.com/images/f2/b7/eca8a1b0f46b7affb1f249377808-1597347.jpg!d'),
+        fit: BoxFit.cover,)),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Spacer(),
+              Container(
+                margin: EdgeInsets.all(50.0),
+              ),
+              SignInButton(
+                Buttons.Google,
+                onPressed: () {
+                  _handleG_SignIn().then((user) {
+                    print(user);
+                    print('111');
+                  });
+                },
+              ),
+              SignInButton(
+                Buttons.Facebook,
+                onPressed: () {
+                  _handleF_SignIn().then((user) => print(user)).catchError((e)=> {
+                    _showMyDialog()
+                  }
+                  );
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom:90),
+              )
+            ],
+          ),
         ),
       ),
     );

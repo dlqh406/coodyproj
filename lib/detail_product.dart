@@ -7,12 +7,20 @@ import 'package:flutter_html/flutter_html.dart';
 
 class ProductDetail extends StatefulWidget {
 
+
   bool deliveryTerm_downbtn = false;
   bool changeTerm_downbtn = false;
   bool refundTerm_downbtn = false;
   bool sellerInfoTerm_downbtn = false;
   bool productInfoTerm_downbtn = false;
   bool useTerm_downbtn = false;
+
+  var selectedList =[];
+  var temSelectedList = ["",""];
+
+  int _selectedSize = 0;
+  int _selectedColor = 0;
+  bool modalVisible =false;
 
   final DocumentSnapshot document;
   final FirebaseUser user;
@@ -25,56 +33,23 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: _buildBody(context),
-//
-//      floatingActionButtonLocation:
-//        FloatingActionButtonLocation.centerDocked,
-//        floatingActionButton: Padding(
-//          padding: const EdgeInsets.only(bottom: 15,left: 17,right: 17),
-//          child: Row(
-//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//            children: <Widget>[
-//              Container(
-//                  decoration: BoxDecoration(
-//                  color: Colors.white,
-//                  borderRadius: BorderRadius.all(Radius.circular((29))),
-//                  boxShadow: [
-//                      BoxShadow(
-//                        color: Colors.grey.withOpacity(0.5),
-//                        spreadRadius: 2,
-//                        blurRadius: 7,
-//                        offset: Offset(0, 5), // changes position of shadow
-//                      ),
-//                    ],
-//                    gradient: LinearGradient(
-//                        begin: Alignment.topRight,
-//                        end: Alignment.bottomLeft,
-//                        colors: [Colors.lightBlueAccent, Colors.blueAccent])
-//                      ),
-//              width: size.width*0.73,
-//              height: 60.0,
-//              child: new RawMaterialButton(
-//                shape: new CircleBorder(),
-//                elevation: 0.0,
-//                child: Text("구매하기",style: TextStyle(fontWeight: FontWeight.w900,fontSize: 20,color: Colors.white),),
-//                onPressed: (){},
-//              )),
-//
-//              Container(
-//                height: 60,
-//                child: FloatingActionButton(
-//                  onPressed: () {},
-//                  child: Image.asset('assets/icons/cart_blue.png',width: 30,),
-//                ),
-//
-//              )
-//            ],
-//          ),
-//        )
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                context: context,
+                builder: buildBottomSheet
+            );
+          },
+          backgroundColor: Colors.blue,
+          child: Image.asset('assets/icons/cart.png',width: 34),
+        )
 
     );
   }
@@ -163,7 +138,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                       padding: const EdgeInsets.only(
                                           right: 3.0),
                                       child: CircleAvatar(
-                                        backgroundColor: Colors.black,
+                                        backgroundColor: Colors.white,
                                         backgroundImage: NetworkImage(
                                             "https://lh3.googleusercontent.com/FK8EcHV1SJGHeTUJCsUhCQl0hmQu-QbC4wG6bM59S0v-rLv-jQl16YC3LQ4x-ZpPwS1cUs_4Idap57kYgcTCOQFB"),
                                       ),
@@ -273,13 +248,14 @@ class _ProductDetailState extends State<ProductDetail> {
 
   Widget _buildRelatedBody(context) {
 
-
     bool _visible;
-    if(widget.document['relatedProduct'] == "null"){
+
+    if(widget.document['relatedProduct'] == null || widget.document['relatedProduct'][0] == "null"){
       _visible = false;
     }else{
       _visible = true;
     }
+
       return Visibility(
           visible: _visible,
           child: Padding(
@@ -298,26 +274,27 @@ class _ProductDetailState extends State<ProductDetail> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: <Widget>[
-
                         for(var i =0; i< widget.document['relatedProduct'].length; i++)
                         StreamBuilder<DocumentSnapshot>(
                             stream: Firestore.instance.collection('uploaded_product').document(widget.document['relatedProduct'][i]).snapshots(),
                             builder: (context, snapshot) {
                               if(!snapshot.hasData){
                                 return Center(child:  CircularProgressIndicator());
-                              }
+                                    }
                               else{
                                 return ReleatedCard(
-                                  image:  snapshot.data.data['thumbnail_img'],
-                                  category: snapshot.data.data['category'],
-                                  productName: snapshot.data.data['productName'],
-                                  price:  "12,900",
-                                  press: () {
-                                  },
-                                );
+                                     image:  snapshot.data.data['thumbnail_img'],
+                                     category: snapshot.data.data['category'],
+                                     productName: snapshot.data.data['productName'],
+                                     price:  "12,900",
+                                     press: () {
+      //                                    Navigator.push(context,
+      //                                        MaterialPageRoute(builder: (context){
+      //                                      return ProductDetail(widget.user,snapshot.data);
+      //                                    }));
+                                          },);}
                               }
-                            }
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -420,20 +397,20 @@ class _ProductDetailState extends State<ProductDetail> {
 
           Visibility(
             visible: reviewCount > 0 ? true : false,
-            child: CupertinoScrollbar(
-              isAlwaysShown: true,
-              controller: widget._controllerOne,
-              child: Container(
-                height: 280,
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: _commentStream(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      return ListView(
+            child: Container(
+              height: 280,
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: _commentStream(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return Scrollbar(
+                      controller: widget._controllerOne,
+                      isAlwaysShown: true,
+                      child: ListView(
                         controller: widget._controllerOne,
                         children: snapshot.data.documents.map((doc) {
                           return ListTile(
@@ -513,9 +490,9 @@ class _ProductDetailState extends State<ProductDetail> {
                             dense: true,
                           );
                         }).toList(),
-                      );
-                    }
-                ),
+                      ),
+                    );
+                  }
               ),
             ),
           ),
@@ -889,6 +866,239 @@ class _ProductDetailState extends State<ProductDetail> {
     DateTime d = t.toDate();
     var list = d.toString().replaceAll('-', '.').split(" ");
     return list[0];
+  }
+
+  Widget buildBottomSheet(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState ){
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(40),
+            topRight: Radius.circular(40),
+          ),
+        ),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top:25.0,right:25.0),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(child: Icon(Icons.close,),
+                          onTap:(){Navigator.pop(context);
+                      }),
+                    ),
+                  ),
+                  Container(
+                      padding: EdgeInsets.only(top:10.0),
+                      width: 300,
+                      child:
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                            icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.blue,
+                                size: 20
+                            ),
+                            value: widget._selectedColor,
+                            items: [
+                              DropdownMenuItem(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                        Icons.color_lens,
+                                        color: Colors.pinkAccent,
+                                        size: 20
+                                    ),
+                                    Text("  컬러를 선택해주세요"),
+                                  ],
+                                ),
+                                value: 0,
+                              ),
+                              for(var i=0; i<widget.document['colorList'].length; i++)
+                                DropdownMenuItem(
+                                  child: Text("${widget.document['colorList'][i]}"),
+                                  value: i+1,
+                                ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                widget._selectedColor = value;
+                                _selectedColorMethod(value);
+                              });
+                            }),
+                      )
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(bottom: 10),
+                    width: 300,
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.blue,
+                            size: 20
+                          ),
+                          isExpanded: true,
+                          value: widget._selectedSize,
+                          hint:Text("  사이즈를 선택해주세요"),
+                          items: [
+                              DropdownMenuItem(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                      Icons.accessibility_new,
+                                      color: Colors.pinkAccent,
+                                      size: 20
+                                  ),
+                                  Text("  사이즈를 선택해주세요"),
+                                ],
+                              ),
+                              value: 0,
+                              ),
+                              for(var i=0; i<widget.document['sizeList'].length; i++)
+                                DropdownMenuItem(
+                                child: Text("${widget.document['sizeList'][i]}"),
+                                value: i+1,
+                                ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              widget._selectedSize = value;
+                              _selectedSizeMethod(value);
+                            });
+                          }),
+                      )
+                      ),
+                  Container(
+                    // TODO 선택되어 보여지는곳
+                    width: size.width*0.78,
+                    height: size.height*0.3,
+                    child: SingleChildScrollView(
+                      child: Scrollbar(
+                        child: Column(
+                          children: [
+                            Visibility(
+                                visible: widget.modalVisible,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top:25.0),
+                                  child: Text("옵션을 모두 선택해주세요",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.pinkAccent),),
+                                )),
+                            if(widget.selectedList.length >=1)
+                            for (var i=0; i< widget.selectedList.length; i++)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom :13.0),
+                                child: Row(
+                                  children: [
+                                    Text('${widget.selectedList[i][0]}',style: TextStyle(fontWeight: FontWeight.bold)),
+                                    Text(','),
+                                    Text('${widget.selectedList[i][1]}',style: TextStyle(fontWeight: FontWeight.bold)),
+                                    Spacer(),
+                                    GestureDetector(child: Icon(Icons.close,color: Colors.grey,), onTap:(){setState((){widget.selectedList.removeAt(i);});
+                                    }),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top:15.0),
+                    child: SizedBox(
+                        width: size.width * 0.85,
+                        height: size.height*0.065,
+                        child: RaisedButton(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),),
+                          color: Colors.pinkAccent,
+                          onPressed: () {},
+                          child: const Text('장바구니 넣기',
+                              style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold)),
+                        )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top:8.0),
+                    child: SizedBox(
+                      width: size.width * 0.85,
+                      height: size.height*0.065,
+                      child: RaisedButton(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40),),
+                        color: Colors.blueAccent,
+                        onPressed: () {
+                          if(widget.selectedList.length == 0){
+                            setState((){
+                              widget.modalVisible = true;
+                            });
+                          }else{
+                            print(widget.selectedList);
+                          }
+                        },
+                        child: const Text('구매하기',
+                            style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold)),
+                      )),
+                  ),
+                ],
+      )
+        ],
+          ),
+        ),
+      );
+  }
+    );
+  }
+
+
+  void _selectedColorMethod(index) {
+
+    var selectedColor = widget.document['colorList'][index-1];
+    widget.temSelectedList.setAll(0,["$selectedColor"]);
+    print("widget.temSelectedList: ${widget.temSelectedList}");
+
+    if (widget.temSelectedList[0] != "" && widget.temSelectedList[1] != ""){
+      widget.modalVisible = false;
+      widget._selectedColor = 0;
+      widget._selectedSize = 0;
+      widget.selectedList.addAll([widget.temSelectedList]);
+      widget.temSelectedList = ["",""];
+      print("widget.selectedList: ${widget.selectedList}");
+
+    }
+
+
+
+  }
+
+  void _selectedSizeMethod(index) {
+    
+
+      var selectedSize = widget.document['sizeList'][index-1];
+      widget.temSelectedList.setAll(1,["$selectedSize"]);
+      print("widget.temSelectedList: ${widget.temSelectedList}");
+
+      if (widget.temSelectedList[0] != "" && widget.temSelectedList[1] != ""){
+        widget.modalVisible = false;
+        widget._selectedColor = 0;
+        widget._selectedSize = 0;
+
+        widget.selectedList.addAll([widget.temSelectedList]);
+        widget.temSelectedList = ["",""];
+        print("widget.selectedList: ${widget.selectedList}");
+
+      }
+  
+
   }
 
 }

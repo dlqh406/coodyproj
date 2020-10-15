@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:list_tile_switch/list_tile_switch.dart';
 
 
 class TestPage extends StatefulWidget {
+  bool showFab = true;
 
   @override
   _TestPageState createState() => _TestPageState();
@@ -10,14 +10,38 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
 
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(title: Text('Demo')),
-      ),
+    return Scaffold(
+      body: Center(child: Text('HomeView')),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: buildBottomSheet
+          );
+        },
+        child: Icon(Icons.add),
+      )
     );
   }
 
+
+  Widget buildBottomSheet(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 1)
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          GestureDetector(child: Icon(Icons.close,),onTap:(){
+            Navigator.pop(context);
+          }),
+         Text("asd"),
+        ],
+      ),
+    );
+  }
 }
