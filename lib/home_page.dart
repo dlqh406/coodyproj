@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBody(context) {
 
     PageController controller = PageController(
-        initialPage: 4);
+        initialPage: widget.images.length);
     controller.addListener(() {
       setState(() {
         widget.currentPage = controller.page;
@@ -295,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                   CardScrollWidget(widget.currentPage, widget.images),
                   Positioned.fill(
                     child: PageView.builder(
-                      itemCount: 4,
+                      itemCount: widget.images.length,
                       controller: controller,
                       reverse: true,
                       itemBuilder: (context, index) {
@@ -383,10 +383,11 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  
 
 }
 
-class CardScrollWidget extends StatelfulWidget {
+class CardScrollWidget extends StatelessWidget {
 
   var currentPage;
   var padding = 20.0;
@@ -394,17 +395,13 @@ class CardScrollWidget extends StatelfulWidget {
   var imagesList;
 
   CardScrollWidget(this.currentPage, this.imagesList);
-  _CardScrollWidgetState createState() => _CardScrollWidgetState();
-}
 
-class _CardScrollWidgetState extends State<CardScrollWidget> {
   @override
   Widget build(BuildContext context) {
     print("imagesList.length:  ${imagesList.length}");
     return new AspectRatio(
       aspectRatio: widgetAspectRatio,
       child: LayoutBuilder(builder: (context, contraints) {
-
         var width = contraints.maxWidth;
         var height = contraints.maxHeight;
 
