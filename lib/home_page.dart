@@ -11,23 +11,23 @@ import 'dart:math';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class HomePage extends StatefulWidget {
+//  List<String> images = ["https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F5.png?alt=media&token=b51cfea8-909e-41ce-98f2-2713447a155c", "https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F1.png?alt=media&token=c1beb195-ff65-4dcc-b49a-881dfb42e982", "https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F2.png?alt=media&token=f75a6b78-4df7-4486-8e73-540f86c5bcd9","https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F3.png?alt=media&token=874e93fc-c5ac-46a6-ad18-64484995ca13"];
+
+  List<String> images=[];
+  var currentPage = 3.0;
+
   final FirebaseUser user;
   HomePage(this.user);
-//  List<String> images = [
-//
-//  ];
-//
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
+
 var cardAspectRatio = 12.0 / 16.0;
 var widgetAspectRatio = cardAspectRatio * 1.2;
 
-List<String> images = [
 
-];
 List<String> images2 = [
   "assets/images/1.png",
   "assets/images/newdelhi.jpg",
@@ -45,36 +45,30 @@ List<String> title = [
 List<String> contents = ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"];
 
 
-
 class _HomePageState extends State<HomePage> {
+
   @override
   void initState() {
-    StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('magazine').orderBy('date', descending: true).snapshots(),
-        builder:(context, snapshot){
-          print('init3');
-          if(!snapshot.hasData){
-            return  Center(child: CircularProgressIndicator());
-          }else{
-            images =[];
-            for(var i=0; i<3; i++){
-              images.add(snapshot.data.documents[i]['thumbnail_img']);
-              print(snapshot.data.documents[i]['thumbnail_img']);
-            }
-            print(images);
-            return Container();
-          }
-        });
+       Firestore.instance.collection('magazine').orderBy('date', descending: true).limit(4).getDocuments().then((querySnapshot) =>
+          querySnapshot.documents.forEach((result) {
+            widget.images.add(result.data['thumbnail_img']);
+            print(result.data['thumbnail_img']);
+            print(widget.images);
+          })
+      );
+    print(widget.images);
     super.initState();
   }
 
 
-  var currentPage = images.length - 2.0;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   FacebookLogin facebookLogin = FacebookLogin();
 
   @override
   Widget build(BuildContext context) {
+
+
+    print("@@@@@@@@images.length: ${widget.images.length}");
 
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection("user_data").document(widget.user.email).snapshots(),
@@ -84,7 +78,6 @@ class _HomePageState extends State<HomePage> {
             return FavoriteAnalysisPage(widget.user);
 
           }else{
-            print(currentPage);
             return Scaffold(
                 body: _buildBody(context)
             );
@@ -99,10 +92,11 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBody(context) {
 
-    PageController controller = PageController(initialPage: images.length);
+    PageController controller = PageController(
+        initialPage: 4);
     controller.addListener(() {
       setState(() {
-        currentPage = controller.page;
+        widget.currentPage = controller.page;
       });
     });
 
@@ -155,8 +149,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
+
                       ),
-//                      if(images.length == 0)
+//                      if(widget.images.length == 0)
 //                        StreamBuilder<QuerySnapshot>(
 //                            stream: Firestore.instance.collection('magazine').orderBy('date', descending: true).snapshots(),
 //                            builder:(context, snapshot){
@@ -164,12 +159,12 @@ class _HomePageState extends State<HomePage> {
 //                              if(!snapshot.hasData){
 //                                return  Center(child: CircularProgressIndicator());
 //                              }else{
-//                                images =[];
-//                                for(var i=0; i<3; i++){
-//                                  images.add(snapshot.data.documents[i]['thumbnail_img']);
+//                                widget.images =[];
+//                                for(var i=0; i<4; i++){
+//                                  widget.images.setAll(i, snapshot.data.documents[i]['thumbnail_img']);
 //                                  print(snapshot.data.documents[i]['thumbnail_img']);
 //                                }
-//                                print(images);
+//                                print(widget.images);
 //                                return Container();
 //                              }
 //                            }),
@@ -297,10 +292,10 @@ class _HomePageState extends State<HomePage> {
               ),
               Stack(
                 children: <Widget>[
-                  CardScrollWidget(currentPage),
+                  CardScrollWidget(widget.currentPage, widget.images),
                   Positioned.fill(
                     child: PageView.builder(
-                      itemCount: images.length,
+                      itemCount: 4,
                       controller: controller,
                       reverse: true,
                       itemBuilder: (context, index) {
@@ -388,38 +383,28 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  void imgaebuild(){
-    StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('magazine').orderBy('date', descending: true).snapshots(),
-        builder:(context, snapshot){
-          print('init3');
-          if(!snapshot.hasData){
-            return  Center(child: CircularProgressIndicator());
-          }else{
-            for(var i=0; i<3; i++){
-              images.add(snapshot.data.documents[i]['thumbnail_img']);
-              print(snapshot.data.documents[i]['thumbnail_img']);
-            }
-            print(images);
-          }
-        });
-
-  }
 
 }
 
-class CardScrollWidget extends StatelessWidget {
+class CardScrollWidget extends StatelfulWidget {
+
   var currentPage;
   var padding = 20.0;
   var verticalInset = 20.0;
+  var imagesList;
 
-  CardScrollWidget(this.currentPage);
+  CardScrollWidget(this.currentPage, this.imagesList);
+  _CardScrollWidgetState createState() => _CardScrollWidgetState();
+}
 
+class _CardScrollWidgetState extends State<CardScrollWidget> {
   @override
   Widget build(BuildContext context) {
+    print("imagesList.length:  ${imagesList.length}");
     return new AspectRatio(
       aspectRatio: widgetAspectRatio,
       child: LayoutBuilder(builder: (context, contraints) {
+
         var width = contraints.maxWidth;
         var height = contraints.maxHeight;
 
@@ -434,8 +419,7 @@ class CardScrollWidget extends StatelessWidget {
 
         List<Widget> cardList = new List();
 
-        for (var i = 0; i < images.length; i++) {
-          print("images.length: ${images.length}");
+        for (var i = 0; i < imagesList.length; i++) {
           var delta = i - currentPage;
           bool isOnRight = delta > 0;
 
@@ -464,7 +448,7 @@ class CardScrollWidget extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: <Widget>[
-                      Image.network(images[i], fit: BoxFit.cover),
+                      Image.network(imagesList[i], fit: BoxFit.cover),
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Column(
