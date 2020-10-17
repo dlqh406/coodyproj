@@ -74,7 +74,7 @@ class _FavoriteState extends State<Favorite> {
                                     print("Tap Event");
                                   },
                                   isRepeatingAnimation: true,
-                                  totalRepeatCount: 10000,
+                                  totalRepeatCount: 60000,
                                   text: ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"],
                                   textStyle: TextStyle(fontSize: 13.0,color: Colors.white),
                                 ),

@@ -45,11 +45,14 @@ flutter:
     -  assets/icons/fast-delivery.png
     -  assets/icons/free-shipping.png
     -  assets/icons/medal.png
+    -  assets/icons/cart2.png
     -  assets/logo/blue.png
     -  assets/logo/blacklogo.png
     -  assets/star/star1.png
     -  assets/star/star11.png
     -  assets/star/starhalf.png
+    -  assets/images/
+
 
   fonts:
     - family: Kopup
