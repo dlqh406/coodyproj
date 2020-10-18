@@ -13,8 +13,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 class HomePage extends StatefulWidget {
 //  List<String> images = ["https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F5.png?alt=media&token=b51cfea8-909e-41ce-98f2-2713447a155c", "https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F1.png?alt=media&token=c1beb195-ff65-4dcc-b49a-881dfb42e982", "https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F2.png?alt=media&token=f75a6b78-4df7-4486-8e73-540f86c5bcd9","https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F3.png?alt=media&token=874e93fc-c5ac-46a6-ad18-64484995ca13"];
 
-  List<String> images=[];
-  var currentPage = 3.0;
+//  var images=[];
+
 
   final FirebaseUser user;
   HomePage(this.user);
@@ -35,28 +35,31 @@ List<String> images2 = [
   "assets/images/paris.jpg",
 ];
 
-List<String> title = [
-  "Hounted Ground",
-  "Fallen In Love",
-  "The Dreaming Moon",
-  "Jack the Persian and the Black Castel",
-];
+
 
 List<String> contents = ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"];
 
 
 class _HomePageState extends State<HomePage> {
+  var images=[];
+  var title = [];
+  var currentPage=0.0;
+
 
   @override
   void initState() {
-       Firestore.instance.collection('magazine').orderBy('date', descending: true).limit(4).getDocuments().then((querySnapshot) =>
+       Firestore.instance.collection('magazine').orderBy('date', descending: false).getDocuments().then((querySnapshot) =>
           querySnapshot.documents.forEach((result) {
-            widget.images.add(result.data['thumbnail_img']);
+            setState(() {
+              images.add(result.data['thumbnail_img']);
+              title.add(result.data['title']);
+              currentPage = images.length - 1.0;
+            });
             print(result.data['thumbnail_img']);
-            print(widget.images);
+            print(images);
           })
       );
-    print(widget.images);
+    print(images);
     super.initState();
   }
 
@@ -66,10 +69,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
-    print("@@@@@@@@images.length: ${widget.images.length}");
-
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection("user_data").document(widget.user.email).snapshots(),
       builder: (context, snapshot) {
@@ -92,11 +91,10 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBody(context) {
 
-    PageController controller = PageController(
-        initialPage: widget.images.length);
+    PageController controller = PageController(initialPage: images.length);
     controller.addListener(() {
       setState(() {
-        widget.currentPage = controller.page;
+        currentPage = controller.page;
       });
     });
 
@@ -292,10 +290,10 @@ class _HomePageState extends State<HomePage> {
               ),
               Stack(
                 children: <Widget>[
-                  CardScrollWidget(widget.currentPage, widget.images),
+                  CardScrollWidget(currentPage, images),
                   Positioned.fill(
                     child: PageView.builder(
-                      itemCount: widget.images.length,
+                      itemCount: images.length,
                       controller: controller,
                       reverse: true,
                       itemBuilder: (context, index) {
@@ -383,23 +381,11 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  
-
-}
-
-class CardScrollWidget extends StatelessWidget {
-
-  var currentPage;
-  var padding = 20.0;
-  var verticalInset = 20.0;
-  var imagesList;
-
-  CardScrollWidget(this.currentPage, this.imagesList);
-
-  @override
-  Widget build(BuildContext context) {
-    print("imagesList.length:  ${imagesList.length}");
-    return new AspectRatio(
+  Widget CardScrollWidget(currentPage,imagesList){
+    var padding = 20.0;
+    var verticalInset = 20.0;
+    print("@@@@@@@@imagesList.length::${imagesList.length}, currentPage: ${currentPage} ");
+    return AspectRatio(
       aspectRatio: widgetAspectRatio,
       child: LayoutBuilder(builder: (context, contraints) {
         var width = contraints.maxWidth;
@@ -452,15 +438,15 @@ class CardScrollWidget extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Text(title[i],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25.0,
-                                  )),
-                            ),
+//                            Padding(
+//                              padding: EdgeInsets.symmetric(
+//                                  horizontal: 16.0, vertical: 8.0),
+//                              child: Text(title[i],
+//                                  style: TextStyle(
+//                                    color: Colors.white,
+//                                    fontSize: 25.0,
+//                                  )),
+//                            ),
 
                             Padding(
                               padding: const EdgeInsets.only(
@@ -482,5 +468,106 @@ class CardScrollWidget extends StatelessWidget {
         );
       }),
     );
+
   }
+
+
 }
+//
+//class CardScrollWidget extends StatelessWidget {
+//
+//  var currentPage;
+//  var padding = 20.0;
+//  var verticalInset = 20.0;
+//  var imagesList;
+//
+//  CardScrollWidget(this.currentPage, this.imagesList);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    print("imagesList.length:  ${imagesList.length}");
+//    return new AspectRatio(
+//      aspectRatio: widgetAspectRatio,
+//      child: LayoutBuilder(builder: (context, contraints) {
+//        var width = contraints.maxWidth;
+//        var height = contraints.maxHeight;
+//
+//        var safeWidth = width - 2 * padding;
+//        var safeHeight = height - 2 * padding;
+//
+//        var heightOfPrimaryCard = safeHeight;
+//        var widthOfPrimaryCard = heightOfPrimaryCard * cardAspectRatio;
+//
+//        var primaryCardLeft = safeWidth - widthOfPrimaryCard;
+//        var horizontalInset = primaryCardLeft / 2;
+//
+//        List<Widget> cardList = new List();
+//
+//        for (var i = 0; i < imagesList.length; i++) {
+//          var delta = i - currentPage;
+//          bool isOnRight = delta > 0;
+//
+//          var start = padding +
+//              max(
+//                  primaryCardLeft -
+//                      horizontalInset * -delta * (isOnRight ? 15 : 1),
+//                  0.0);
+//
+//          var cardItem = Positioned.directional(
+//            top: padding + verticalInset * max(-delta, 0.0),
+//            bottom: padding + verticalInset * max(-delta, 0.0),
+//            start: start,
+//            textDirection: TextDirection.rtl,
+//            child: ClipRRect(
+//              borderRadius: BorderRadius.circular(16.0),
+//              child: Container(
+//                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+//                  BoxShadow(
+//                      color: Colors.black12,
+//                      offset: Offset(3.0, 6.0),
+//                      blurRadius: 10.0)
+//                ]),
+//                child: AspectRatio(
+//                  aspectRatio: cardAspectRatio,
+//                  child: Stack(
+//                    fit: StackFit.expand,
+//                    children: <Widget>[
+//                      Image.network(imagesList[i], fit: BoxFit.cover),
+//                      Align(
+//                        alignment: Alignment.bottomLeft,
+//                        child: Column(
+//                          mainAxisSize: MainAxisSize.min,
+//                          crossAxisAlignment: CrossAxisAlignment.start,
+//                          children: <Widget>[
+//                            Padding(
+//                              padding: EdgeInsets.symmetric(
+//                                  horizontal: 16.0, vertical: 8.0),
+//                              child: Text(title[i],
+//                                  style: TextStyle(
+//                                    color: Colors.white,
+//                                    fontSize: 25.0,
+//                                  )),
+//                            ),
+//
+//                            Padding(
+//                              padding: const EdgeInsets.only(
+//                                  left: 12.0, bottom: 12.0),
+//                            )
+//                          ],
+//                        ),
+//                      )
+//                    ],
+//                  ),
+//                ),
+//              ),
+//            ),
+//          );
+//          cardList.add(cardItem);
+//        }
+//        return Stack(
+//          children: cardList,
+//        );
+//      }),
+//    );
+//  }
+//}
