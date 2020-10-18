@@ -17,18 +17,11 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
-const kBackgroundColor2 = Color(0xFFF1EFF1);
-const kPrimaryColor2 = Color(0xFF035AA6);
-const kSecondaryColor2 = Color(0xFFFFA41B);
-const kTextColor2 = Color(0xFF000839);
-const kTextLightColor2 = Color(0xFF747474);
-const kBlueColor2 = Color(0xFF40BAD5);
 const kDefaultShadow = BoxShadow(
   offset: Offset(0, 15),
   blurRadius: 27,
   color: Colors.black12, // Black color with 12% opacity
 );
-
 
 const kPrimaryColor = Color(0xFF0C9869);
 const kTextColor = Color(0xFF3C4046);
@@ -36,36 +29,8 @@ const kBackgroundColor = Color(0xFFF9F8FD);
 const double kDefaultPadding = 20.0;
 
 List<String> contents = ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"];
-List<Product> products = [
-  Product(
-    id: 1,
-    price: 56,
-    title: "Classic Leather Arm Chair",
-    image: "assets/images/Item_1.png",
-    description:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim",
-  ),
-  Product(
-    id: 4,
-    price: 68,
-    title: "Poppy Plastic Tub Chair",
-    image: "assets/images/Item_2.png",
-    description:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim",
-  ),
-  Product(
-    id: 9,
-    price: 39,
-    title: "Bar Stool Chair",
-    image: "assets/images/Item_3.png",
-    description:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim",
-  ),
-];
 
 class _HomePageState extends State<HomePage> {
-
-
   var images=[];
   var title = [];
   var currentPage=0.0;
@@ -418,6 +383,7 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+    // ignore: non_constant_identifier_names
     Widget AI_recommendationView(){
     Size size = MediaQuery.of(context).size;
 
@@ -430,7 +396,8 @@ class _HomePageState extends State<HomePage> {
       height: 160,
       child: InkWell(
         onTap: (){
-
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => Favorite(widget.user)));
         },
         child: Stack(
           alignment: Alignment.bottomCenter,

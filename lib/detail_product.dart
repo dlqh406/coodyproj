@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coodyproj/detail_review.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -118,94 +119,102 @@ class _ProductDetailState extends State<ProductDetail> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Column(
-                      // -  당일배송가능 여부// - 우수판매자 // 0핀매자 썸내일 // 소재 // 카테고리종류//- 무료배송
                       children: [
-
-                        IconButton(
-                          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 60.0),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(13.0),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 3.0),
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        backgroundImage: NetworkImage(
-                                            "https://lh3.googleusercontent.com/FK8EcHV1SJGHeTUJCsUhCQl0hmQu-QbC4wG6bM59S0v-rLv-jQl16YC3LQ4x-ZpPwS1cUs_4Idap57kYgcTCOQFB"),
-                                      ),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 3.0),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: NetworkImage(
+                                          "https://lh3.googleusercontent.com/FK8EcHV1SJGHeTUJCsUhCQl0hmQu-QbC4wG6bM59S0v-rLv-jQl16YC3LQ4x-ZpPwS1cUs_4Idap57kYgcTCOQFB"),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(0.0),
-                                      child: Text(''),
-                                    )
-                                  ],
-                                ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(0.0),
+                                    child: Text(''),
+                                  )
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(13.0),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 4.0),
-                                      child: Image.asset(
-                                        'assets/icons/free-shipping.png',
-                                        width: 45,),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('무료배송'),
-                                    )
-                                  ],
-                                ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 4.0),
+                                    child: Image.asset(
+                                      'assets/icons/free-shipping.png',
+                                      width: 45,),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('무료배송'),
+                                  )
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(13.0),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 4.0),
-                                      child: Image.asset(
-                                        'assets/icons/fast-delivery.png',
-                                        width: 45,),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('당일배송'),
-                                    )
-                                  ],
-                                ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 4.0),
+                                    child: Image.asset(
+                                      'assets/icons/fast-delivery.png',
+                                      width: 45,),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('당일배송'),
+                                  )
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(13.0),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 4.0),
-                                      child: Image.asset(
-                                        'assets/icons/medal.png', width: 45,
-                                        height: 40,),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('우수셀러'),
-                                    )
-                                  ],
-                                ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 4.0),
+                                    child: Image.asset(
+                                      'assets/icons/medal.png', width: 45,
+                                      height: 40,),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('우수셀러'),
+                                  )
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 4.0),
+                                    child: Image.asset(
+                                      'assets/icons/medal.png', width: 45,
+                                      height: 40,),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('1:1문의'),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
                         )
                       ],
                     ),
@@ -346,9 +355,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Widget _buildHasReview(context, length) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     var reviewCount = length;
 
     return Padding(
@@ -394,7 +401,6 @@ class _ProductDetailState extends State<ProductDetail> {
               ],
             ),
           ),
-
           Visibility(
             visible: reviewCount > 0 ? true : false,
             child: Container(
@@ -507,7 +513,10 @@ class _ProductDetailState extends State<ProductDetail> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),),
                   color: Colors.blueAccent,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => DetailReview(widget.user,widget.document,length)));
+                  },
                   child: const Text('후기 전체 보기',
                       style: TextStyle(color: Colors.white, fontSize: 13)),
                 ),
