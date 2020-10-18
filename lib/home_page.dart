@@ -38,7 +38,7 @@ List<String> images2 = [
 
 
 List<String> contents = ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"];
-
+PageController _pageController;
 
 class _HomePageState extends State<HomePage> {
   var images=[];
@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _pageController = PageController();
        Firestore.instance.collection('magazine').orderBy('date', descending: false).getDocuments().then((querySnapshot) =>
           querySnapshot.documents.forEach((result) {
             setState(() {
@@ -61,6 +62,13 @@ class _HomePageState extends State<HomePage> {
       );
     print(images);
     super.initState();
+  }
+
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
 
@@ -91,12 +99,12 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBody(context) {
 
-    PageController controller = PageController(initialPage: images.length);
-    controller.addListener(() {
-      setState(() {
-        currentPage = controller.page;
-      });
-    });
+//    PageController controller = PageController();
+//    _pageController.addListener(() {
+//      setState(() {
+//        currentPage = _pageController.page;
+//      });
+//    });
 
     return Container(
       decoration: BoxDecoration(
@@ -294,7 +302,7 @@ class _HomePageState extends State<HomePage> {
                   Positioned.fill(
                     child: PageView.builder(
                       itemCount: images.length,
-                      controller: controller,
+                      controller: _pageController,
                       reverse: true,
                       itemBuilder: (context, index) {
                         return Container();
@@ -438,15 +446,15 @@ class _HomePageState extends State<HomePage> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-//                            Padding(
-//                              padding: EdgeInsets.symmetric(
-//                                  horizontal: 16.0, vertical: 8.0),
-//                              child: Text(title[i],
-//                                  style: TextStyle(
-//                                    color: Colors.white,
-//                                    fontSize: 25.0,
-//                                  )),
-//                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Text(title[i],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25.0,
+                                  )),
+                            ),
 
                             Padding(
                               padding: const EdgeInsets.only(
