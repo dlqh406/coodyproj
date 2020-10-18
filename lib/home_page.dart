@@ -7,71 +7,82 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'favorite_analysis_page.dart';
 import 'loading_page.dart';
 import 'favorite.dart';
-import 'dart:math';
+import 'package:coodyproj/constants.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class HomePage extends StatefulWidget {
-//  List<String> images = ["https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F5.png?alt=media&token=b51cfea8-909e-41ce-98f2-2713447a155c", "https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F1.png?alt=media&token=c1beb195-ff65-4dcc-b49a-881dfb42e982", "https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F2.png?alt=media&token=f75a6b78-4df7-4486-8e73-540f86c5bcd9","https://firebasestorage.googleapis.com/v0/b/coody-f21eb.appspot.com/o/magazine%2F3.png?alt=media&token=874e93fc-c5ac-46a6-ad18-64484995ca13"];
-
-//  var images=[];
-
-
   final FirebaseUser user;
   HomePage(this.user);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
+const kBackgroundColor2 = Color(0xFFF1EFF1);
+const kPrimaryColor2 = Color(0xFF035AA6);
+const kSecondaryColor2 = Color(0xFFFFA41B);
+const kTextColor2 = Color(0xFF000839);
+const kTextLightColor2 = Color(0xFF747474);
+const kBlueColor2 = Color(0xFF40BAD5);
+const kDefaultShadow = BoxShadow(
+  offset: Offset(0, 15),
+  blurRadius: 27,
+  color: Colors.black12, // Black color with 12% opacity
+);
 
 
-var cardAspectRatio = 12.0 / 16.0;
-var widgetAspectRatio = cardAspectRatio * 1.2;
-
-
-List<String> images2 = [
-  "assets/images/1.png",
-  "assets/images/newdelhi.jpg",
-  "assets/images/newyork.jpg",
-  "assets/images/paris.jpg",
-];
-
-
+const kPrimaryColor = Color(0xFF0C9869);
+const kTextColor = Color(0xFF3C4046);
+const kBackgroundColor = Color(0xFFF9F8FD);
+const double kDefaultPadding = 20.0;
 
 List<String> contents = ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"];
-PageController _pageController;
+List<Product> products = [
+  Product(
+    id: 1,
+    price: 56,
+    title: "Classic Leather Arm Chair",
+    image: "assets/images/Item_1.png",
+    description:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim",
+  ),
+  Product(
+    id: 4,
+    price: 68,
+    title: "Poppy Plastic Tub Chair",
+    image: "assets/images/Item_2.png",
+    description:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim",
+  ),
+  Product(
+    id: 9,
+    price: 39,
+    title: "Bar Stool Chair",
+    image: "assets/images/Item_3.png",
+    description:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim",
+  ),
+];
 
 class _HomePageState extends State<HomePage> {
+
+
   var images=[];
   var title = [];
   var currentPage=0.0;
-
-
   @override
   void initState() {
-    _pageController = PageController();
-       Firestore.instance.collection('magazine').orderBy('date', descending: false).getDocuments().then((querySnapshot) =>
+       Firestore.instance.collection('magazine').orderBy('date', descending: true).getDocuments().then((querySnapshot) =>
           querySnapshot.documents.forEach((result) {
             setState(() {
               images.add(result.data['thumbnail_img']);
-              title.add(result.data['title']);
+              title.add(result.data['shortTitile']);
               currentPage = images.length - 1.0;
             });
-            print(result.data['thumbnail_img']);
-            print(images);
           })
       );
     print(images);
     super.initState();
   }
-
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   FacebookLogin facebookLogin = FacebookLogin();
 
@@ -83,123 +94,95 @@ class _HomePageState extends State<HomePage> {
         if(snapshot.hasData){
           if(snapshot.data.data == null){
             return FavoriteAnalysisPage(widget.user);
-
           }else{
             return Scaffold(
-                body: _buildBody(context)
-            );
-          }
-        }else{
-          return LoadingPage();
-        }
-
-      }
-    );
-    }
-
-  Widget _buildBody(context) {
-
-//    PageController controller = PageController();
-//    _pageController.addListener(() {
-//      setState(() {
-//        currentPage = _pageController.page;
-//      });
-//    });
-
-    return Container(
-      decoration: BoxDecoration(
-      color: Colors.white
-      ),
-      child: Scaffold(
-        appBar: PreferredSize(preferredSize: Size.fromHeight(40.0),
-            child:AppBar(
-              titleSpacing: 6.0,
-              backgroundColor: Colors.white,
-              elevation: 0,
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Container(
-                  child: GestureDetector(
-                      child: Image.asset('assets/logo/blacklogo.png'),
-                      onTap: (){Navigator.of(context).pop();}),
-                ),
-              ),
-              title: Container(
-                child: Container(
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top:1.5,right: 10,left: 5),
-                        child: GestureDetector(
-                          onTap: (){print("Tap GTD");},
-                          child: Image.asset('assets/icons/bar.png',height: 40,),
+                appBar: PreferredSize(preferredSize: Size.fromHeight(40.0),
+                    child:AppBar(
+                      titleSpacing: 6.0,
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      leading: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Container(
+                          child: GestureDetector(
+                              child: Image.asset('assets/logo/blacklogo.png'),
+                              onTap: (){Navigator.of(context).pop();}),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left:11.0),
-                        child: Row(
-                          children: <Widget>[
-
-                            Padding(
-                              padding: const EdgeInsets.only(left:27.0),
-                              child: RotateAnimatedTextKit(
-                                onTap: () {
-                                  // 위 GestureDetector 랑 똑같이 구현 해야함
-                                  print("Tap Event");
-                                },
-                                isRepeatingAnimation: true,
-                                totalRepeatCount: 60000,
-                                text: contents,
-                                textStyle: TextStyle(fontSize: 13.0,color: Colors.white),
+                      title: Container(
+                        child: Container(
+                          child: Stack(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top:1.5,right: 10,left: 5),
+                                child: GestureDetector(
+                                  onTap: (){print("Tap GTD");},
+                                  child: Image.asset('assets/icons/bar.png',height: 40,),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                              Padding(
+                                padding: const EdgeInsets.only(left:11.0),
+                                child: Row(
+                                  children: <Widget>[
 
+                                    Padding(
+                                      padding: const EdgeInsets.only(left:27.0),
+                                      child: RotateAnimatedTextKit(
+                                        onTap: () {
+                                          // 위 GestureDetector 랑 똑같이 구현 해야함
+                                          print("Tap Event");
+                                        },
+                                        isRepeatingAnimation: true,
+                                        totalRepeatCount: 60000,
+                                        text: contents,
+                                        textStyle: TextStyle(fontSize: 13.0,color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                              ),
+                            ],
+                          ),),
                       ),
-//                      if(widget.images.length == 0)
-//                        StreamBuilder<QuerySnapshot>(
-//                            stream: Firestore.instance.collection('magazine').orderBy('date', descending: true).snapshots(),
-//                            builder:(context, snapshot){
-//                              print('init3');
-//                              if(!snapshot.hasData){
-//                                return  Center(child: CircularProgressIndicator());
-//                              }else{
-//                                widget.images =[];
-//                                for(var i=0; i<4; i++){
-//                                  widget.images.setAll(i, snapshot.data.documents[i]['thumbnail_img']);
-//                                  print(snapshot.data.documents[i]['thumbnail_img']);
-//                                }
-//                                print(widget.images);
-//                                return Container();
-//                              }
-//                            }),
-                    ],
-                  ),),
-              ),
-              actions: <Widget>[
+                      actions: <Widget>[
 
-                InkWell(
-                  child: new Container(
-                      width: 25,
-                      child: Image.asset('assets/icons/cart2.png')),
-                  onTap: () => {
+                        InkWell(
+                          child: new Container(
+                              width: 25,
+                              child: Image.asset('assets/icons/cart2.png')),
+                          onTap: () => {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => TestPage()))
+                          },
+                        ),
+                        new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
+                            onPressed: () => {
+                            }),
 
-                  },
+                      ],
+
+                    )
                 ),
-                new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
-                    onPressed: () => {
-                    }),
+                body: ListView(
+                  children: [
+                    magazineView(),
+                    divideTag(),
+                    AI_recommendationView(),
+                    recommendationView(),
+                  ],
+                )
 
-              ],
-
-            )
-        ),
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-//              Padding(
+            );}}
+        else{
+          return LoadingPage();
+        }});
+    }
+    Widget magazineView(){
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          //              Padding(
 //                padding: const EdgeInsets.only(
 //                    left: 12.0, right: 12.0, top: 39.0, bottom: 8.0),
 //                child: Row(
@@ -238,344 +221,449 @@ class _HomePageState extends State<HomePage> {
 //                    )
 //                  ],
 //                ),
-//              ),
-              Padding(
-                padding: EdgeInsets.only(top:15),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("패션 컨텐츠",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30.0,
-                            letterSpacing: 0.1,
-                          )),
-                      IconButton(
-                        icon: Icon(
-                          Icons.add,
-                          size: 25.0,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Favorite(widget.user)));
-                        },
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top:5,left: 20.0),
+//              ),ddsa
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(top:15),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFFff6e6e),
-                        borderRadius: BorderRadius.circular(20.0),
+                    Text("Magazine",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Archivo',
+                        fontSize: 30.0,
+                        letterSpacing: 0,
+                      ),),
+                    IconButton(
+                      icon: Icon(
+                        Icons.add,
+                        size: 25.0,
+                        color: Colors.black,
                       ),
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 22.0, vertical: 6.0),
-                          child: Text("Magazine",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15.0,
-                    ),
-                    Text("25+ Stories",
-                        style: TextStyle(color: Colors.black)),
-                    Spacer(),
+                      onPressed: () {
 
-                  ],
-                ),
-              ),
-              Stack(
-                children: <Widget>[
-                  CardScrollWidget(currentPage, images),
-                  Positioned.fill(
-                    child: PageView.builder(
-                      itemCount: images.length,
-                      controller: _pageController,
-                      reverse: true,
-                      itemBuilder: (context, index) {
-                        return Container();
                       },
-                    ),
-                  )
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top:20),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("A.I 스타일추천",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 30.0,
-                            letterSpacing: 0.1,
-                          )),
-                      IconButton(
-                        icon: Icon(
-                          Icons.add,
-                          size: 25.0,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Favorite(widget.user)));
-                        },
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top:5.0,left: 20.0),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 22.0, vertical: 6.0),
-                          child: Text("Store",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15.0,
-                    ),
-                    Text("1235+",
-                        style: TextStyle(color: Colors.black)),
-                    Spacer(),
-
+                    )
                   ],
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(18.0),
-                    child: ClipRRect(
-
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.asset("assets/images/newyork.jpg",fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width*0.9,
-                        height: MediaQuery.of(context).size.width*0.6,
-                      ),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-  Widget CardScrollWidget(currentPage,imagesList){
-    var padding = 20.0;
-    var verticalInset = 20.0;
-    print("@@@@@@@@imagesList.length::${imagesList.length}, currentPage: ${currentPage} ");
-    return AspectRatio(
-      aspectRatio: widgetAspectRatio,
-      child: LayoutBuilder(builder: (context, contraints) {
-        var width = contraints.maxWidth;
-        var height = contraints.maxHeight;
-
-        var safeWidth = width - 2 * padding;
-        var safeHeight = height - 2 * padding;
-
-        var heightOfPrimaryCard = safeHeight;
-        var widthOfPrimaryCard = heightOfPrimaryCard * cardAspectRatio;
-
-        var primaryCardLeft = safeWidth - widthOfPrimaryCard;
-        var horizontalInset = primaryCardLeft / 2;
-
-        List<Widget> cardList = new List();
-
-        for (var i = 0; i < imagesList.length; i++) {
-          var delta = i - currentPage;
-          bool isOnRight = delta > 0;
-
-          var start = padding +
-              max(
-                  primaryCardLeft -
-                      horizontalInset * -delta * (isOnRight ? 15 : 1),
-                  0.0);
-
-          var cardItem = Positioned.directional(
-            top: padding + verticalInset * max(-delta, 0.0),
-            bottom: padding + verticalInset * max(-delta, 0.0),
-            start: start,
-            textDirection: TextDirection.rtl,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                      color: Colors.black12,
-                      offset: Offset(3.0, 6.0),
-                      blurRadius: 10.0)
-                ]),
-                child: AspectRatio(
-                  aspectRatio: cardAspectRatio,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      Image.network(imagesList[i], fit: BoxFit.cover),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Text(title[i],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25.0,
-                                  )),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 12.0, bottom: 12.0),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
                 ),
               ),
             ),
-          );
-          cardList.add(cardItem);
-        }
-        return Stack(
-          children: cardList,
-        );
-      }),
-    );
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top:5,left: 20.0),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFff6e6e),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 22.0, vertical: 6.0),
+                      child: Text("CONTENTS",
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 15.0,
+                ),
+                Text("${images.length}+ Stories",
+                    style: TextStyle(color: Colors.black)),
+                Spacer(),
 
-  }
-
-
-}
-//
-//class CardScrollWidget extends StatelessWidget {
-//
-//  var currentPage;
-//  var padding = 20.0;
-//  var verticalInset = 20.0;
-//  var imagesList;
-//
-//  CardScrollWidget(this.currentPage, this.imagesList);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    print("imagesList.length:  ${imagesList.length}");
-//    return new AspectRatio(
-//      aspectRatio: widgetAspectRatio,
-//      child: LayoutBuilder(builder: (context, contraints) {
-//        var width = contraints.maxWidth;
-//        var height = contraints.maxHeight;
-//
-//        var safeWidth = width - 2 * padding;
-//        var safeHeight = height - 2 * padding;
-//
-//        var heightOfPrimaryCard = safeHeight;
-//        var widthOfPrimaryCard = heightOfPrimaryCard * cardAspectRatio;
-//
-//        var primaryCardLeft = safeWidth - widthOfPrimaryCard;
-//        var horizontalInset = primaryCardLeft / 2;
-//
-//        List<Widget> cardList = new List();
-//
-//        for (var i = 0; i < imagesList.length; i++) {
-//          var delta = i - currentPage;
-//          bool isOnRight = delta > 0;
-//
-//          var start = padding +
-//              max(
-//                  primaryCardLeft -
-//                      horizontalInset * -delta * (isOnRight ? 15 : 1),
-//                  0.0);
-//
-//          var cardItem = Positioned.directional(
-//            top: padding + verticalInset * max(-delta, 0.0),
-//            bottom: padding + verticalInset * max(-delta, 0.0),
-//            start: start,
-//            textDirection: TextDirection.rtl,
-//            child: ClipRRect(
-//              borderRadius: BorderRadius.circular(16.0),
-//              child: Container(
-//                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-//                  BoxShadow(
-//                      color: Colors.black12,
-//                      offset: Offset(3.0, 6.0),
-//                      blurRadius: 10.0)
-//                ]),
-//                child: AspectRatio(
-//                  aspectRatio: cardAspectRatio,
-//                  child: Stack(
-//                    fit: StackFit.expand,
+              ],
+            ),
+          ),
+          SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                  children: <Widget>[
+                    Row(
+                        children: [
+                          for(var i=0; i< images.length; i++)
+                            ContentsCard(
+                                image: "${images[i]}",
+                                title: "${title[i]}",
+                                country: "Russia",
+                                price: 440,
+                                press: (){}
+                            ),
+                        ])])),
+          //Padding(
+//                padding: EdgeInsets.only(top:00),
+//                child: Padding(
+//                  padding: EdgeInsets.symmetric(horizontal: 30.0),
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                    children: <Widget>[
-//                      Image.network(imagesList[i], fit: BoxFit.cover),
-//                      Align(
-//                        alignment: Alignment.bottomLeft,
-//                        child: Column(
-//                          mainAxisSize: MainAxisSize.min,
-//                          crossAxisAlignment: CrossAxisAlignment.start,
-//                          children: <Widget>[
-//                            Padding(
-//                              padding: EdgeInsets.symmetric(
-//                                  horizontal: 16.0, vertical: 8.0),
-//                              child: Text(title[i],
-//                                  style: TextStyle(
-//                                    color: Colors.white,
-//                                    fontSize: 25.0,
-//                                  )),
-//                            ),
-//
-//                            Padding(
-//                              padding: const EdgeInsets.only(
-//                                  left: 12.0, bottom: 12.0),
-//                            )
-//                          ],
+//                      Text("A.I 스타일추천",
+//                          style: TextStyle(
+//                            fontWeight: FontWeight.bold,
+//                            color: Colors.black,
+//                            fontSize: 30.0,
+//                            letterSpacing: 0.1,
+//                          )),
+//                      IconButton(
+//                        icon: Icon(
+//                          Icons.add,
+//                          size: 25.0,
+//                          color: Colors.black,
 //                        ),
+//                        onPressed: () {
+//                          Navigator.push(context,
+//                              MaterialPageRoute(builder: (context) => Favorite(widget.user)));
+//                        },
 //                      )
 //                    ],
 //                  ),
 //                ),
 //              ),
-//            ),
-//          );
-//          cardList.add(cardItem);
-//        }
-//        return Stack(
-//          children: cardList,
-//        );
-//      }),
-//    );
-//  }
-//}
+//              Padding(
+//                padding: const EdgeInsets.only(top:5.0,left: 20.0),
+//                child: Row(
+//                  children: <Widget>[
+//                    Container(
+//                      decoration: BoxDecoration(
+//                        color: Colors.blueAccent,
+//                        borderRadius: BorderRadius.circular(20.0),
+//                      ),
+//                      child: Center(
+//                        child: Padding(
+//                          padding: EdgeInsets.symmetric(
+//                              horizontal: 22.0, vertical: 6.0),
+//                          child: Text("Store",
+//                              style: TextStyle(color: Colors.white)),
+//                        ),
+//                      ),
+//                    ),
+//                    SizedBox(
+//                      width: 15.0,
+//                    ),
+//                    Text("1235+",
+//                        style: TextStyle(color: Colors.black)),
+//                    Spacer(),
+//                  ],
+//                ),
+//              ),
+        ],
+      ),
+    );
+  }
+    Widget divideTag(){
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("Recommend",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Archivo',
+                  fontSize: 30.0,
+                  letterSpacing: 0,
+                ),),
+              IconButton(
+                icon: Icon(
+                  Icons.search,
+                  size: 25.0,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+
+                },
+              )
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top:5,left: 20.0),
+          child: Row(
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 22.0, vertical: 6.0),
+                    child: Text("STORE",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 15.0,
+              ),
+              Text("${images.length}+ Stories",
+                  style: TextStyle(color: Colors.black)),
+              Spacer(),
+
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+    Widget AI_recommendationView(){
+    Size size = MediaQuery.of(context).size;
+
+    return   Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: kDefaultPadding,
+        vertical: kDefaultPadding / 2,
+      ),
+      // color: Colors.blueAccent,
+      height: 160,
+      child: InkWell(
+        onTap: (){
+
+        },
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            // Those are our background
+            Container(
+              height: 136,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                color: Colors.lightBlue,
+                boxShadow: [kDefaultShadow],
+              ),
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(22),
+                ),
+              ),
+            ),
+            // our product image
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
+                height: 160,
+                // image is square but we add extra 20 + 20 padding thats why width is 200
+                width: 200,
+                child: Image.asset("assets/images/Item_1.png", fit: BoxFit.cover,),
+              ),
+            ),
+            // Product title and price
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: SizedBox(
+                height: 136,
+                // our image take 200 width, thats why we set out total width - 200
+                width: size.width - 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding),
+                      child: Text(
+                        "product.title"
+                      ),
+                    ),
+                    // it use the available space
+                    Spacer(),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: kDefaultPadding * 1.5, // 30 padding
+                        vertical: kDefaultPadding / 4, // 5 top and bottom
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.pinkAccent,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(22),
+                          topRight: Radius.circular(22),
+                        ),
+                      ),
+                      child: Text(
+                        "price",
+                        style: TextStyle(color:Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+    Widget recommendationView(){
+      Size size = MediaQuery.of(context).size;
+
+    return   Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: kDefaultPadding,
+        vertical: kDefaultPadding / 2,
+      ),
+      // color: Colors.blueAccent,
+      height: 160,
+      child: InkWell(
+        onTap: (){},
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            // Those are our background
+            Container(
+              height: 136,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                color: kBlueColor2,
+                boxShadow: [kDefaultShadow],
+              ),
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(22),
+                ),
+              ),
+            ),
+            // our product image
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
+                height: 160,
+                // image is square but we add extra 20 + 20 padding thats why width is 200
+                width: 200,
+                child: Image.asset("assets/images/Item_1.png", fit: BoxFit.cover,),
+              ),
+            ),
+            // Product title and price
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: SizedBox(
+                height: 136,
+                // our image take 200 width, thats why we set out total width - 200
+                width: size.width - 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding),
+                      child: Text(
+                        "product.title",
+                        style: Theme.of(context).textTheme.button,
+                      ),
+                    ),
+                    // it use the available space
+                    Spacer(),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: kDefaultPadding * 1.5, // 30 padding
+                        vertical: kDefaultPadding / 4, // 5 top and bottom
+                      ),
+                      decoration: BoxDecoration(
+                        color: kSecondaryColor2,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(22),
+                          topRight: Radius.circular(22),
+                        ),
+                      ),
+                      child: Text(
+                        "price",
+                        style: Theme.of(context).textTheme.button,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    }
+
+}
+class ContentsCard extends StatelessWidget {
+  const ContentsCard({
+    Key key,
+    this.image,
+    this.title,
+    this.country,
+    this.price,
+    this.press,
+  }) : super(key: key);
+
+  final String image, title, country;
+  final int price;
+  final Function press;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.only(
+        left: kDefaultPadding,
+        top: kDefaultPadding / 2,
+        bottom: kDefaultPadding * 2.5,
+      ),
+      width: size.width * 0.4,
+      child: Column(
+        children: <Widget>[
+          ClipRRect(
+              borderRadius:BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              child: Image.network(image)),
+          GestureDetector(
+            onTap: press,
+            child: Container(
+              padding: EdgeInsets.all(kDefaultPadding / 2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 10),
+                    blurRadius: 34,
+                    color: Colors.black12,
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                 Text("$title",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
