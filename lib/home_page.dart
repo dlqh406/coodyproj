@@ -111,14 +111,13 @@ class _HomePageState extends State<HomePage> {
                           ),),
                       ),
                       actions: <Widget>[
-
                         InkWell(
                           child: new Container(
                               width: 25,
                               child: Image.asset('assets/icons/cart2.png')),
                           onTap: () => {
                             Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => TestPage()))
+                                MaterialPageRoute(builder: (context) => TestPage(widget.user)))
                           },
                         ),
                         new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
@@ -497,7 +496,7 @@ class _HomePageState extends State<HomePage> {
               height: 136,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22),
-                color: kBlueColor2,
+                color: Colors.blue,
                 boxShadow: [kDefaultShadow],
               ),
               child: Container(
@@ -548,7 +547,7 @@ class _HomePageState extends State<HomePage> {
                         vertical: kDefaultPadding / 4, // 5 top and bottom
                       ),
                       decoration: BoxDecoration(
-                        color: kSecondaryColor2,
+                        color: Colors.blue,
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(22),
                           topRight: Radius.circular(22),

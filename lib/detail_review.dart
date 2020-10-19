@@ -124,7 +124,7 @@ class _DetailReviewState extends State<DetailReview> {
                                     padding: const EdgeInsets.only(top:8.0),
                                     child: SizedBox(
                                         width: size.width * 0.77,
-                                        child: Text(doc['review'])),
+                                        child: Text(doc['review'],style: TextStyle(fontSize: 14),)),
                                   )],
                               ),
                               subtitle: Opacity(

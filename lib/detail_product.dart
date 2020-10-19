@@ -17,7 +17,7 @@ class ProductDetail extends StatefulWidget {
   bool useTerm_downbtn = false;
 
   var selectedList =[];
-  var temSelectedList = ["",""];
+  var temSelectedList = ["","",""];
 
   int _selectedSize = 0;
   int _selectedColor = 0;
@@ -1001,20 +1001,28 @@ class _ProductDetailState extends State<ProductDetail> {
                                   child: Text("옵션을 모두 선택해주세요",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.pinkAccent),),
                                 )),
                             if(widget.selectedList.length >=1)
-                            for (var i=0; i< widget.selectedList.length; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom :13.0),
-                                child: Row(
-                                  children: [
-                                    Text('${widget.selectedList[i][0]}',style: TextStyle(fontWeight: FontWeight.bold)),
-                                    Text(','),
-                                    Text('${widget.selectedList[i][1]}',style: TextStyle(fontWeight: FontWeight.bold)),
-                                    Spacer(),
-                                    GestureDetector(child: Icon(Icons.close,color: Colors.grey,), onTap:(){setState((){widget.selectedList.removeAt(i);});
-                                    }),
-                                  ],
-                                ),
-                              ),
+//                            for (var i=0; i< widget.selectedList.length; i++)
+                              _cleanArray(),
+                              for (var index=0; index< widget.selectedList.length; index++)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom :13.0),
+                                    child: Row(
+                                      children: [
+                                          Text('${widget.selectedList[index][0]}',style: TextStyle(fontWeight: FontWeight.bold)),
+                                          Text(','),
+                                          Text('${widget.selectedList[index][1]}',style: TextStyle(fontWeight: FontWeight.bold)),
+                                          Text(','),
+                                          Text('${widget.selectedList[index][2]}',style: TextStyle(fontWeight: FontWeight.bold)),
+                                          Spacer(),
+                                          GestureDetector(child: Icon(Icons.close,color: Colors.grey,), onTap:(){
+                                             setState((){
+                                              widget.selectedList.removeAt(index);
+                                                print(widget.selectedList);
+                                          });
+                                         }),
+                                     ],
+                                    ),
+                                    ),
                           ],
                         ),
                       ),
@@ -1030,7 +1038,9 @@ class _ProductDetailState extends State<ProductDetail> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(40),),
                           color: Colors.pinkAccent,
-                          onPressed: () {},
+                          onPressed: () {
+//                            _writeComment();
+                          },
                           child: const Text('장바구니 넣기',
                               style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold)),
                         )),
@@ -1070,44 +1080,88 @@ class _ProductDetailState extends State<ProductDetail> {
 
 
   void _selectedColorMethod(index) {
-
     var selectedColor = widget.document['colorList'][index-1];
     widget.temSelectedList.setAll(0,["$selectedColor"]);
+    widget.temSelectedList.setAll(2,["1"]);
+
     print("widget.temSelectedList: ${widget.temSelectedList}");
 
-    if (widget.temSelectedList[0] != "" && widget.temSelectedList[1] != ""){
+    if (widget.temSelectedList[0] != "" && widget.temSelectedList[1] != "") {
+      // 만약 두개조건을 충족 안하여 경고메세지가 뜨면 다시 제대로 골랐을떄 없애는 코드
       widget.modalVisible = false;
+      // 선택하고 hint처럼 떠있게
       widget._selectedColor = 0;
       widget._selectedSize = 0;
+
       widget.selectedList.addAll([widget.temSelectedList]);
-      widget.temSelectedList = ["",""];
+      widget.temSelectedList = ["","",""];
       print("widget.selectedList: ${widget.selectedList}");
-
     }
-
-
-
   }
 
   void _selectedSizeMethod(index) {
-    
-
       var selectedSize = widget.document['sizeList'][index-1];
       widget.temSelectedList.setAll(1,["$selectedSize"]);
       print("widget.temSelectedList: ${widget.temSelectedList}");
 
       if (widget.temSelectedList[0] != "" && widget.temSelectedList[1] != ""){
         widget.modalVisible = false;
+
         widget._selectedColor = 0;
         widget._selectedSize = 0;
 
         widget.selectedList.addAll([widget.temSelectedList]);
-        widget.temSelectedList = ["",""];
+
+        widget.temSelectedList = ["","",""];
         print("widget.selectedList: ${widget.selectedList}");
 
       }
-  
+  }
 
+  Widget _cleanArray(){
+    if(widget.selectedList.length>=2){
+      print("a");
+      // i=1
+     for(var i=widget.selectedList.length-1; i>1; i--){
+       for(var j=0; j<widget.selectedList.length-1; j++){
+                              // 1                        // 0
+         if(widget.selectedList[i][0]==widget.selectedList[j][0] &&
+                               // 1                         // 0
+             widget.selectedList[i][1]==widget.selectedList[j][1]){
+             print("same");
+             widget.selectedList[j].setAll(2,["${int.parse(widget.selectedList[j][2])+1}"]);
+             widget.selectedList.removeAt(i);
+             print(widget.selectedList);
+           _cleanArray();
+         }
+       }
+    }
+    }else{
+      print("else");
+    }
+    return Container();
+  }
+
+
+  void _writeComment(String text) {
+    final data = {
+      'writer' : widget.user.email,
+      'comment' : text,};
+    // 댓글 추가
+    Firestore.instance
+        .collection('post')
+        .document(widget.document.documentID)
+        .collection('comment')
+        .add(data);
+    // lastComment와 commentCount 최산화
+    final _updataData ={
+      'lastComment' : text,
+      'commentCount' : (widget.document['commentCount']??0)+1
+    };
+    Firestore.instance
+        .collection('post')
+        .document(widget.document.documentID)
+        .updateData(_updataData);
   }
 
 }
