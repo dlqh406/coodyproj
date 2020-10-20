@@ -1011,15 +1011,32 @@ class _ProductDetailState extends State<ProductDetail> {
                                           Text('${widget.selectedList[index][0]}',style: TextStyle(fontWeight: FontWeight.bold)),
                                           Text(','),
                                           Text('${widget.selectedList[index][1]}',style: TextStyle(fontWeight: FontWeight.bold)),
-                                          Text(','),
-                                          Text('${widget.selectedList[index][2]}',style: TextStyle(fontWeight: FontWeight.bold)),
                                           Spacer(),
-                                          GestureDetector(child: Icon(Icons.close,color: Colors.grey,), onTap:(){
-                                             setState((){
-                                              widget.selectedList.removeAt(index);
-                                                print(widget.selectedList);
-                                          });
+                                          GestureDetector(child: Icon(Icons.arrow_drop_down),
+                                              onTap:(){
+                                                setState((){
+                                                  widget.selectedList[index].setAll(2,["${int.parse(widget.selectedList[index][2])-1==0?widget.selectedList.removeAt(index):int.parse(widget.selectedList[index][2])-1}"]);
+                                                  print(widget.selectedList);
+                                                });
+                                              }),
+                                          Text('${widget.selectedList[index][2]}',style: TextStyle(fontWeight: FontWeight.bold)),
+                                          GestureDetector(child: Icon(Icons.arrow_drop_up),
+                                              onTap:(){
+                                                setState((){
+                                                  widget.selectedList[index].setAll(2,["${int.parse(widget.selectedList[index][2])+1}"]);
+                                                  print(widget.selectedList);
+                                                });
+                                              }
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left:20.0),
+                                            child: GestureDetector(child: Icon(Icons.cancel,color: Colors.grey,), onTap:(){
+                                               setState((){
+                                                widget.selectedList.removeAt(index);
+                                                  print(widget.selectedList);
+                                            });
                                          }),
+                                          ),
                                      ],
                                     ),
                                     ),
@@ -1121,14 +1138,10 @@ class _ProductDetailState extends State<ProductDetail> {
   Widget _cleanArray(){
     if(widget.selectedList.length>=2){
       print("a");
-      // i=1
      for(var i=widget.selectedList.length-1; i>1; i--){
        for(var j=0; j<widget.selectedList.length-1; j++){
-                              // 1                        // 0
          if(widget.selectedList[i][0]==widget.selectedList[j][0] &&
-                               // 1                         // 0
              widget.selectedList[i][1]==widget.selectedList[j][1]){
-             print("same");
              widget.selectedList[j].setAll(2,["${int.parse(widget.selectedList[j][2])+1}"]);
              widget.selectedList.removeAt(i);
              print(widget.selectedList);
@@ -1141,8 +1154,7 @@ class _ProductDetailState extends State<ProductDetail> {
     }
     return Container();
   }
-
-
+  
   void _writeComment(String text) {
     final data = {
       'writer' : widget.user.email,
