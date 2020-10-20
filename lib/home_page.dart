@@ -1,3 +1,4 @@
+import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/test.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'favorite_analysis_page.dart';
 import 'loading_page.dart';
 import 'favorite.dart';
+import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/constants.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -54,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: Firestore.instance.collection("user_data").document(widget.user.email).snapshots(),
+      stream: Firestore.instance.collection("user_data").document(widget.user.uid).snapshots(),
       builder: (context, snapshot) {
         if(snapshot.hasData){
           if(snapshot.data.data == null){
@@ -117,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                               child: Image.asset('assets/icons/cart2.png')),
                           onTap: () => {
                             Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => TestPage(widget.user)))
+                                MaterialPageRoute(builder: (context) => CartPage(widget.user)))
                           },
                         ),
                         new IconButton( icon: new Icon(Icons.more_vert,size: 28,),

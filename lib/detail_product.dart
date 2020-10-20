@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_html/flutter_html.dart';
-
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 class ProductDetail extends StatefulWidget {
 
@@ -445,8 +445,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
 
                                       doc['img'] == null
@@ -468,7 +467,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                           child: Text(doc['review'],
                                             maxLines: 4,
                                             overflow: TextOverflow.ellipsis,
-                                            softWrap: false,)),
+                                            softWrap: false,
+                                          )),
                                     ],
                                   ),
                                 ),
@@ -863,6 +863,7 @@ class _ProductDetailState extends State<ProductDetail> {
     '2. 구매한 상품은 입점 업체(쇼핑몰 업체)에서 배송합니다': false,
     '3. 결제 확인후 1~3일 정도 소요됩니다.(주문 폭주시 배송이 지연될 수 있습니다)': false,
   };
+
   Stream<QuerySnapshot> _commentStream() {
     return Firestore.instance.collection('uploaded_product')
         .document(widget.document.documentID).collection('review').orderBy(
@@ -1001,7 +1002,6 @@ class _ProductDetailState extends State<ProductDetail> {
                                   child: Text("옵션을 모두 선택해주세요",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.pinkAccent),),
                                 )),
                             if(widget.selectedList.length >=1)
-//                            for (var i=0; i< widget.selectedList.length; i++)
                               _cleanArray(),
                               for (var index=0; index< widget.selectedList.length; index++)
                                 Padding(
@@ -1012,10 +1012,14 @@ class _ProductDetailState extends State<ProductDetail> {
                                           Text(','),
                                           Text('${widget.selectedList[index][1]}',style: TextStyle(fontWeight: FontWeight.bold)),
                                           Spacer(),
-                                          GestureDetector(child: Icon(Icons.arrow_drop_down),
+                                          GestureDetector(
+                                              child: Icon(Icons.arrow_drop_down),
                                               onTap:(){
                                                 setState((){
-                                                  widget.selectedList[index].setAll(2,["${int.parse(widget.selectedList[index][2])-1==0?widget.selectedList.removeAt(index):int.parse(widget.selectedList[index][2])-1}"]);
+                                                  widget.selectedList[index].setAll(2,
+                                                      ["${int.parse(widget.selectedList[index][2])-1==0
+                                                          ?widget.selectedList.removeAt(index)
+                                                          :int.parse(widget.selectedList[index][2])-1}"]);
                                                   print(widget.selectedList);
                                                 });
                                               }),
@@ -1056,7 +1060,17 @@ class _ProductDetailState extends State<ProductDetail> {
                             borderRadius: BorderRadius.circular(40),),
                           color: Colors.pinkAccent,
                           onPressed: () {
-//                            _writeComment();
+                            if(widget.selectedList.length == 0){
+                              setState((){
+                                widget.modalVisible = true;
+                              });
+                            }else{
+                              print(widget.selectedList);
+                              _addToCart(widget.selectedList);
+                              Navigator.pop(context);
+                              _showMyDialog();
+                            }
+
                           },
                           child: const Text('장바구니 넣기',
                               style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold)),
@@ -1154,29 +1168,79 @@ class _ProductDetailState extends State<ProductDetail> {
     }
     return Container();
   }
-  
-  void _writeComment(String text) {
-    final data = {
-      'writer' : widget.user.email,
-      'comment' : text,};
-    // 댓글 추가
-    Firestore.instance
-        .collection('post')
-        .document(widget.document.documentID)
-        .collection('comment')
-        .add(data);
-    // lastComment와 commentCount 최산화
-    final _updataData ={
-      'lastComment' : text,
-      'commentCount' : (widget.document['commentCount']??0)+1
-    };
-    Firestore.instance
-        .collection('post')
-        .document(widget.document.documentID)
-        .updateData(_updataData);
+  void _addToCart(List selectedList) {
+
+    // [[color, size, quantity],[color, size, quantity]]
+
+    if(selectedList.length > 1){
+      for( var i=0; i< selectedList.length; i++){
+        final data = {
+          'product': widget.document.documentID,
+          'selectedColor' : selectedList[i][0],
+          'selectedSize' : selectedList[i][1],
+          'selectedQuantity' : selectedList[i][2],
+          'date' : DateTime.now()
+        };
+        // 댓글 추가
+        Firestore.instance.collection('user_data')
+            .document(widget.user.uid)
+            .collection('cart')
+            .add(data);
+      }
+
+    }
+    else{
+      // [[color, size, quantity]]
+      final data = {
+        'product': widget.document.documentID,
+        'selectedColor' : selectedList[0][0],
+        'selectedSize' : selectedList[0][1],
+        'selectedQuantity' : selectedList[0][2],
+        'date' : DateTime.now()
+      };
+      // 댓글 추가
+      Firestore.instance.collection('user_data')
+          .document(widget.user.uid)
+          .collection('cart')
+          .add(data);
+    }
+
+  }
+  Future<void> _showMyDialog() async {
+    return  showDialog(
+        context: context,
+        builder: (_) => NetworkGiffyDialog(
+          image: Image.network(
+            "https://raw.githubusercontent.com/Shashank02051997/FancyGifDialog-Android/master/GIF's/gif14.gif",
+            fit: BoxFit.cover,
+          ),
+          entryAnimation: EntryAnimation.TOP_LEFT,
+          title: Text(
+            '장바구니에 담았습니다',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 22.0, fontWeight: FontWeight.w700),
+          ),
+          description: Text(
+            '장바구니에 성공적으로 저장되었습니다',
+            textAlign: TextAlign.center,
+          ),
+          buttonOkColor: Colors.blue,
+          buttonCancelColor: Colors.redAccent,
+          onOkButtonPressed: (){
+            Navigator.pop(context);
+          },
+          onCancelButtonPressed: (){
+            // 장바구니 뷰 구현
+            Navigator.pop(context);
+          },
+          buttonOkText:Text("Yes",style: TextStyle(color: Colors.white),) ,
+          buttonCancelText: Text("장바구니 바로가기",style: TextStyle(color: Colors.white),),
+
+        ));
   }
 
-}
+  }
 
 class ReleatedCard extends StatelessWidget {
   const ReleatedCard({

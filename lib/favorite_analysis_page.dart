@@ -465,9 +465,8 @@ class _SheetContainerState extends State<SheetContainer>{
 
             Firestore.instance
                 .collection('user_data')
-                .document(widget.user.email)
+                .document(widget.user.uid)
                 .setData(_updateData);
-
           };
           print("count: ${count}");
           widget.final_count = count;

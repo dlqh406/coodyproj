@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'detail_product.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:coodyproj/test.dart';
 
 class Favorite extends StatefulWidget {
 
@@ -48,7 +49,13 @@ class _FavoriteState extends State<Favorite> {
                   child: Container(
                     child: GestureDetector(
                         child: Image.asset('assets/logo/blacklogo.png'),
-                        onTap: (){Navigator.of(context).pop();}),
+                        onTap: (){
+
+                          Navigator.push(context, MaterialPageRoute(builder: (context){
+                            return TestPage(widget.user);
+                          }));
+
+                        }),
                   ),
                 ),
                 title: Container(
