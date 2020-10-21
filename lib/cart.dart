@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class CartPage extends StatefulWidget {
   final FirebaseUser user;
-
+  List<bool> checkboxList=[];
+  List calculatePriceList=[];
 
   final ScrollController _controllerOne = ScrollController();
 
@@ -73,106 +74,15 @@ class _CartPageState extends State<CartPage> {
                         ?Scrollbar(
                       controller: widget._controllerOne,
                       isAlwaysShown: true,
-                      child: ListView(
+                      child: ListView.builder(
                         controller: widget._controllerOne,
-                        children: snapshot.data.documents.map((doc) {
-                          return Column(
-                            children: [
-                              Row(
-                                children: [
-                                  StreamBuilder(
-                                    stream: Firestore.instance.collection('uploaded_product').document("${doc['product']}").snapshots(),
-                                    builder: (context, snapshot){
-                                      if(!snapshot.hasData){
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      return ClipRRect(
-                                          borderRadius: BorderRadius.circular(18.0),
-                                          child: Image.network(snapshot.data['thumbnail_img'],width: 90,height: 90,fit: BoxFit.cover,));
-                                    },
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left:10.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          StreamBuilder(
-                                            stream: Firestore.instance.collection('uploaded_product').document("${doc['product']}").snapshots(),
-                                            builder: (context, snapshot){
-                                              if(!snapshot.hasData){
-                                                return Center(
-                                                  child: CircularProgressIndicator(),
-                                                );
-                                              }
-                                              return Container(
-                                                  width: 200,
-                                                  child: Text("${snapshot.data['productName']}",
-                                                    style:TextStyle(fontWeight: FontWeight.bold),
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    softWrap: false,
-                                                  ));
-                                            },
-                                          ),
-                                          Text("옵션: ${doc['selectedColor']} / ${doc['selectedSize']}", style: TextStyle(fontSize:14 ,color: Colors.black87),),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top:5.0),
-                                            child: Container(
-                                              child: Row(
-                                                children: [
-                                                  GestureDetector(
-                                                      child: Icon(Icons.arrow_drop_down),
-                                                      onTap:(){
-                                                      }),
-                                                  Text('${doc['selectedQuantity']}',style: TextStyle(fontWeight: FontWeight.bold)),
-                                                  GestureDetector(child: Icon(Icons.arrow_drop_up),
-                                                      onTap:(){
-                                                      }
-                                                  ),
-                                                  Spacer(),
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(right:8.0),
-                                                    child: StreamBuilder(
-                                                      stream: Firestore.instance.collection('uploaded_product').document("${doc['product']}").snapshots(),
-                                                      builder: (context, snapshot){
-                                                        if(!snapshot.hasData){
-                                                          return Center(
-                                                            child: CircularProgressIndicator(),
-                                                          );
-                                                        }
-                                                        return Text("₩ ${snapshot.data['price']}",
-                                                          style:TextStyle(fontWeight: FontWeight.bold)
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Opacity(
-                                  opacity: 0.15,
-                                  child: Padding(
-                                  padding: const EdgeInsets.only(
-                                  top: 15.0, bottom: 15.0),
-                              child: Container(
-                                height: 1,
-                                color: Colors.black38,
-                              ))),
-                            ],
-                          );
-                        }).toList(),
+                        itemCount: snapshot.data.documents.length,
+                        itemBuilder:(BuildContext context, int index){
+                          return _buildListView(context, snapshot.data.documents[index],index, snapshot.data.documents.length,);
+                        },
                       ),
                     ):Center(child: Text("장바구니 비였음"));
+
                   }
               ),
             ),
@@ -181,12 +91,140 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+  Widget _buildListView(context, doc, index, length){
+    if( widget.checkboxList.length != length){
+      for(var i=0; i< length; i++){
+        widget.checkboxList.add(true);
+      }
+    }
+    return Column(
+      children: [
+        Row(
+          children: [
+            StreamBuilder(
+              stream: Firestore.instance.collection('uploaded_product').document("${doc['product']}").snapshots(),
+              builder: (context, snapshot){
+                if(!snapshot.hasData){
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return ClipRRect(
+                    borderRadius: BorderRadius.circular(18.0),
+                    child: Image.network(snapshot.data['thumbnail_img'],width: 90,height: 90,fit: BoxFit.cover,));
+              },
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left:10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    StreamBuilder(
+                      stream: Firestore.instance.collection('uploaded_product').document("${doc['product']}").snapshots(),
+                      builder: (context, snapshot){
+                        if(!snapshot.hasData){
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return Row(
+                          children: [
+                            Container(
+                                width: 200,
+                                child: Text("${snapshot.data['productName']}",
+                                  style:TextStyle(fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: false,
+                                )),
+                            Checkbox(
+                              activeColor: Colors.blue,
+                              value: widget.checkboxList[index],
+                              onChanged: (val){
+                                setState(() {
+                                 widget.checkboxList[index] = !widget.checkboxList[index];
+                                 print(widget.checkboxList);
+                                });
+                              },
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                    Text("옵션: ${doc['selectedColor']} / ${doc['selectedSize']}", style: TextStyle(fontSize:14 ,color: Colors.black87),),
+                    Padding(
+                      padding: const EdgeInsets.only(top:5.0),
+                      child: Container(
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                                child: Icon(Icons.arrow_drop_down),
+                                onTap:(){
+                                }),
+                            Text('${doc['selectedQuantity']}',style: TextStyle(fontWeight: FontWeight.bold)),
+                            GestureDetector(child: Icon(Icons.arrow_drop_up),
+                                onTap:(){
+                                }
+                            ),
+                            Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(right:20.0),
+                              child: StreamBuilder(
+                                stream: Firestore.instance.collection('uploaded_product').document("${doc['product']}").snapshots(),
+                                builder: (context, snapshot){
+                                  if(!snapshot.hasData){
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return Text("₩ ${snapshot.data['price']}",
+                                      style:TextStyle(fontWeight: FontWeight.bold)
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        Opacity(
+            opacity: 0.15,
+            child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 15.0, bottom: 15.0),
+                child: Container(
+                  height: 1,
+                  color: Colors.black38,
+                ))),
+      ],
+    );
+  }
   Stream<QuerySnapshot> _cartStream() {
     return Firestore.instance.collection('user_data')
         .document("${widget.user.uid}").collection('cart')
         .orderBy('date', descending: true).snapshots();
   }
   Widget _calculationView(BuildContext context) {
+
+
+    Firestore.instance.collection('user_data')
+        .document("${widget.user.uid}")
+        .collection('cart')
+        .orderBy('date', descending: true).getDocuments().then((querySnapshot){
+         querySnapshot.documents.forEach((result){
+          Firestore.instance.collection('uploaded_product').document(result.data["product"]).get().then((value) {
+            widget.calculatePriceList.add(value.data['productName']);
+          });
+        });});
+
+
     return Padding(
       padding: const EdgeInsets.only(left:15.0,right:15.0),
       child: Container(
@@ -241,6 +279,15 @@ class _CartPageState extends State<CartPage> {
         ),
       ),
     );
-
   }
+  //TODO Price 데이터 필드 결정빨리하고 콤마 , 알고리즘 구현 해야하고 아래 함수의 리턴 값으로 총합계보여주면 됨  
+//  int _calculatePrice(){
+//    int totalPrice = 0;
+//    for(var i=0; i< widget.checkboxList.length; i++){
+//      if(widget.checkboxList[i] == true){
+//        totalPrice += widget.calculatePriceList[i];
+//      }
+//    }
+//    return totalPrice;
+//  }
 }
