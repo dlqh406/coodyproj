@@ -50,8 +50,8 @@ class _FavoriteState extends State<Favorite> {
                     child: GestureDetector(
                         child: Image.asset('assets/logo/blacklogo.png'),
                         onTap: (){
-
-                          Navigator.push(context, MaterialPageRoute(builder: (context){
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context){
                             return TestPage(widget.user);
                           }));
 
@@ -63,7 +63,7 @@ class _FavoriteState extends State<Favorite> {
                     child: Stack(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top:1.5,right: 10,left: 5),
+                          padding: const EdgeInsets.only(top:2.3,right: 10,left: 5),
                           child: GestureDetector(
                             onTap: (){print("Tap GTD");},
                             child: Image.asset('assets/icons/bar.png',height: 40,),
@@ -101,14 +101,33 @@ class _FavoriteState extends State<Favorite> {
                       _categoryFilterAlert()
                       },
                   ),
-                  new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
-                      onPressed: () => {
-                      }),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom:5.0),
+                    child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
+                        onPressed: () => {
+                        }),
+                  ),
                 ],
 
             )
         ),
         body: _bodyBuilder(),
+        floatingActionButton:
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left:31.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.arrow_back_ios,color: Colors.white,),
+                backgroundColor: Colors.black.withOpacity(0.7),
+              ),
+            ),
+          ],
+        ),
 
       ),
     );

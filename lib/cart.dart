@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class CartPage extends StatefulWidget {
   final FirebaseUser user;
+  var _documentIDList =[];
   List<bool> checkboxList=[];
   List calculatePriceList=[];
 
@@ -39,12 +40,43 @@ class _CartPageState extends State<CartPage> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text("장바구니",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios),
+                      onPressed: (){
+                        Navigator.pop(context);
+                      }
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("장바구니",
+                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                    ),
+                  ],
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(right:8.0),
+                  child: SizedBox(
+                    width: 60,
+                    height: 30,
+                    child: RaisedButton(
+                      color: Color(0xFF5D70F8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7)
+                      ),
+                      onPressed: () {
+                        _deleteCart();
+
+                      },
+                      child: Text("삭제",style: TextStyle(color: Colors.white),),
+                    ),
+                  ),
+                )
+
               ],
             ),
             StreamBuilder<QuerySnapshot>(
@@ -206,6 +238,22 @@ class _CartPageState extends State<CartPage> {
       ],
     );
   }
+  void _deleteCart(){
+      Firestore.instance.collection('user_data').document("${widget.user.uid}")
+          .collection('cart').orderBy('date', descending:true).getDocuments().then((querySnapshot) {
+        querySnapshot.documents.forEach((result){
+          widget._documentIDList.add(result.documentID);
+        });
+        for(var i=0; i< widget.checkboxList.length; i++){
+          if(widget.checkboxList[i] == true){
+            Firestore.instance.collection('user_data').document(widget.user.uid)
+                .collection('cart').document(widget._documentIDList[i]).delete();
+          }
+        }});
+      Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (BuildContext context) =>  CartPage(widget.user)));
+
+  }
   Stream<QuerySnapshot> _cartStream() {
     return Firestore.instance.collection('user_data')
         .document("${widget.user.uid}").collection('cart')
@@ -213,9 +261,7 @@ class _CartPageState extends State<CartPage> {
   }
   Widget _calculationView(BuildContext context) {
 
-
-    Firestore.instance.collection('user_data')
-        .document("${widget.user.uid}")
+    Firestore.instance.collection('user_data').document("${widget.user.uid}")
         .collection('cart')
         .orderBy('date', descending: true).getDocuments().then((querySnapshot){
          querySnapshot.documents.forEach((result){
@@ -280,7 +326,7 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
-  //TODO Price 데이터 필드 결정빨리하고 콤마 , 알고리즘 구현 해야하고 아래 함수의 리턴 값으로 총합계보여주면 됨  
+  //TODO Price 데이터 필드 결정빨리하고 콤마 , 알고리즘 구현 해야하고 아래 함수의 리턴 값으로 총합계보여주면 됨 /// 장바구니 삭제기능 해야함
 //  int _calculatePrice(){
 //    int totalPrice = 0;
 //    for(var i=0; i< widget.checkboxList.length; i++){

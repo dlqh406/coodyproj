@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/detail_review.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,19 +40,40 @@ class _ProductDetailState extends State<ProductDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(context),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                context: context,
-                builder: buildBottomSheet
-            );
-          },
-          backgroundColor: Colors.blue,
-          child: Image.asset('assets/icons/cart.png',width: 34),
-        )
-
+        floatingActionButton:Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+                  padding: const EdgeInsets.only(left:31.0),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(Icons.arrow_back_ios,color: Colors.white,),
+                    backgroundColor: Colors.black.withOpacity(0.7),
+                  ),
+                ),
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: RaisedButton(
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: buildBottomSheet
+                  );
+                },
+                child: Image.asset('assets/icons/cart.png',width: 34),
+              ),
+            )
+              ],
+            ),
     );
   }
 
@@ -1126,7 +1148,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
       widget.selectedList.addAll([widget.temSelectedList]);
       widget.temSelectedList = ["","",""];
-      print("widget.selectedList: ${widget.selectedList}");
+      print("#widget.selectedList: ${widget.selectedList}");
     }
   }
 
@@ -1144,22 +1166,20 @@ class _ProductDetailState extends State<ProductDetail> {
         widget.selectedList.addAll([widget.temSelectedList]);
 
         widget.temSelectedList = ["","",""];
-        print("widget.selectedList: ${widget.selectedList}");
+        print("@widget.selectedList: ${widget.selectedList}");
 
       }
   }
 
   Widget _cleanArray(){
+    var _deleteIndex = [];
     if(widget.selectedList.length>=2){
-      print("a");
-     for(var i=widget.selectedList.length-1; i>1; i--){
-       for(var j=0; j<widget.selectedList.length-1; j++){
-         if(widget.selectedList[i][0]==widget.selectedList[j][0] &&
-             widget.selectedList[i][1]==widget.selectedList[j][1]){
+     for(var i=widget.selectedList.length-1; i>0; i--){
+       for(var j=0; j<i; j++){
+         if(widget.selectedList[i][0]==widget.selectedList[j][0] && widget.selectedList[i][1]==widget.selectedList[j][1]){
              widget.selectedList[j].setAll(2,["${int.parse(widget.selectedList[j][2])+1}"]);
              widget.selectedList.removeAt(i);
-             print(widget.selectedList);
-           _cleanArray();
+             break;
          }
        }
     }
@@ -1231,11 +1251,12 @@ class _ProductDetailState extends State<ProductDetail> {
             Navigator.pop(context);
           },
           onCancelButtonPressed: (){
-            // 장바구니 뷰 구현
-            Navigator.pop(context);
+            Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (BuildContext context) =>  CartPage(widget.user)));
           },
           buttonOkText:Text("Yes",style: TextStyle(color: Colors.white),) ,
           buttonCancelText: Text("장바구니 바로가기",style: TextStyle(color: Colors.white),),
+
 
         ));
   }

@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                           child: Stack(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(top:1.5,right: 10,left: 5),
+                                padding: const EdgeInsets.only(top:2.3,right: 10,left: 5),
                                 child: GestureDetector(
                                   onTap: (){print("Tap GTD");},
                                   child: Image.asset('assets/icons/bar.png',height: 40,),
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                         InkWell(
                           child: new Container(
                               width: 25,
-                              child: Image.asset('assets/icons/cart2.png')),
+                              child: Image.asset('assets/icons/bag.png')),
                           onTap: () => {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) => CartPage(widget.user)))
@@ -130,13 +130,16 @@ class _HomePageState extends State<HomePage> {
 
                     )
                 ),
-                body: ListView(
-                  children: [
-                    magazineView(),
-                    divideTag(),
-                    AI_recommendationView(),
-                    recommendationView(),
-                  ],
+                body: Container(
+                  color:Colors.white,
+                  child: ListView(
+                    children: [
+                      magazineView(),
+                      divideTag(),
+                      AI_recommendationView(),
+                      recommendationView(),
+                    ],
+                  ),
                 )
 
             );}}
