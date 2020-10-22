@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:intl/intl.dart';
 
 class ProductDetail extends StatefulWidget {
 
@@ -35,6 +36,7 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +114,7 @@ class _ProductDetailState extends State<ProductDetail> {
             child: Row(
               children: [
                 Text('₩ '),
-                Text(widget.document['price'], style: TextStyle(fontWeight: FontWeight.w500,
+                Text("${numberWithComma(int.parse(widget.document['price']))}", style: TextStyle(fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.italic,
                     fontSize: 20)),
               ],
@@ -1172,7 +1174,6 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Widget _cleanArray(){
-    var _deleteIndex = [];
     if(widget.selectedList.length>=2){
      for(var i=widget.selectedList.length-1; i>0; i--){
        for(var j=0; j<i; j++){
@@ -1260,7 +1261,9 @@ class _ProductDetailState extends State<ProductDetail> {
 
         ));
   }
-
+  String numberWithComma(int param){
+    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
+  }
   }
 
 class ReleatedCard extends StatelessWidget {
