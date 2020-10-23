@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+
 
 class CartPage extends StatefulWidget {
   final FirebaseUser user;
   var _documentIDList =[];
+  var totalPrice =0;
   List<bool> checkboxList=[];
   List calculatePriceList=[];
 
@@ -16,7 +19,10 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  @override
   var cartCount;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,6 +183,7 @@ class _CartPageState extends State<CartPage> {
                                 setState(() {
                                  widget.checkboxList[index] = !widget.checkboxList[index];
                                  print(widget.checkboxList);
+                                 _calculatePrice();
                                 });
                               },
                             )
@@ -254,23 +261,13 @@ class _CartPageState extends State<CartPage> {
           builder: (BuildContext context) =>  CartPage(widget.user)));
 
   }
+
   Stream<QuerySnapshot> _cartStream() {
     return Firestore.instance.collection('user_data')
         .document("${widget.user.uid}").collection('cart')
         .orderBy('date', descending: true).snapshots();
   }
   Widget _calculationView(BuildContext context) {
-
-    Firestore.instance.collection('user_data').document("${widget.user.uid}")
-        .collection('cart')
-        .orderBy('date', descending: true).getDocuments().then((querySnapshot){
-         querySnapshot.documents.forEach((result){
-          Firestore.instance.collection('uploaded_product').document(result.data["product"]).get().then((value) {
-            widget.calculatePriceList.add(value.data['productName']);
-          });
-        });});
-
-
     return Padding(
       padding: const EdgeInsets.only(left:15.0,right:15.0),
       child: Container(
@@ -289,7 +286,7 @@ class _CartPageState extends State<CartPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('총 합계',style: TextStyle(fontSize:25,fontWeight: FontWeight.bold),),
-                  Text('₩ 48,000', style: TextStyle(fontSize:23, fontWeight: FontWeight.bold),)
+                  Text('₩ ${_calculatePrice()}', style: TextStyle(fontSize:23, fontWeight: FontWeight.bold),)
                 ],
               ),
             ),
@@ -326,14 +323,33 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
-  //TODO Price 데이터 필드 결정빨리하고 콤마 , 알고리즘 구현 해야하고 아래 함수의 리턴 값으로 총합계보여주면 됨 /// 장바구니 삭제기능 해야함
-//  int _calculatePrice(){
-//    int totalPrice = 0;
-//    for(var i=0; i< widget.checkboxList.length; i++){
-//      if(widget.checkboxList[i] == true){
-//        totalPrice += widget.calculatePriceList[i];
-//      }
-//    }
-//    return totalPrice;
-//  }
+  String numberWithComma(int param){
+    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
+  }
+  
+  String _calculatePrice(){
+    int _totalPrice = 0;
+      Firestore.instance.collection('user_data').document("${widget.user.uid}")
+          .collection('cart')
+          .orderBy('date', descending: true).getDocuments().then((querySnapshot){
+        querySnapshot.documents.forEach((result){
+          Firestore.instance.collection('uploaded_product')
+              .document(result.data["product"]).get().then((value) {
+                _totalPrice += int.parse(value.data['price']);
+             setState(() {
+               if( widget.calculatePriceList.length!=widget.checkboxList.length){
+                 widget.calculatePriceList.add(int.parse(value.data['price']));
+               }
+             });
+          });
+        });});
+    if(widget.calculatePriceList.length==widget.checkboxList.length){
+      for(var i=0; i< widget.checkboxList.length; i++){
+        if(widget.checkboxList[i] == true){
+            _totalPrice += widget.calculatePriceList[i];
+        }
+      }
+    }
+    return numberWithComma(_totalPrice);
+  }
 }

@@ -27,7 +27,6 @@ dependencies:
   multiselect_formfield: ^0.1.4
   list_tile_switch: ^0.0.2
   flutter_html: ^1.0.2
-  flutter_money_formatter: ^0.8.3
 
 dev_dependencies:
   flutter_test:
