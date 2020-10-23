@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +8,6 @@ import 'package:intl/intl.dart';
 class CartPage extends StatefulWidget {
   final FirebaseUser user;
   var _documentIDList =[];
-  var totalPrice =0;
   List<bool> checkboxList=[];
   List calculatePriceList=[];
 
@@ -76,7 +76,8 @@ class _CartPageState extends State<CartPage> {
                       ),
                       onPressed: () {
                         _deleteCart();
-
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (BuildContext context) =>  CartPage(widget.user)));
                       },
                       child: Text("삭제",style: TextStyle(color: Colors.white),),
                     ),
@@ -109,7 +110,7 @@ class _CartPageState extends State<CartPage> {
                       );
                     }
                     return snapshot.data.documents.length!=0
-                        ?Scrollbar(
+                        ?CupertinoScrollbar(
                       controller: widget._controllerOne,
                       isAlwaysShown: true,
                       child: ListView.builder(
@@ -167,6 +168,7 @@ class _CartPageState extends State<CartPage> {
                           );
                         }
                         return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
                                 width: 200,
@@ -176,16 +178,18 @@ class _CartPageState extends State<CartPage> {
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: false,
                                 )),
-                            Checkbox(
-                              activeColor: Colors.blue,
-                              value: widget.checkboxList[index],
-                              onChanged: (val){
-                                setState(() {
-                                 widget.checkboxList[index] = !widget.checkboxList[index];
-                                 print(widget.checkboxList);
-                                 _calculatePrice();
-                                });
-                              },
+                            Padding(
+                              padding: const EdgeInsets.only(right:4.0),
+                              child: Checkbox(
+                                activeColor: Colors.blue,
+                                value: widget.checkboxList[index],
+                                onChanged: (val){
+                                  setState(() {
+                                   widget.checkboxList[index] = !widget.checkboxList[index];
+                                   print(widget.checkboxList);
+                                  });
+                                },
+                              ),
                             )
                           ],
                         );
@@ -257,8 +261,7 @@ class _CartPageState extends State<CartPage> {
                 .collection('cart').document(widget._documentIDList[i]).delete();
           }
         }});
-      Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (BuildContext context) =>  CartPage(widget.user)));
+
 
   }
 
@@ -269,7 +272,7 @@ class _CartPageState extends State<CartPage> {
   }
   Widget _calculationView(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left:15.0,right:15.0),
+      padding: const EdgeInsets.only(top:25,left:15.0,right:15.0),
       child: Container(
         child: Column(
           children: [
@@ -326,7 +329,7 @@ class _CartPageState extends State<CartPage> {
   String numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
-  
+
   String _calculatePrice(){
     int _totalPrice = 0;
       Firestore.instance.collection('user_data').document("${widget.user.uid}")
@@ -335,7 +338,6 @@ class _CartPageState extends State<CartPage> {
         querySnapshot.documents.forEach((result){
           Firestore.instance.collection('uploaded_product')
               .document(result.data["product"]).get().then((value) {
-                _totalPrice += int.parse(value.data['price']);
              setState(() {
                if( widget.calculatePriceList.length!=widget.checkboxList.length){
                  widget.calculatePriceList.add(int.parse(value.data['price']));

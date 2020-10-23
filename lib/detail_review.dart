@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -83,65 +84,15 @@ class _DetailReviewState extends State<DetailReview> {
                           child: CircularProgressIndicator(),
                         );
                       }
-                      return Scrollbar(
+                      return CupertinoScrollbar(
                         controller: widget._controllerOne,
                         isAlwaysShown: true,
-                        child: ListView(
+                        child: ListView.builder(
+                          itemCount: snapshot.data.documents.length,
                           controller: widget._controllerOne,
-                          children: snapshot.data.documents.map((doc) {
-                            return ListTile(
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(doc['writer'], style: TextStyle(
-                                      fontWeight: FontWeight.bold),),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                            'assets/star/star1.png', width: 75),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0),
-                                          child: Text(
-                                            _timeStampToString(doc['date']),
-                                            style: TextStyle(fontSize: 12),),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  doc['img'] == null ? Visibility(
-                                    visible: false, child: Text(""),) : Padding(
-                                    padding: const EdgeInsets.only(right: 10,top:15,bottom: 15),
-                                    child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        child: Image.network(
-                                          doc['img'], fit: BoxFit.cover,)),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top:8.0),
-                                    child: SizedBox(
-                                        width: size.width * 0.77,
-                                        child: Text(doc['review'],style: TextStyle(fontSize: 14),)),
-                                  )],
-                              ),
-                              subtitle: Opacity(
-                                opacity: 0.3,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10.0, bottom: 5.0),
-                                  child: Container(
-                                    width: size.width * 0.8,
-                                    height: 1,
-                                    color: Colors.black38,
-                                  ),
-                                ),
-                              ),
-
-                            );
-                          }).toList(),
+                            itemBuilder: (BuildContext context, int index){
+                              return _buildListView(context, snapshot.data.documents[index], index);
+                            }
                         ),
                       );
                     }
@@ -152,6 +103,62 @@ class _DetailReviewState extends State<DetailReview> {
         ),
       ),
     );
+  }
+
+  Widget _buildListView(BuildContext context, doc, int index) {
+    Size size = MediaQuery.of(context).size;
+
+  return Padding(
+    padding: const EdgeInsets.only(left:15.0,right: 15),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(doc['writer'], style: TextStyle(
+            fontWeight: FontWeight.bold),),
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Row(
+            children: [
+              Image.asset(
+                  'assets/star/star1.png', width: 75),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 5.0),
+                child: Text(
+                  _timeStampToString(doc['date']),
+                  style: TextStyle(fontSize: 12),),
+              )
+            ],
+          ),
+        ),
+        doc['img'] == null ? Visibility(
+          visible: false, child: Text(""),) : Padding(
+          padding: const EdgeInsets.only(right: 10,top:15,bottom: 15),
+          child: Container(
+              width: 100,
+              height: 100,
+              child: Image.network(
+                doc['img'], fit: BoxFit.cover,)),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top:8.0),
+          child: SizedBox(
+              width: size.width * 1,
+              child: Text(doc['review'],style: TextStyle(fontSize: 14),)),
+        ),
+        Opacity(
+            opacity: 0.15,
+            child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 15.0, bottom: 15.0),
+                child: Container(
+                  height: 1,
+                  color: Colors.black38,
+                ))),
+
+      ],
+    ),
+  );
   }
   Stream<QuerySnapshot> _commentStream() {
     return Firestore.instance.collection('uploaded_product')

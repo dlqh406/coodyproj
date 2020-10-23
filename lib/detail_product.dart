@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
+
 
 class ProductDetail extends StatefulWidget {
 
@@ -437,89 +439,15 @@ class _ProductDetailState extends State<ProductDetail> {
                         child: CircularProgressIndicator(),
                       );
                     }
-                    return Scrollbar(
+                    return CupertinoScrollbar(
                       controller: widget._controllerOne,
                       isAlwaysShown: true,
-                      child: ListView(
+                      child: ListView.builder(
+                        itemCount: snapshot.data.documents.length,
                         controller: widget._controllerOne,
-                        children: snapshot.data.documents.map((doc) {
-                          return ListTile(
-
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(doc['writer'], style: TextStyle(
-                                    fontWeight: FontWeight.bold),),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0),
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                          'assets/star/star1.png', width: 75),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 5.0),
-                                        child: Text(
-                                          _timeStampToString(doc['date']),
-                                          style: TextStyle(fontSize: 12),),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-
-                                      doc['img'] == null
-                                          ? Visibility(
-                                        visible: false, child: Text(""),)
-                                          : Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 10),
-                                        child: Container(
-                                            width: 60,
-                                            height: 60,
-                                            child: Image.network(
-                                              doc['img'], fit: BoxFit.cover,)),
-                                      ),
-                                      SizedBox(
-                                          width: doc['img'] == null ? size
-                                              .width * 0.77 : size.width * 0.58,
-                                          height: 60,
-                                          child: Text(doc['review'],
-                                            maxLines: 4,
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: false,
-                                          )),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Opacity(
-                              opacity: 0.3,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 10.0, bottom: 5.0),
-                                child: Container(
-                                  width: size.width * 0.8,
-                                  height: 1,
-                                  color: Colors.black38,
-                                ),
-                              ),
-                            ),
-                            trailing: Padding(
-                              padding: const EdgeInsets.only(top: 40),
-                              child: Container(
-                                  child: Icon(
-                                    Icons.arrow_forward_ios, size: 10,)
-                              ),
-                            ),
-                            dense: true,
-                          );
-                        }).toList(),
+                        itemBuilder: (BuildContext context, int index){
+                          return _buildListView(context, snapshot.data.documents[index], index);
+                        }
                       ),
                     );
                   }
@@ -551,6 +479,90 @@ class _ProductDetailState extends State<ProductDetail> {
       ),
     );
   }
+
+
+  Widget _buildListView(BuildContext context, doc, int index) {
+    Size size = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.only(left:18.0,right:18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(doc['writer'], style: TextStyle(
+                  fontWeight: FontWeight.bold),),
+//              Spacer(),
+//              Padding(
+//                padding: const EdgeInsets.only(right:30.0),
+//                child: GestureDetector(
+//                    onTap: (){},
+//                    child: Icon(Icons.add,size: 12,color: Colors.grey,)
+//                ),
+//              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Row(
+              children: [
+                Image.asset('assets/star/star1.png', width: 75),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 5.0),
+                  child: Text(
+                    _timeStampToString(doc['date']),
+                    style: TextStyle(fontSize: 12),),
+                ),
+
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                doc['img'] == null
+                    ? Visibility(
+                  visible: false, child: Text(""),)
+                    : Padding(
+                  padding: const EdgeInsets.only(
+                      right: 10),
+                  child: Container(
+                      width: 60,
+                      height: 60,
+                      child: Image.network(
+                        doc['img'], fit: BoxFit.cover,)),
+                ),
+                SizedBox(
+                    width: doc['img'] == null ? size
+                        .width * 0.85 : size.width * 0.65,
+                    child: Text(doc['review'],
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                    )),
+              ],
+            ),
+          ),
+          Opacity(
+              opacity: 0.15,
+              child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 15.0, bottom: 15.0),
+                  child: Container(
+                    height: 1,
+                    color: Colors.black38,
+                  ))),
+        ],
+      ),
+    );
+  }
+
+
+
 
   Widget _buildMainInfoBody(BuildContext context) {
     final htmlData = """${widget.document['productDecription']}""";
@@ -1016,7 +1028,7 @@ class _ProductDetailState extends State<ProductDetail> {
                     width: size.width*0.78,
                     height: size.height*0.3,
                     child: SingleChildScrollView(
-                      child: Scrollbar(
+                      child: CupertinoScrollbar(
                         child: Column(
                           children: [
                             Visibility(
@@ -1264,6 +1276,8 @@ class _ProductDetailState extends State<ProductDetail> {
   String numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
+
+
   }
 
 class ReleatedCard extends StatelessWidget {
