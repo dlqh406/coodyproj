@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'detail_product.dart';
+import 'dart:io' show Platform;
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:coodyproj/test.dart';
 
@@ -113,20 +114,23 @@ class _FavoriteState extends State<Favorite> {
         ),
         body: _bodyBuilder(),
         floatingActionButton:
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left:31.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.arrow_back_ios,color: Colors.white,),
-                backgroundColor: Colors.black.withOpacity(0.7),
+        Visibility(
+          visible: !Platform.isAndroid,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left:31.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.arrow_back_ios,color: Colors.white,),
+                  backgroundColor: Colors.black.withOpacity(0.7),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
 
       ),

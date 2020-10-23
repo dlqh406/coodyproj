@@ -10,8 +10,8 @@ class DetailReview extends StatefulWidget {
   final int length;
 
   final ScrollController _controllerOne = ScrollController();
-
   DetailReview(this.user, this.document, this.length);
+
   @override
   _DetailReviewState createState() => _DetailReviewState();
 }

@@ -76,6 +76,7 @@ class _CartPageState extends State<CartPage> {
                       ),
                       onPressed: () {
                         _deleteCart();
+                        Navigator.pop(context);
                         Navigator.pushReplacement(context, MaterialPageRoute(
                             builder: (BuildContext context) =>  CartPage(widget.user)));
                       },
@@ -250,6 +251,7 @@ class _CartPageState extends State<CartPage> {
     );
   }
   void _deleteCart(){
+
       Firestore.instance.collection('user_data').document("${widget.user.uid}")
           .collection('cart').orderBy('date', descending:true).getDocuments().then((querySnapshot) {
         querySnapshot.documents.forEach((result){

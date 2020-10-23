@@ -8,7 +8,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'dart:io' show Platform;
 
 class ProductDetail extends StatefulWidget {
 
@@ -44,7 +44,7 @@ class _ProductDetailState extends State<ProductDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(context),
-        floatingActionButton:Row(
+        floatingActionButton: Platform.isIOS?Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
@@ -77,7 +77,26 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
             )
               ],
+            ): SizedBox(
+          width: 60,
+          height: 60,
+          child: RaisedButton(
+            color: Colors.blue,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50)
             ),
+            onPressed: () {
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  context: context,
+                  builder: buildBottomSheet
+              );
+            },
+            child: Image.asset('assets/icons/cart.png',width: 34),
+          ),
+        )
+
     );
   }
 

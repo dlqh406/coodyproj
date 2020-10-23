@@ -16,6 +16,12 @@ class HomePage extends StatefulWidget {
   final FirebaseUser user;
   HomePage(this.user);
 
+  double xOffset = 0;
+  double yOffset = 0;
+  double scaleFactor = 1;
+
+  bool isDrawerOpen = false;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -57,11 +63,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double xOffset = 0;
-    double yOffset = 0;
-    double scaleFactor = 1;
-
-    bool isDrawerOpen = false;
 
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection("user_data").document(widget.user.uid).snapshots(),
@@ -71,117 +72,40 @@ class _HomePageState extends State<HomePage> {
             return FavoriteAnalysisPage(widget.user);
           }else{
             return AnimatedContainer(
-                transform: Matrix4.translationValues(xOffset, yOffset, 0)
-                  ..scale(scaleFactor)..rotateY(isDrawerOpen? -0.5:0),
-                duration: Duration(milliseconds: 250),
-                decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(isDrawerOpen?40:0.0)
-                ),
-
-                child: Scaffold(
-                appBar: PreferredSize(preferredSize: Size.fromHeight(40.0),
-                    child:AppBar(
-                      titleSpacing: 6.0,
-                      backgroundColor: Colors.white,
-                      elevation: 0,
-                      leading: Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Container(
-                          child: GestureDetector(
-                              child: Image.asset('assets/logo/blacklogo.png'),
-                              onTap: (){
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => TestPage(widget.user)));
-                              }),
-                        ),
-                      ),
-                      title: Container(
-                        child: Container(
-                          child: Stack(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top:2.3,right: 10,left: 5),
-                                child: GestureDetector(
-                                  onTap: (){
-                                    print("Tap GTD");
-                                    },
-                                  child: Image.asset('assets/icons/bar.png',height: 40,),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left:11.0),
-                                child: Row(
-                                  children: <Widget>[
-
-                                    Padding(
-                                      padding: const EdgeInsets.only(left:27.0),
-                                      child: RotateAnimatedTextKit(
-                                        onTap: () {
-                                          // 위 GestureDetector 랑 똑같이 구현 해야함
-                                          print("Tap Event");
-                                        },
-                                        isRepeatingAnimation: true,
-                                        totalRepeatCount: 60000,
-                                        text: contents,
-                                        textStyle: TextStyle(fontSize: 13.0,color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),),
-                      ),
-                      actions: <Widget>[
-                        InkWell(
-                          child: new Container(
-                              width: 25,
-                              child: Image.asset('assets/icons/bag.png')),
-                          onTap: () => {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => CartPage(widget.user)))
-                          },
-                        ),
-                        isDrawerOpen ?IconButton(
-                          icon: Icon(Icons.arrow_back_ios,color: Colors.blue,),
-                          onPressed: (){
-                            setState(() {
-                              xOffset=0;
-                              yOffset=0;
-                              scaleFactor=1;
-                              isDrawerOpen=false;
-                            });
-                          },)
-                        :IconButton( icon: new Icon(Icons.more_vert,size: 28,),
-                            onPressed: () => {
-                            setState(() {
-                              xOffset = 230;
-                              yOffset = 150;
-                              scaleFactor = 0.6;
-                              isDrawerOpen=true;
-                              })
-                            })
-                      ],
-                    )
-                ),
-                body: Container(
-                  color:Colors.white,
-                  child: ListView(
-                    children: [
-                      magazineView(),
-                      divideTag(),
-                      AI_recommendationView(),
-                      recommendationView(),
-                    ],
-                  ),
-                )
-
-            ));}}
+                  transform: Matrix4.translationValues(widget.xOffset, widget.yOffset, 0)
+                    ..scale(widget.scaleFactor)..rotateY(widget.isDrawerOpen? -0.5:0),
+                  duration: Duration(milliseconds: 250),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(widget.isDrawerOpen?40:0.0)
+                  ),child:
+              Scaffold(
+                  backgroundColor:widget.isDrawerOpen?Colors.transparent:Colors.white,
+                  appBar: appBarBuild(),
+                  body: bodyBuild()
+             ));
+          }}
         else{
           return LoadingPage();
         }}
         );
+    }
+    Widget bodyBuild(){
+    return Container(
+      decoration: BoxDecoration(
+          color:Colors.white,
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular( widget.isDrawerOpen?27:0.0),
+              bottomLeft: Radius.circular( widget.isDrawerOpen?27:0.0))
+      ),
+      child: ListView(
+        children: [
+          magazineView(),
+          divideTag(),
+          AI_recommendationView(),
+          recommendationView(),
+        ],
+      ),
+    );
     }
     Widget magazineView(){
     return SingleChildScrollView(
@@ -423,10 +347,8 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-    // ignore: non_constant_identifier_names
     Widget AI_recommendationView(){
     Size size = MediaQuery.of(context).size;
-
     return   Container(
       margin: EdgeInsets.symmetric(
         horizontal: kDefaultPadding,
@@ -608,6 +530,99 @@ class _HomePageState extends State<HomePage> {
       ),
     );
     }
+    Widget appBarBuild() {
+    return
+      PreferredSize(preferredSize: Size.fromHeight(40.0),
+        child:AppBar(
+          titleSpacing: 6.0,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular( widget.isDrawerOpen?27:0.0),
+            )
+          ),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Container(
+              child: GestureDetector(
+                  child: Image.asset('assets/logo/blacklogo.png'),
+                  onTap: (){
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => TestPage(widget.user)));
+                  }),
+            ),
+          ),
+          title: Container(
+            child: Container(
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top:2.3,right: 10,left: 5),
+                    child: GestureDetector(
+                      onTap: (){
+                        print("Tap GTD");
+                      },
+                      child: Image.asset('assets/icons/bar.png',height: 40,),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left:11.0),
+                    child: Row(
+                      children: <Widget>[
+
+                        Padding(
+                          padding: const EdgeInsets.only(left:27.0),
+                          child: RotateAnimatedTextKit(
+                            onTap: () {
+                              // 위 GestureDetector 랑 똑같이 구현 해야함
+                              print("Tap Event");
+                            },
+                            isRepeatingAnimation: true,
+                            totalRepeatCount: 60000,
+                            text: contents,
+                            textStyle: TextStyle(fontSize: 13.0,color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),),
+          ),
+          actions: <Widget>[
+            InkWell(
+              child: new Container(
+                  width: 25,
+                  child: Image.asset('assets/icons/bag.png')),
+              onTap: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CartPage(widget.user)))
+              },
+            ),
+            widget.isDrawerOpen ?IconButton(
+              icon: Icon(Icons.arrow_back_ios,color: Colors.blue,),
+              onPressed: (){
+                setState(() {
+                  widget.xOffset=0;
+                  widget.yOffset=0;
+                  widget.scaleFactor=1;
+                  widget.isDrawerOpen=false;
+                });
+              },)
+                :IconButton( icon: new Icon(Icons.more_vert,size: 28,),
+                onPressed: () => {
+                  setState(() {
+                    widget.xOffset = -60;
+                    widget.yOffset = 150;
+                    widget.scaleFactor = 0.6;
+                    widget.isDrawerOpen=true;
+                  })
+                })
+          ],
+        )
+    );
+  }
 }
 class ContentsCard extends StatelessWidget {
   const ContentsCard({
