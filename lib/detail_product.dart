@@ -492,14 +492,14 @@ class _ProductDetailState extends State<ProductDetail> {
             children: [
               Text(doc['writer'], style: TextStyle(
                   fontWeight: FontWeight.bold),),
-//              Spacer(),
-//              Padding(
-//                padding: const EdgeInsets.only(right:30.0),
-//                child: GestureDetector(
-//                    onTap: (){},
-//                    child: Icon(Icons.add,size: 12,color: Colors.grey,)
-//                ),
-//              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(right:18.0),
+                child: GestureDetector(
+                    onTap: (){},
+                    child: Icon(Icons.add,size: 12,color: Colors.grey,)
+                ),
+              ),
             ],
           ),
           Padding(

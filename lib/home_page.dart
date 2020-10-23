@@ -38,8 +38,10 @@ class _HomePageState extends State<HomePage> {
   var currentPage=0.0;
   @override
   void initState() {
-       Firestore.instance.collection('magazine').orderBy('date', descending: true).getDocuments().then((querySnapshot) =>
-          querySnapshot.documents.forEach((result) {
+       Firestore.instance.collection('magazine')
+           .orderBy('date', descending: true)
+           .getDocuments().then((querySnapshot) =>
+            querySnapshot.documents.forEach((result) {
             setState(() {
               images.add(result.data['thumbnail_img']);
               title.add(result.data['shortTitile']);
@@ -55,6 +57,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double xOffset = 0;
+    double yOffset = 0;
+    double scaleFactor = 1;
+
+    bool isDrawerOpen = false;
+
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection("user_data").document(widget.user.uid).snapshots(),
       builder: (context, snapshot) {
@@ -62,7 +70,16 @@ class _HomePageState extends State<HomePage> {
           if(snapshot.data.data == null){
             return FavoriteAnalysisPage(widget.user);
           }else{
-            return Scaffold(
+            return AnimatedContainer(
+                transform: Matrix4.translationValues(xOffset, yOffset, 0)
+                  ..scale(scaleFactor)..rotateY(isDrawerOpen? -0.5:0),
+                duration: Duration(milliseconds: 250),
+                decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(isDrawerOpen?40:0.0)
+                ),
+
+                child: Scaffold(
                 appBar: PreferredSize(preferredSize: Size.fromHeight(40.0),
                     child:AppBar(
                       titleSpacing: 6.0,
@@ -73,7 +90,10 @@ class _HomePageState extends State<HomePage> {
                         child: Container(
                           child: GestureDetector(
                               child: Image.asset('assets/logo/blacklogo.png'),
-                              onTap: (){Navigator.of(context).pop();}),
+                              onTap: (){
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => TestPage(widget.user)));
+                              }),
                         ),
                       ),
                       title: Container(
@@ -83,7 +103,9 @@ class _HomePageState extends State<HomePage> {
                               Padding(
                                 padding: const EdgeInsets.only(top:2.3,right: 10,left: 5),
                                 child: GestureDetector(
-                                  onTap: (){print("Tap GTD");},
+                                  onTap: (){
+                                    print("Tap GTD");
+                                    },
                                   child: Image.asset('assets/icons/bar.png',height: 40,),
                                 ),
                               ),
@@ -107,7 +129,6 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ],
                                 ),
-
                               ),
                             ],
                           ),),
@@ -122,12 +143,26 @@ class _HomePageState extends State<HomePage> {
                                 MaterialPageRoute(builder: (context) => CartPage(widget.user)))
                           },
                         ),
-                        new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
+                        isDrawerOpen ?IconButton(
+                          icon: Icon(Icons.arrow_back_ios,color: Colors.blue,),
+                          onPressed: (){
+                            setState(() {
+                              xOffset=0;
+                              yOffset=0;
+                              scaleFactor=1;
+                              isDrawerOpen=false;
+                            });
+                          },)
+                        :IconButton( icon: new Icon(Icons.more_vert,size: 28,),
                             onPressed: () => {
-                            }),
-
+                            setState(() {
+                              xOffset = 230;
+                              yOffset = 150;
+                              scaleFactor = 0.6;
+                              isDrawerOpen=true;
+                              })
+                            })
                       ],
-
                     )
                 ),
                 body: Container(
@@ -142,10 +177,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                 )
 
-            );}}
+            ));}}
         else{
           return LoadingPage();
-        }});
+        }}
+        );
     }
     Widget magazineView(){
     return SingleChildScrollView(
@@ -572,7 +608,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
     }
-
 }
 class ContentsCard extends StatelessWidget {
   const ContentsCard({
