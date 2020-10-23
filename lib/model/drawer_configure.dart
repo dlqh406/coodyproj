@@ -17,26 +17,26 @@ List<Map> categories = [
 List<Map> drawerItems=[
   {
     'icon': FontAwesomeIcons.paw,
-    'title' : 'Adoption'
+    'title' : '주문&배송'
   },
   {
     'icon': Icons.mail,
-    'title' : 'Donation'
+    'title' : '장바구니'
   },
   {
     'icon': FontAwesomeIcons.plus,
-    'title' : 'Add pet'
+    'title' : '나의 1:1 문의'
   },
   {
     'icon': Icons.favorite,
-    'title' : 'Favorites'
+    'title' : '매거진'
   },
   {
     'icon': Icons.mail,
-    'title' : 'Messages'
+    'title' : '최근 본 상품'
   },
   {
     'icon': FontAwesomeIcons.userAlt,
-    'title' : 'Profile'
+    'title' : '계정 설정'
   },
 ];

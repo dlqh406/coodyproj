@@ -14,21 +14,22 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
-  HomePage(this.user);
 
   double xOffset = 0;
   double yOffset = 0;
   double scaleFactor = 1;
+  bool isDrawerOpen= false;
 
-  bool isDrawerOpen = false;
+  @override
+  HomePage(this.user,);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 const kDefaultShadow = BoxShadow(
   offset: Offset(0, 15),
-  blurRadius: 27,
-  color: Colors.black12, // Black color with 12% opacity
+  blurRadius: 30,
+  color: Colors.black38, // Black color with 12% opacity
 );
 
 const kPrimaryColor = Color(0xFF0C9869);
@@ -71,18 +72,46 @@ class _HomePageState extends State<HomePage> {
           if(snapshot.data.data == null){
             return FavoriteAnalysisPage(widget.user);
           }else{
-            return AnimatedContainer(
-                  transform: Matrix4.translationValues(widget.xOffset, widget.yOffset, 0)
-                    ..scale(widget.scaleFactor)..rotateY(widget.isDrawerOpen? -0.5:0),
-                  duration: Duration(milliseconds: 250),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.isDrawerOpen?40:0.0)
-                  ),child:
-              Scaffold(
-                  backgroundColor:widget.isDrawerOpen?Colors.transparent:Colors.white,
-                  appBar: appBarBuild(),
-                  body: bodyBuild()
-             ));
+            return
+            widget.isDrawerOpen?
+            AnimatedContainer(
+                transform: Matrix4.translationValues(widget.xOffset, widget.yOffset, 0)
+                  ..scale(widget.scaleFactor)..rotateY(widget.isDrawerOpen? -0.5:0),
+                duration: Duration(milliseconds: 250),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(widget.isDrawerOpen?40:0.0)
+                ),child:
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  widget.xOffset=0;
+                  widget.yOffset=0;
+                  widget.scaleFactor=1;
+                  widget.isDrawerOpen=false;
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [kDefaultShadow],
+                ),
+                child: Scaffold(
+                    backgroundColor:widget.isDrawerOpen?Colors.transparent:Colors.white,
+                    appBar: appBarBuild(),
+                    body: bodyBuild()
+                ),
+              ),
+            )) :AnimatedContainer(
+                    transform: Matrix4.translationValues(widget.xOffset, widget.yOffset, 0)
+                      ..scale(widget.scaleFactor)..rotateY(widget.isDrawerOpen? -0.5:0),
+                    duration: Duration(milliseconds: 250),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(widget.isDrawerOpen?40:0.0)
+                    ),child:
+                Scaffold(
+                    backgroundColor:widget.isDrawerOpen?Colors.transparent:Colors.white,
+                    appBar: appBarBuild(),
+                    body: bodyBuild()
+               ));
           }}
         else{
           return LoadingPage();
@@ -421,8 +450,8 @@ class _HomePageState extends State<HomePage> {
                       decoration: BoxDecoration(
                         color: Colors.pinkAccent,
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(22),
-                          topRight: Radius.circular(22),
+                          bottomLeft: Radius.circular(30),
+                          topRight: Radius.circular(60),
                         ),
                       ),
                       child: Text(
@@ -601,7 +630,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             widget.isDrawerOpen ?IconButton(
-              icon: Icon(Icons.arrow_back_ios,color: Colors.blue,),
+              icon: Icon(Icons.more_vert,),
               onPressed: (){
                 setState(() {
                   widget.xOffset=0;
@@ -614,7 +643,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () => {
                   setState(() {
                     widget.xOffset = -60;
-                    widget.yOffset = 150;
+                    widget.yOffset = 170;
                     widget.scaleFactor = 0.6;
                     widget.isDrawerOpen=true;
                   })
