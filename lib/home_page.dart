@@ -72,8 +72,7 @@ class _HomePageState extends State<HomePage> {
           if(snapshot.data.data == null){
             return FavoriteAnalysisPage(widget.user);
           }else{
-            return
-            widget.isDrawerOpen?
+            return widget.isDrawerOpen?
             AnimatedContainer(
                 transform: Matrix4.translationValues(widget.xOffset, widget.yOffset, 0)
                   ..scale(widget.scaleFactor)..rotateY(widget.isDrawerOpen? -0.5:0),

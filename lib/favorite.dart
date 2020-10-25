@@ -6,6 +6,7 @@ import 'detail_product.dart';
 import 'dart:io' show Platform;
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:coodyproj/test.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Favorite extends StatefulWidget {
 
@@ -18,6 +19,9 @@ class Favorite extends StatefulWidget {
   bool outer_downbtn = false;
   bool innerWear_downbtn = false;
   bool fitnessWear_downbtn = false;
+
+  var stopTrigger = 1;
+  var unchanging;
 
   int selectedCount =0;
   var selectedCategoryList=[];
@@ -316,17 +320,21 @@ class _FavoriteState extends State<Favorite> {
                         SizedBox(
                           width: 600,
                           child: RaisedButton(
+                            color:Colors.blue,
                             onPressed: (){
                               setState(() {
                                 widget.top_downbtn = !widget.top_downbtn ;
                               });
                             },
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('👚 상의', style: TextStyle(fontSize: 15)),
-                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                                Icon(FontAwesomeIcons.tshirt,size: 15,color: Colors.white,),
+                                SizedBox(width: 14),
+                                Text('상의', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -334,7 +342,7 @@ class _FavoriteState extends State<Favorite> {
                         Visibility(
                           visible: widget.top_downbtn,
                           child: Container(
-                            height: 500,
+                            height: 600,
                             child: Scrollbar(
                               child: ListView.builder(
                                 shrinkWrap: true,
@@ -364,17 +372,21 @@ class _FavoriteState extends State<Favorite> {
                         SizedBox(
                           width: 600,
                           child: RaisedButton(
+                            color:Colors.blue,
                             onPressed: (){
                               setState(() {
                                 widget.bottom_downbtn = !widget.bottom_downbtn ;
                               });
                             },
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('👖 하의', style: TextStyle(fontSize: 15)),
-                                widget.bottom_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                                Image.asset('assets/icons/jeans.png',width: 20,),
+                                SizedBox(width: 14),
+                                Text('하의', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -412,17 +424,21 @@ class _FavoriteState extends State<Favorite> {
                         SizedBox(
                           width: 600,
                           child: RaisedButton(
+                            color:Colors.blue,
                             onPressed: (){
                               setState(() {
                                 widget.outer_downbtn = !widget.outer_downbtn ;
                               });
                             },
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('🧥 아우터', style: TextStyle(fontSize: 15)),
-                                widget.outer_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                                Image.asset('assets/icons/coat.png',width: 20,),
+                                SizedBox(width: 14),
+                                Text('아우터', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -460,17 +476,21 @@ class _FavoriteState extends State<Favorite> {
                         SizedBox(
                           width: 600,
                           child: RaisedButton(
+                            color: Colors.blue,
                             onPressed: (){
                               setState(() {
                                 widget.dress_downbtn = !widget.dress_downbtn ;
                               });
                             },
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('👗 원피스', style: TextStyle(fontSize: 15)),
-                                widget.dress_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                                Image.asset('assets/icons/dress.png',width: 20,),
+                                SizedBox(width: 14),
+                                Text('원피스', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -509,17 +529,21 @@ class _FavoriteState extends State<Favorite> {
                         SizedBox(
                           width: 600,
                           child: RaisedButton(
+                            color: Colors.blue,
                             onPressed: (){
                               setState(() {
                                 widget.innerWear_downbtn = !widget.innerWear_downbtn ;
                               });
                             },
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('👙 이너웨어', style: TextStyle(fontSize: 15)),
-                                widget.innerWear_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                                Image.asset('assets/icons/bikini.png',width: 20,),
+                                SizedBox(width: 14),
+                                Text('이너웨어', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -554,21 +578,24 @@ class _FavoriteState extends State<Favorite> {
                             ),
                           ),
                         ),
-
                         SizedBox(
                           width: 600,
                           child: RaisedButton(
+                            color: Colors.blue,
                             onPressed: (){
                               setState(() {
                                 widget.fitnessWear_downbtn = !widget.fitnessWear_downbtn;
                               });
                             },
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('🏃‍♀ 피트니스', style: TextStyle(fontSize: 15)),
-                                widget.fitnessWear_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                                Image.asset('assets/icons/yoga.png',width: 20,),
+                                SizedBox(width: 14),
+                                Text('피트니스', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -608,17 +635,21 @@ class _FavoriteState extends State<Favorite> {
                         SizedBox(
                           width: 600,
                           child: RaisedButton(
+                            color:Colors.blue,
                             onPressed: (){
                               setState(() {
                                 widget.beachWear_downbtn = !widget.beachWear_downbtn;
                               });
                             },
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('🏊‍♀ 비치웨어', style: TextStyle(fontSize: 15)),
-                                widget.beachWear_downbtn?Icon(Icons.keyboard_arrow_up):Icon(Icons.keyboard_arrow_down)
+                                Image.asset('assets/icons/swimwear.png',width: 20,),
+                                SizedBox(width: 14),
+                                Text('비치웨어', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -683,7 +714,7 @@ class _FavoriteState extends State<Favorite> {
                       Navigator.pop(context,null);
                       _getDelayForFilter();
                     },
-                    child: Text('완료'),
+                    child: Text('적용'),
                   ),
                 ],
               );

@@ -1,74 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:opencv_histogram_equality/opencv_histogram_equality.dart';
 
 class TestPage extends StatefulWidget {
   final FirebaseUser user;
   TestPage(this.user);
-
-
-
 
   @override
   _TestPageState createState() => _TestPageState();
 }
 
 class _TestPageState extends State<TestPage> {
-  double xOffset = 0;
-  double yOffset = 0;
-  double scaleFactor = 1;
 
-  bool isDrawerOpen = false;
+  String _platformVersion = 'Unknown';
+
+  @override
+  void initState() {
+    super.initState();
+
+    checkSimilairtyTestImages();
+  }
+
+  Future<void> checkSimilairtyTestImages() async {
+    ByteData first = await rootBundle.load('assets/images/gondola.jpg');
+    ByteData second = await rootBundle.load('assets/images/hotel0.jpg');
+
+    OpencvHistogramEquality()
+        .similarity(first.buffer.asUint8List(), second.buffer.asUint8List());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildHasReview(context),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Plugin example app'),
+        ),
+        body: Center(
+          child: Text('Running on: $_platformVersion\n'),
+        ),
+      ),
     );
   }
-
-  Widget _buildHasReview(context) {
-    return AnimatedContainer(
-        transform: Matrix4.translationValues(xOffset, yOffset, 0)
-      ..scale(scaleFactor)..rotateY(isDrawerOpen? -0.5:0),
-    duration: Duration(milliseconds: 250),
-    decoration: BoxDecoration(
-    color: Colors.grey[200],
-    borderRadius: BorderRadius.circular(isDrawerOpen?40:0.0)
-    ),
-      child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              isDrawerOpen?IconButton(
-                icon: Icon(Icons.arrow_back_ios,color: Colors.blue,),
-                onPressed: (){
-                  setState(() {
-                    xOffset=0;
-                    yOffset=0;
-                    scaleFactor=1;
-                    isDrawerOpen=false;
-
-                  });
-                },
-
-              ): IconButton(
-                  icon: Icon(Icons.menu, color: Colors.blue),
-                  onPressed: () {
-                    setState(() {
-                      xOffset = 230;
-                      yOffset = 150;
-                      scaleFactor = 0.6;
-                      isDrawerOpen=true;
-                    });
-                  }),
-            ],
-          )
-      ));
-
-
-  }
-
-
 }
+

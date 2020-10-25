@@ -321,7 +321,7 @@ class _SheetContainerState extends State<SheetContainer>{
 
             Container(
               margin: EdgeInsets.only(top: 5),
-              height: sheetItemHeight,
+              height: 700,
               // 여기에 스트림 빌더
               child: _StreamBuilder()
             )
