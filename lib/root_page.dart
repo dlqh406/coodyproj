@@ -1,4 +1,5 @@
 import 'package:coodyproj/home_page.dart';
+import 'package:coodyproj/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class RootPage extends StatelessWidget {
       stream : FirebaseAuth.instance.onAuthStateChanged,
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.hasData){
-          return Home(snapshot.data);
+          return SearchPage(snapshot.data);
         }
         else{
           return LoginPage();

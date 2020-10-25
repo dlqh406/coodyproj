@@ -317,12 +317,13 @@ class _FavoriteState extends State<Favorite> {
           return StatefulBuilder(
             builder: (context, setState) {
               return AlertDialog(
+                backgroundColor: Color(0xff142035),
                 title: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('필터 적용',style:TextStyle(fontWeight:FontWeight.w700),),
-                    Text("${widget.selectedCategoryList.length}개 선택됨",style:TextStyle(fontWeight:FontWeight.w300))
+                    Text('필터 적용',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
+                    Text("${widget.selectedCategoryList.length}개 선택됨",style:TextStyle(fontWeight:FontWeight.w300,fontSize:15,color: Colors.white))
                   ],
                 ),
                 content: SingleChildScrollView(
@@ -364,20 +365,26 @@ class _FavoriteState extends State<Favorite> {
                                 itemCount: top.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   String _key = top.keys.elementAt(index);
-                                  return CheckboxListTile(
-                                    activeColor: Colors.blue,
-                                    value: top[_key],
-                                    title: Text(_key),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        top[_key] = val;
+                                  return Theme(
+                                    data: ThemeData(
+                                      unselectedWidgetColor: Colors.white, // Your color
+                                    ),
+                                    child: CheckboxListTile(
+                                      checkColor: Colors.white,
+                                      activeColor: Colors.blue,
+                                      value: top[_key],
+                                      title: Text(_key,style: TextStyle(color: Colors.white),),
+                                      onChanged: (val) {
                                         setState(() {
-                                          top[_key] ? widget.selectedCategoryList.add(_key)
-                                              : widget.selectedCategoryList.remove(_key);
+                                          top[_key] = val;
+                                          setState(() {
+                                            top[_key] ? widget.selectedCategoryList.add(_key)
+                                                : widget.selectedCategoryList.remove(_key);
+                                          });
+                                          print(widget.selectedCategoryList);
                                         });
-                                        print(widget.selectedCategoryList);
-                                      });
-                                    },
+                                      },
+                                    ),
                                   );
                                 },
                               ),
@@ -416,20 +423,25 @@ class _FavoriteState extends State<Favorite> {
                                 itemCount: bottom.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   String _key = bottom.keys.elementAt(index);
-                                  return CheckboxListTile(
-                                    activeColor: Colors.blue,
-                                    value: bottom[_key],
-                                    title: Text(_key),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        bottom[_key] = val;
+                                  return Theme(
+                                    data: ThemeData(
+                                      unselectedWidgetColor: Colors.white, // Your color
+                                    ),
+                                    child: CheckboxListTile(
+                                      activeColor: Colors.blue,
+                                      value: bottom[_key],
+                                      title: Text(_key,style: TextStyle(color: Colors.white),),
+                                      onChanged: (val) {
                                         setState(() {
-                                          bottom[_key] ? widget.selectedCategoryList.add(_key)
-                                              : widget.selectedCategoryList.remove(_key);
+                                          bottom[_key] = val;
+                                          setState(() {
+                                            bottom[_key] ? widget.selectedCategoryList.add(_key)
+                                                : widget.selectedCategoryList.remove(_key);
+                                          });
+                                          print(widget.selectedCategoryList);
                                         });
-                                        print(widget.selectedCategoryList);
-                                      });
-                                    },
+                                      },
+                                    ),
                                   );
                                 },
                               ),
@@ -468,20 +480,25 @@ class _FavoriteState extends State<Favorite> {
                                 itemCount: outer.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   String _key = outer.keys.elementAt(index);
-                                  return CheckboxListTile(
-                                    activeColor: Colors.blue,
-                                    value: outer[_key],
-                                    title: Text(_key),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        outer[_key] = val;
+                                  return Theme(
+                                    data: ThemeData(
+                                      unselectedWidgetColor: Colors.white, // Your color
+                                    ),
+                                    child: CheckboxListTile(
+                                      activeColor: Colors.blue,
+                                      value: outer[_key],
+                                      title: Text(_key,style: TextStyle(color: Colors.white),),
+                                      onChanged: (val) {
                                         setState(() {
-                                          outer[_key] ? widget.selectedCategoryList.add(_key)
-                                              : widget.selectedCategoryList.remove(_key);
+                                          outer[_key] = val;
+                                          setState(() {
+                                            outer[_key] ? widget.selectedCategoryList.add(_key)
+                                                : widget.selectedCategoryList.remove(_key);
+                                          });
+                                          print(widget.selectedCategoryList);
                                         });
-                                        print(widget.selectedCategoryList);
-                                      });
-                                    },
+                                      },
+                                    ),
                                   );
                                 },
                               ),
@@ -520,20 +537,25 @@ class _FavoriteState extends State<Favorite> {
                                 itemCount: dress.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   String _key = dress.keys.elementAt(index);
-                                  return CheckboxListTile(
-                                    activeColor: Colors.blue,
-                                    value: dress[_key],
-                                    title: Text(_key),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        dress[_key] = val;
+                                  return Theme(
+                                    data: ThemeData(
+                                      unselectedWidgetColor: Colors.white, // Your color
+                                    ),
+                                    child: CheckboxListTile(
+                                      activeColor: Colors.blue,
+                                      value: dress[_key],
+                                      title: Text(_key,style: TextStyle(color: Colors.white),),
+                                      onChanged: (val) {
                                         setState(() {
-                                          dress[_key] ? widget.selectedCategoryList.add(_key)
-                                              : widget.selectedCategoryList.remove(_key);
+                                          dress[_key] = val;
+                                          setState(() {
+                                            dress[_key] ? widget.selectedCategoryList.add(_key)
+                                                : widget.selectedCategoryList.remove(_key);
+                                          });
+                                          print(widget.selectedCategoryList);
                                         });
-                                        print(widget.selectedCategoryList);
-                                      });
-                                    },
+                                      },
+                                    ),
                                   );
                                 },
                               ),
@@ -573,20 +595,25 @@ class _FavoriteState extends State<Favorite> {
                                 itemCount: innerWear.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   String _key = innerWear.keys.elementAt(index);
-                                  return CheckboxListTile(
-                                    activeColor: Colors.blue,
-                                    value: innerWear[_key],
-                                    title: Text(_key),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        innerWear[_key] = val;
+                                  return Theme(
+                                    data: ThemeData(
+                                      unselectedWidgetColor: Colors.white, // Your color
+                                    ),
+                                    child: CheckboxListTile(
+                                      activeColor: Colors.blue,
+                                      value: innerWear[_key],
+                                      title: Text(_key,style: TextStyle(color:Colors.white),),
+                                      onChanged: (val) {
                                         setState(() {
-                                          innerWear[_key] ? widget.selectedCategoryList.add(_key)
-                                              : widget.selectedCategoryList.remove(_key);
+                                          innerWear[_key] = val;
+                                          setState(() {
+                                            innerWear[_key] ? widget.selectedCategoryList.add(_key)
+                                                : widget.selectedCategoryList.remove(_key);
+                                          });
+                                          print(widget.selectedCategoryList);
                                         });
-                                        print(widget.selectedCategoryList);
-                                      });
-                                    },
+                                      },
+                                    ),
                                   );
                                 },
                               ),
@@ -625,20 +652,25 @@ class _FavoriteState extends State<Favorite> {
                                 itemCount: fitnessWear.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   String _key = fitnessWear.keys.elementAt(index);
-                                  return CheckboxListTile(
-                                    activeColor: Colors.blue,
-                                    value: fitnessWear[_key],
-                                    title: Text(_key),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        fitnessWear[_key] = val;
+                                  return Theme(
+                                    data: ThemeData(
+                                      unselectedWidgetColor: Colors.white, // Your color
+                                    ),
+                                    child: CheckboxListTile(
+                                      activeColor: Colors.blue,
+                                      value: fitnessWear[_key],
+                                      title: Text(_key,style: TextStyle(color:Colors.white),),
+                                      onChanged: (val) {
                                         setState(() {
-                                          fitnessWear[_key] ? widget.selectedCategoryList.add(_key)
-                                              : widget.selectedCategoryList.remove(_key);
+                                          fitnessWear[_key] = val;
+                                          setState(() {
+                                            fitnessWear[_key] ? widget.selectedCategoryList.add(_key)
+                                                : widget.selectedCategoryList.remove(_key);
+                                          });
+                                          print(widget.selectedCategoryList);
                                         });
-                                        print(widget.selectedCategoryList);
-                                      });
-                                    },
+                                      },
+                                    ),
                                   );
                                 },
                               ),
@@ -679,20 +711,25 @@ class _FavoriteState extends State<Favorite> {
                                 itemCount: beachWear.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   String _key = beachWear.keys.elementAt(index);
-                                  return CheckboxListTile(
-                                    activeColor: Colors.blue,
-                                    value: beachWear[_key],
-                                    title: Text(_key),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        beachWear[_key] = val;
+                                  return Theme(
+                                    data: ThemeData(
+                                      unselectedWidgetColor: Colors.white, // Your color
+                                    ),
+                                    child: CheckboxListTile(
+                                      activeColor: Colors.blue,
+                                      value: beachWear[_key],
+                                      title: Text(_key,style: TextStyle(color: Colors.white),),
+                                      onChanged: (val) {
                                         setState(() {
-                                          beachWear[_key] ? widget.selectedCategoryList.add(_key)
-                                              : widget.selectedCategoryList.remove(_key);
+                                          beachWear[_key] = val;
+                                          setState(() {
+                                            beachWear[_key] ? widget.selectedCategoryList.add(_key)
+                                                : widget.selectedCategoryList.remove(_key);
+                                          });
+                                          print(widget.selectedCategoryList);
                                         });
-                                        print(widget.selectedCategoryList);
-                                      });
-                                    },
+                                      },
+                                    ),
                                   );
                                 },
                               ),
@@ -711,7 +748,7 @@ class _FavoriteState extends State<Favorite> {
                         _getDelayForReset();
                         Navigator.pop(context, null);
                       },
-                      child:Text('필터 해제'),
+                      child:Text('필터 해제',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
                     ),
                   ),
                   FlatButton(
@@ -722,14 +759,14 @@ class _FavoriteState extends State<Favorite> {
                       });
                       Navigator.pop(context, null);
                     },
-                    child:Text('취소'),
+                    child:Text('취소',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
                   ),
                   FlatButton(
                     onPressed: () {
                       Navigator.pop(context,null);
                       _getDelayForFilter();
                     },
-                    child: Text('적용'),
+                    child: Text('적용',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
                   ),
                 ],
               );
