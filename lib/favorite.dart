@@ -38,6 +38,12 @@ class _FavoriteState extends State<Favorite> {
   @override
   void initState() {
     super.initState();
+    if (widget.stopTrigger == 1) {
+      setState(() {
+        widget.unchanging =
+            Firestore.instance.collection("uploaded_product").snapshots();
+      });
+    }
   }
 
   @override
@@ -165,13 +171,17 @@ class _FavoriteState extends State<Favorite> {
             print("passed");
 
             if(widget.filter == false){
+              widget.stopTrigger = 2;
               items =  snapshot.data?.documents ??[];
               fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
               sF = items.where((doc)=> doc['style'] == "로맨틱").toList();
               tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
               fF.addAll(sF);
               fF.addAll(tF);
-              fF.shuffle();
+              if(widget.stopTrigger == 2 ){
+                fF.shuffle();
+                widget.unchanging = fF;
+              }
             }
             else if(widget.filter == true){
               items =  snapshot.data?.documents??[];
@@ -227,7 +237,12 @@ class _FavoriteState extends State<Favorite> {
   }
 
   Stream<QuerySnapshot> _productStream() {
-    return Firestore.instance.collection("uploaded_product").snapshots();
+
+    widget.stopTrigger +=1;
+    if(widget.stopTrigger == 2 ){
+      return widget.unchanging;
+    }
+
   }
 
   Map<String, bool> top = {

@@ -304,12 +304,16 @@ class _ProductDetailState extends State<ProductDetail> {
 
     bool _visible;
 
-    if(widget.document['relatedProduct'] == null || widget.document['relatedProduct'][0] == "null"){
+    if(widget.document['relatedProduct'][0] == "null"){
       _visible = false;
+      print("false");
+      print(widget.document['relatedProduct'][0]);
     }else{
       _visible = true;
+      print("true");
+      print(widget.document['relatedProduct'][0]);
     }
-
+    print(_visible);
       return Visibility(
           visible: _visible,
           child: Padding(

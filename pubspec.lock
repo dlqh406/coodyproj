@@ -338,13 +338,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
-  opencv_histogram_equality:
-    dependency: "direct main"
-    description:
-      name: opencv_histogram_equality
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.3+1"
   path:
     dependency: transitive
     description:
