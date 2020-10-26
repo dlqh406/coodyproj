@@ -168,8 +168,6 @@ class _FavoriteState extends State<Favorite> {
             var fF;
             var sF;
             var tF;
-            print("passed");
-
             if(widget.filter == false){
               widget.stopTrigger = 2;
               items =  snapshot.data?.documents ??[];

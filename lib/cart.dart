@@ -335,8 +335,7 @@ class _CartPageState extends State<CartPage> {
   String _calculatePrice(){
     int _totalPrice = 0;
       Firestore.instance.collection('user_data').document("${widget.user.uid}")
-          .collection('cart')
-          .orderBy('date', descending: true).getDocuments().then((querySnapshot){
+          .collection('cart').orderBy('date', descending: true).getDocuments().then((querySnapshot){
         querySnapshot.documents.forEach((result){
           Firestore.instance.collection('uploaded_product')
               .document(result.data["product"]).get().then((value) {

@@ -350,7 +350,9 @@ class _ProductDetailState extends State<ProductDetail> {
       //                                        MaterialPageRoute(builder: (context){
       //                                      return ProductDetail(widget.user,snapshot.data);
       //                                    }));
-                                          },);}
+                                          },);
+
+                              }
                               }
                         )
                       ],
