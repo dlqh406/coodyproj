@@ -195,15 +195,18 @@ class _FavoriteState extends State<Favorite> {
               }
               fF.shuffle();
             }
-            return StaggeredGridView.countBuilder(
-                crossAxisCount: 3,
-                mainAxisSpacing: 6.0,
-                crossAxisSpacing: 6.0,
-                itemCount: fF.length,
-                staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?1.2 : 1.8),
-                itemBuilder: (BuildContext context, int index) {
-                  return _buildListItem(context,fF[index]);
-                }
+            return Padding(
+              padding: const EdgeInsets.only(top:4,left:4,right:4),
+              child: StaggeredGridView.countBuilder(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 6.0,
+                  crossAxisSpacing: 6.0,
+                  itemCount: fF.length,
+                  staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?1.2 : 1.8),
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildListItem(context,fF[index]);
+                  }
+              ),
             );
 
 
