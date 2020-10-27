@@ -38,6 +38,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xff142035),
         body: ListView(
           children: [
             _buildTitleBar(),
@@ -72,7 +73,7 @@ class _SearchPageState extends State<SearchPage> {
         Padding(
           padding: const EdgeInsets.only(top:15,left:20.0),
           child: Text("쿠디 트렌드 검색",
-            style: TextStyle(fontSize: 37, fontWeight: FontWeight.bold, letterSpacing:-1,),),
+            style: TextStyle(fontSize: 37, fontWeight: FontWeight.bold,color: Colors.white, letterSpacing:-1,),),
         ),
       ],
     );
@@ -135,7 +136,6 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-
   Widget _buildGridView() {
     return Visibility(
       visible: _searchText != "" ? true : false,
@@ -197,15 +197,18 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildKeywordBar() {
-    return Container(
-      child: Column(
-        children: [
-          Row(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left:20.0),
+          child: Row(
             children: [
-              Text('추천 키워드'),
+              Text('추천 트렌드 키워드',style: TextStyle(fontSize: 15, color: Colors.white),),
             ],
           ),
-          StreamBuilder<QuerySnapshot>(
+        ),
+        Container(
+          child: StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance.collection('keyword').snapshots(),
               builder: (context, snapshot) {
 
@@ -213,12 +216,12 @@ class _SearchPageState extends State<SearchPage> {
                 if(!snapshot.hasData){
                   return Center(child:  CircularProgressIndicator());
                 }
-              return CarouselSlider.builder(
-                    height: 400,
-                    viewportFraction: 0.8,
-                    aspectRatio: 2.0,
+                return CarouselSlider.builder(
+                    height: 160,
+                    enlargeCenterPage: true,
+                    viewportFraction: 0.3,
                     autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 4),
+                    autoPlayInterval: Duration(seconds: 3),
                     autoPlayAnimationDuration: Duration(milliseconds: 800),
                     autoPlayCurve: Curves.fastOutSlowIn,
                     itemCount: snapshot.data.documents.length,
@@ -228,20 +231,16 @@ class _SearchPageState extends State<SearchPage> {
                   );
               }
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildListCarouseSlider(context, document) {
-    return Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: Image.network(document['img'],fit: BoxFit.fill,),
-      ),
-    );
-
-
+    return ClipRRect(
+          borderRadius: BorderRadius.circular(7.0),
+          child: Image.network(document['img'],fit: BoxFit.fill,),
+        );
   }
 
 }
