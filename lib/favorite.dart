@@ -41,7 +41,8 @@ class _FavoriteState extends State<Favorite> {
     if (widget.stopTrigger == 1) {
       setState(() {
         widget.unchanging =
-            Firestore.instance.collection("uploaded_product").snapshots();
+            Firestore.instance.collection("uploaded_product")
+                .snapshots();
       });
     }
   }

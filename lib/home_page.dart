@@ -1,4 +1,5 @@
 import 'package:coodyproj/cart.dart';
+import 'package:coodyproj/search_page.dart';
 import 'package:coodyproj/test.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +15,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
+  var productStream = [];
 
   double xOffset = 0;
   double yOffset = 0;
@@ -40,9 +42,11 @@ const double kDefaultPadding = 20.0;
 List<String> contents = ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"];
 
 class _HomePageState extends State<HomePage> {
+
   var images=[];
   var title = [];
   var currentPage=0.0;
+
   @override
   void initState() {
        Firestore.instance.collection('magazine')
@@ -64,6 +68,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    _productStream();
 
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection("user_data").document(widget.user.uid).snapshots(),
@@ -313,6 +318,15 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+  void _productStream() {
+    Firestore.instance.collection('uploaded_product').orderBy('uploadDate', descending: true).limit(10).getDocuments().then((value){
+      value.documents.forEach((element) {
+        setState(() {
+          widget.productStream.add(element.data);
+        });
+      });
+    });
   }
     Widget divideTag(){
     return Column(
@@ -576,8 +590,7 @@ class _HomePageState extends State<HomePage> {
               child: GestureDetector(
                   child: Image.asset('assets/logo/blacklogo.png'),
                   onTap: (){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TestPage(widget.user)));
+
                   }),
             ),
           ),
@@ -589,7 +602,8 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.only(top:2.3,right: 10,left: 5),
                     child: GestureDetector(
                       onTap: (){
-                        print("Tap GTD");
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SearchPage(widget.user, widget.productStream)));
                       },
                       child: Image.asset('assets/icons/bar.png',height: 40,),
                     ),

@@ -1,19 +1,21 @@
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'detail_product.dart';
 
 class SearchPage extends StatefulWidget {
   var keywordArrayLength =0;
+  var productStream = [];
+
+
   final FirebaseUser user;
-  SearchPage(this.user);
+  SearchPage(this.user,this.productStream);
   @override
   _SearchPageState createState() => _SearchPageState();
 }
-
 class _SearchPageState extends State<SearchPage> {
   var keywordLength =0;
   final TextEditingController _searchFilter = TextEditingController();
@@ -28,11 +30,11 @@ class _SearchPageState extends State<SearchPage> {
       });
     });
   }
-
   @override
   void initState() {
-    setState(() {});
+    // TODO: implement initState
     super.initState();
+
   }
 
   @override
@@ -44,6 +46,7 @@ class _SearchPageState extends State<SearchPage> {
             _buildTitleBar(),
             _buildSearchBar(),
             _buildKeywordBar(),
+            _buildBestSellingView(),
             _buildGridView()
           ],
         )
@@ -57,13 +60,13 @@ class _SearchPageState extends State<SearchPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-                icon: Icon(Icons.arrow_back_ios,size: 19,),
+                icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.white,),
                 onPressed: (){
                   Navigator.pop(context);
                 }
             ),
             IconButton(
-              icon: Icon(Icons.more_vert,),
+              icon: Icon(Icons.more_vert,color: Colors.white,),
               onPressed: (){
                 setState(() {
                 });
@@ -73,7 +76,8 @@ class _SearchPageState extends State<SearchPage> {
         Padding(
           padding: const EdgeInsets.only(top:15,left:20.0),
           child: Text("쿠디 트렌드 검색",
-            style: TextStyle(fontSize: 37, fontWeight: FontWeight.bold,color: Colors.white, letterSpacing:-1,),),
+            style: TextStyle(
+              fontSize: 37, fontWeight: FontWeight.bold,color: Colors.white, letterSpacing:-1,),),
         ),
       ],
     );
@@ -200,10 +204,10 @@ class _SearchPageState extends State<SearchPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left:20.0),
+          padding: const EdgeInsets.only(left:20.0,top:5,bottom: 11),
           child: Row(
             children: [
-              Text('추천 트렌드 키워드',style: TextStyle(fontSize: 15, color: Colors.white),),
+              Text('추천 트렌드 키워드',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Colors.white),),
             ],
           ),
         ),
@@ -211,8 +215,6 @@ class _SearchPageState extends State<SearchPage> {
           child: StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance.collection('keyword').snapshots(),
               builder: (context, snapshot) {
-
-                print( "aaa: ${snapshot.data.documents.length}");
                 if(!snapshot.hasData){
                   return Center(child:  CircularProgressIndicator());
                 }
@@ -242,5 +244,45 @@ class _SearchPageState extends State<SearchPage> {
           child: Image.network(document['img'],fit: BoxFit.fill,),
         );
   }
+
+  Widget _buildBestSellingView() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left:25.0,top:20,bottom: 11),
+          child: Row(
+            children: [
+              Text('베스트 셀링',style:
+              TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Colors.white),),
+            ],
+          ),
+        ),
+
+        for(var i=0; i<10; i++)
+          Padding(
+            padding: const EdgeInsets.only(left:25.0,top:10),
+            child: Container(
+              child: Row(
+                children: [
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(18.0),
+                      child: Image.network(widget.productStream[i]['thumbnail_img'],fit: BoxFit.cover,width: 100,height: 100,)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${i+1}위"),
+                      Text("${widget.productStream[i]['category']}"),
+                      Text('${widget.productStream[i]['productName']}')
+                    ],
+                  )
+                ],
+              ),
+            ),
+          )
+      ]
+    );
+  }
+
+
 
 }
