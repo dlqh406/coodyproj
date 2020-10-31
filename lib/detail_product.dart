@@ -331,6 +331,7 @@ class _ProductDetailState extends State<ProductDetail> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
+                      
                       children: <Widget>[
                         for(var i =0; i< widget.document['relatedProduct'].length; i++)
                         StreamBuilder<DocumentSnapshot>(

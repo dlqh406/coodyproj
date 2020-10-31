@@ -776,6 +776,8 @@ class _FavoriteState extends State<Favorite> {
           );
         });
   }
+
+
   Future _getDelayForFilter() {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>

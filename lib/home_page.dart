@@ -320,7 +320,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
   void _productStream() {
-    Firestore.instance.collection('uploaded_product').orderBy('uploadDate', descending: true).limit(10).getDocuments().then((value){
+    Firestore.instance.collection('uploaded_product').orderBy('soldCount', descending: true).getDocuments().then((value){
+      //
       value.documents.forEach((element) {
         setState(() {
           widget.productStream.add(element.data);
