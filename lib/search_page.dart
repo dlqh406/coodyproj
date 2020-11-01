@@ -18,6 +18,8 @@ class SearchPage extends StatefulWidget {
   bool innerWear_downbtn = false;
   bool fitnessWear_downbtn = false;
 
+  var docId ="";
+
   int selectedCount =0;
   var selectedCategoryList=[];
 
@@ -289,7 +291,7 @@ class _SearchPageState extends State<SearchPage> {
                     widget.filter = true;
                   });
                 },
-                child: Text('베스트 셀링',style:
+                child: Text('베스트 셀링 TOP 30',style:
                 TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Colors.white),),
               ),
               Spacer(),
@@ -308,32 +310,84 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
 
-        for(var i=0; i<50; i++)
-          Padding(
-            padding: const EdgeInsets.only(left:25.0,top:10),
-            child: Container(
-              child: Row(
-                children: [
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(18.0),
-                      child: Image.network(widget.productStream[i]['thumbnail_img'],fit: BoxFit.cover,width: 100,height: 100,)),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("${i+1}위"),
-                      Text('${widget.productStream[i]['soldCount']}'),
-                      Text('${widget.productStream[i]['style']}'),
-                      Text("${widget.productStream[i]['category']}"),
-                      Text('${widget.productStream[i]['productName']}')
-                    ],
-                  )
-                ],
+//    Navigator.push(context, MaterialPageRoute(builder: (context){
+//    var doc = Firestore.instance.collection('uploaded_product').document(widget.docId).snapshots().toList();
+//                        print(doc);
+//                       return ProductDetail(widget.user, );
+//    }));
+
+        for(var i=0; i<30; i++)
+          InkWell(
+            onTap: (){
+
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left:25.0,top:10,right: 25),
+              child: Container(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right:8.0),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(18.0),
+                          child: Image.network(widget.productStream[i]['thumbnail_img'],fit: BoxFit.cover,width: 100,height: 100,)),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.white
+                        ),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left:8.0, right: 10.0),
+                              child: Container(
+                                  width:45,
+                                  child: Center(child: Text("${i+1}",style: TextStyle(fontWeight: FontWeight.w100 ,fontSize: 24,fontStyle: FontStyle.italic),))),
+                            ),
+                            Container(
+                              width: 150,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("캐주얼 노멀 하이퀄 니트",style: TextStyle(fontSize: 13),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top:2.0),
+                                    child: Text("${widget.productStream[i]['category']}",style: TextStyle(fontWeight: FontWeight.w700,color: Colors.blue),),
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset('assets/star/star1.png', width:70,),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top:3.0,left: 10),
+                                        child: Text("₩12,900",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                      ),
+                                    ],
+                                  ),
+                                  //Text('${widget.productStream[i]['productName']}'),
+                                  //Text('${widget.productStream[i]['price']}')
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           )
       ]
     );
   }
+
   Map<String, bool> top = {
     '니트': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
     '브라우스': false, '셔츠': false,'반팔': false,
@@ -348,7 +402,7 @@ class _SearchPageState extends State<SearchPage> {
     '래더': false,
   };
   Map<String, bool> dress = {
-    '롱&미디': false, '숏': false,
+    '롱&미디': false, '숏': false
   };
   Map<String, bool> beachWear = {
     '비키니': false, '모노키니': false, '로브': false,
@@ -396,10 +450,46 @@ class _SearchPageState extends State<SearchPage> {
       '트레이닝': false, '레깅스': false, '탑': false,
     };
   }
+  _resetBox(){
+    widget.filter = false;
+    widget.top_downbtn = false;
+    widget.bottom_downbtn = false;
+    widget.dress_downbtn = false;
+    widget.beachWear_downbtn = false;
+    widget.outer_downbtn = false;
+    widget.innerWear_downbtn = false;
+    widget.fitnessWear_downbtn = false;
+
+    top = {
+      '니트': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
+      '브라우스': false, '셔츠': false,'반팔': false,
+      '민소매': false,
+    };
+    bottom = {
+      '롱&미디 스커트': false, '숏 스커트': false, '데님': false, '슬랙스': false,
+      '팬츠': false,
+    };
+    outer = {
+      '코트': false, '패딩': false, '자켓': false, '퍼 자켓': false,
+      '래더': false,
+    };
+    dress = {
+      '롱&미디': false, '숏': false
+    };
+    beachWear = {
+      '비키니': false, '모노키니': false, '로브': false,
+    };
+    innerWear = {
+      '파운데이션': false, '란제리': false,
+    };
+    fitnessWear = {
+      '트레이닝': false, '레깅스': false, '탑': false,
+    };
+
+  }
 
   Future<Map<String, bool>> _categoryFilterAlert() async {
-
-
+    _resetBox();
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -465,10 +555,19 @@ class _SearchPageState extends State<SearchPage> {
                                       onChanged: (val) {
                                         setState(() {
                                           top[_key] = val;
-                                          setState(() {
-                                            top[_key] ? widget.selectedCategoryList.add(_key)
-                                                : widget.selectedCategoryList.remove(_key);
-                                          });
+                                          if(widget.selectedCategoryList.length==0){
+                                            setState(() {
+                                              top[_key] ? widget.selectedCategoryList.add(_key)
+                                                  : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
+                                          else{
+                                            setState(() {
+
+                                              widget.selectedCategoryList =[];
+                                              top[_key] ? widget.selectedCategoryList.add(_key) : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
                                           print(widget.selectedCategoryList);
                                         });
                                         Navigator.pop(context,null);
@@ -498,7 +597,7 @@ class _SearchPageState extends State<SearchPage> {
                                 SizedBox(width: 14),
                                 Text('하의', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
+                                widget.bottom_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -524,10 +623,19 @@ class _SearchPageState extends State<SearchPage> {
                                       onChanged: (val) {
                                         setState(() {
                                           bottom[_key] = val;
-                                          setState(() {
-                                            bottom[_key] ? widget.selectedCategoryList.add(_key)
-                                                : widget.selectedCategoryList.remove(_key);
-                                          });
+                                          if(widget.selectedCategoryList.length==0){
+                                            setState(() {
+                                              bottom[_key] ? widget.selectedCategoryList.add(_key)
+                                                  : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
+                                          else{
+                                            setState(() {
+
+                                              widget.selectedCategoryList =[];
+                                              bottom[_key] ? widget.selectedCategoryList.add(_key) : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
                                           print(widget.selectedCategoryList);
                                         });
                                         Navigator.pop(context,null);
@@ -557,7 +665,7 @@ class _SearchPageState extends State<SearchPage> {
                                 SizedBox(width: 14),
                                 Text('아우터', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
+                                widget.outer_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -583,10 +691,19 @@ class _SearchPageState extends State<SearchPage> {
                                       onChanged: (val) {
                                         setState(() {
                                           outer[_key] = val;
-                                          setState(() {
-                                            outer[_key] ? widget.selectedCategoryList.add(_key)
-                                                : widget.selectedCategoryList.remove(_key);
-                                          });
+                                          if(widget.selectedCategoryList.length==0){
+                                            setState(() {
+                                              outer[_key] ? widget.selectedCategoryList.add(_key)
+                                                  : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
+                                          else{
+                                            setState(() {
+
+                                              widget.selectedCategoryList =[];
+                                              outer[_key] ? widget.selectedCategoryList.add(_key) : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
                                           print(widget.selectedCategoryList);
                                         });
                                         Navigator.pop(context,null);
@@ -616,7 +733,7 @@ class _SearchPageState extends State<SearchPage> {
                                 SizedBox(width: 14),
                                 Text('원피스', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
+                                widget.dress_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -640,16 +757,22 @@ class _SearchPageState extends State<SearchPage> {
                                       value: dress[_key],
                                       title: Text(_key,style: TextStyle(color: Colors.white),),
                                       onChanged: (val) {
-                                        setState(() {
                                           dress[_key] = val;
-                                          setState(() {
-                                            dress[_key] ? widget.selectedCategoryList.add(_key)
-                                                : widget.selectedCategoryList.remove(_key);
-                                          });
+                                          if(widget.selectedCategoryList.length==0){
+                                            setState(() {
+                                              dress[_key] ? widget.selectedCategoryList.add(_key)
+                                                  : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
+                                          else{
+                                            setState(() {
+                                              widget.selectedCategoryList =[];
+                                              dress[_key] ? widget.selectedCategoryList.add(_key) : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
                                           print(widget.selectedCategoryList);
-                                        });
-                                        Navigator.pop(context);
-                                        _getDelayForFilter();
+                                          Navigator.pop(context);
+                                          _getDelayForFilter();
                                       },
                                     ),
                                   );
@@ -676,7 +799,7 @@ class _SearchPageState extends State<SearchPage> {
                                 SizedBox(width: 14),
                                 Text('이너웨어', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
+                                widget.innerWear_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -702,10 +825,19 @@ class _SearchPageState extends State<SearchPage> {
                                       onChanged: (val) {
                                         setState(() {
                                           innerWear[_key] = val;
-                                          setState(() {
-                                            innerWear[_key] ? widget.selectedCategoryList.add(_key)
-                                                : widget.selectedCategoryList.remove(_key);
-                                          });
+                                          if(widget.selectedCategoryList.length==0){
+                                            setState(() {
+                                              innerWear[_key] ? widget.selectedCategoryList.add(_key)
+                                                  : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
+                                          else{
+                                            setState(() {
+
+                                              widget.selectedCategoryList =[];
+                                              innerWear[_key] ? widget.selectedCategoryList.add(_key) : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
                                           print(widget.selectedCategoryList);
                                         });
                                         Navigator.pop(context,null);
@@ -735,7 +867,7 @@ class _SearchPageState extends State<SearchPage> {
                                 SizedBox(width: 14),
                                 Text('피트니스', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
+                                widget.fitnessWear_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -761,10 +893,19 @@ class _SearchPageState extends State<SearchPage> {
                                       onChanged: (val) {
                                         setState(() {
                                           fitnessWear[_key] = val;
-                                          setState(() {
-                                            fitnessWear[_key] ? widget.selectedCategoryList.add(_key)
-                                                : widget.selectedCategoryList.remove(_key);
-                                          });
+                                          if(widget.selectedCategoryList.length==0){
+                                            setState(() {
+                                              fitnessWear[_key] ? widget.selectedCategoryList.add(_key)
+                                                  : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
+                                          else{
+                                            setState(() {
+
+                                              widget.selectedCategoryList =[];
+                                              fitnessWear[_key] ? widget.selectedCategoryList.add(_key) : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
                                           print(widget.selectedCategoryList);
                                         });
                                         Navigator.pop(context,null);
@@ -796,7 +937,7 @@ class _SearchPageState extends State<SearchPage> {
                                 SizedBox(width: 14),
                                 Text('비치웨어', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                widget.top_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
+                                widget.beachWear_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],
                             ),
                           ),
@@ -822,10 +963,18 @@ class _SearchPageState extends State<SearchPage> {
                                       onChanged: (val) {
                                         setState(() {
                                           beachWear[_key] = val;
-                                          setState(() {
-                                            beachWear[_key] ? widget.selectedCategoryList.add(_key)
-                                                : widget.selectedCategoryList.remove(_key);
-                                          });
+                                          if(widget.selectedCategoryList.length==0){
+                                            setState(() {
+                                              beachWear[_key] ? widget.selectedCategoryList.add(_key)
+                                                  : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
+                                          else{
+                                            setState(() {
+                                              widget.selectedCategoryList =[];
+                                              beachWear[_key] ? widget.selectedCategoryList.add(_key) : widget.selectedCategoryList.remove(_key);
+                                            });
+                                          }
                                           print(widget.selectedCategoryList);
                                         });
                                         Navigator.pop(context,null);
@@ -888,5 +1037,19 @@ class _SearchPageState extends State<SearchPage> {
         })
     );
   }
+
+//  Widget _buildInkwell(index, String docId) {
+//    return StreamBuilder(
+//      stream: Firestore.instance.collection('uploaded_product').document(widget.docId).snapshots(),
+//      builder: (context, snapshot){
+//        if(!snapshot.hasData){
+//          return Center(child:  CircularProgressIndicator());
+//        }
+//        Navigator.push(context, MaterialPageRoute(builder: (context){
+//         return ProductDetail(widget.user, snapshot.data.document);
+//       }));
+//      },
+//    );
+//  }
 
 }

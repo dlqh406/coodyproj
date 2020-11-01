@@ -27,7 +27,7 @@ class ProductDetail extends StatefulWidget {
   int _selectedColor = 0;
   bool modalVisible =false;
 
-  final DocumentSnapshot document;
+  DocumentSnapshot document;
   final FirebaseUser user;
 
   ProductDetail(this.user, this.document);
