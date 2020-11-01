@@ -1,10 +1,10 @@
-
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'detail_product.dart';
+import 'package:coodyproj/detail_product.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SearchPage extends StatefulWidget {
@@ -18,28 +18,32 @@ class SearchPage extends StatefulWidget {
   bool innerWear_downbtn = false;
   bool fitnessWear_downbtn = false;
 
+  var stopTrigger = 1;
+  var unchanging;
+
   var docId ="";
 
   int selectedCount =0;
   var selectedCategoryList=[];
 
-
   var keywordArrayLength =0;
-  var original_productStream = [];
   var productStream = [];
 
 
-
   final FirebaseUser user;
-  SearchPage(this.user, this.original_productStream);
+  SearchPage(this.user);
+
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 class _SearchPageState extends State<SearchPage> {
+
   var keywordLength =0;
   final TextEditingController _searchFilter = TextEditingController();
   FocusNode focusNode = FocusNode();
   String _searchText = "";
+
 
   _SearchPageState() {
     _searchFilter.addListener(() {
@@ -51,8 +55,8 @@ class _SearchPageState extends State<SearchPage> {
   }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
   }
 
   @override
@@ -63,9 +67,9 @@ class _SearchPageState extends State<SearchPage> {
           children: [
             _buildTitleBar(),
             _buildSearchBar(),
+            _buildGridView(),
             _buildKeywordBar(),
             _buildBestSellingView(),
-            _buildGridView()
           ],
         )
     );
@@ -91,11 +95,14 @@ class _SearchPageState extends State<SearchPage> {
               },)
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top:15,left:20.0),
-          child: Text("쿠디 트렌드 검색",
-            style: TextStyle(
-              fontSize: 37, fontWeight: FontWeight.bold,color: Colors.white, letterSpacing:-1,),),
+        Visibility(
+          visible: _searchText != "" ? false : true,
+          child: Padding(
+            padding: const EdgeInsets.only(top:15,left:20.0),
+            child: Text("쿠디 트렌드 검색",
+              style: TextStyle(
+                fontSize: 37, fontWeight: FontWeight.bold,color: Colors.white, letterSpacing:-1,),),
+          ),
         ),
       ],
     );
@@ -103,7 +110,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget _buildSearchBar() {
     return Padding(
-      padding: const EdgeInsets.only(left:20.0,right:20.0),
+      padding:EdgeInsets.only(left:16.0,right:16.0),
       child: Center(
         child: Column(
           children: [
@@ -133,6 +140,8 @@ class _SearchPageState extends State<SearchPage> {
                               _searchText = "";
                               focusNode.unfocus();
                             });
+                            Navigator.pushReplacement(context, MaterialPageRoute(
+                                builder: (BuildContext context) =>  SearchPage(widget.user)));
                           },)
                             : Container(),
                         hintText: '찾고싶은 키워드를 입력하세요',
@@ -182,7 +191,7 @@ class _SearchPageState extends State<SearchPage> {
       }
     }
     return Padding(
-      padding: const EdgeInsets.only(top:4,left:4,right:4),
+      padding: const EdgeInsets.only(top:4,left:16,right:16),
       child: Expanded(
         child: StaggeredGridView.countBuilder(
             crossAxisCount: 3,
@@ -201,6 +210,7 @@ class _SearchPageState extends State<SearchPage> {
     return Hero(
       tag: doc['thumbnail_img'],
       child: Material(
+        color: Colors.transparent,
         child: InkWell(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -219,40 +229,43 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildKeywordBar() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left:20.0,top:5,bottom: 11),
-          child: Row(
-            children: [
-              Text('추천 트렌드 키워드',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Colors.white),),
-            ],
+    return Visibility(
+      visible: _searchText != "" ? false : true,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left:20.0,top:5,bottom: 11),
+            child: Row(
+              children: [
+                Text('추천 트렌드 키워드',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Colors.white),),
+              ],
+            ),
           ),
-        ),
-        Container(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('keyword').snapshots(),
-              builder: (context, snapshot) {
-                if(!snapshot.hasData){
-                  return Center(child:  CircularProgressIndicator());
+          Container(
+            child: StreamBuilder<QuerySnapshot>(
+                stream: Firestore.instance.collection('keyword').snapshots(),
+                builder: (context, snapshot) {
+                  if(!snapshot.hasData){
+                    return Center(child:  CircularProgressIndicator());
+                  }
+                  return CarouselSlider.builder(
+                      height: 160,
+                      enlargeCenterPage: true,
+                      viewportFraction: 0.3,
+                      autoPlay: true,
+                      autoPlayInterval: Duration(seconds: 3),
+                      autoPlayAnimationDuration: Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder:(BuildContext context, int itemIndex){
+                        return _buildListCarouseSlider(context, snapshot.data.documents[itemIndex]);
+                      },
+                    );
                 }
-                return CarouselSlider.builder(
-                    height: 160,
-                    enlargeCenterPage: true,
-                    viewportFraction: 0.3,
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 3),
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder:(BuildContext context, int itemIndex){
-                      return _buildListCarouseSlider(context, snapshot.data.documents[itemIndex]);
-                    },
-                  );
-              }
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -264,128 +277,145 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildBestSellingView() {
+    return Visibility(
+      visible: _searchText != "" ? false : true,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left:25.0,top:20,bottom: 11),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      widget.filter = true;
+                    });
+                  },
+                  child: Text('베스트 셀링 TOP 25',style:
+                  TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Colors.white),),
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(top:5,right:36.0),
+                  child: InkWell(
+                    child: new Container(
+                        width: 18,
+                        child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/Wfilter.png') ),
+                    onTap: () => {
+                      _categoryFilterAlert()
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+           Container(
+             child: StreamBuilder<QuerySnapshot>(
+                stream: _productStream(),
+                builder: (context, snapshot) {
+                  if(!snapshot.hasData){
+                    return Center(child:  CircularProgressIndicator());
+                  }
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 25,
+                      itemBuilder: (BuildContext context, int index){
+                        var items;
+                        if(widget.filter == false){
+                          items = snapshot.data.documents;
+                        }
+                        else if(widget.filter == true){
+                          print("true");
+                          items = snapshot.data.documents
+                              .where((doc)=> doc['category'] == widget.selectedCategoryList[0])
+                              .toList();
+                        }
+                        return _buildBestSelling(context, items[index], index);
+                      }
+                  );
+                }
+              ),
+           )
+        ]
+      ),
+    );
+  }
 
-    if (widget.filter == true){
-      setState(() {
-        for(var i=0; i<widget.selectedCategoryList.length; i++){
-          if(i==0){
-            widget.productStream = widget.original_productStream.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
-          }
-        }
-      });
-    }
-    else{
-      setState(() {
-        widget.productStream = widget.original_productStream;
-      });
-    }
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left:25.0,top:20,bottom: 11),
+  Stream<QuerySnapshot> _productStream() {
+    return Firestore.instance.collection("uploaded_product").orderBy('soldCount', descending: true).snapshots();
+  }
+  Widget _buildBestSelling(context,doc,index){
+
+    return InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return ProductDetail(widget.user, doc);
+        }));
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left:25.0,top:10,right: 25),
+        child: Container(
           child: Row(
             children: [
-              GestureDetector(
-                onTap: (){
-                  setState(() {
-                    widget.filter = true;
-                  });
-                },
-                child: Text('베스트 셀링 TOP 30',style:
-                TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Colors.white),),
-              ),
-              Spacer(),
               Padding(
-                padding: const EdgeInsets.only(top:5,right:36.0),
-                child: InkWell(
-                  child: new Container(
-                      width: 18,
-                      child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/Wfilter.png') ),
-                  onTap: () => {
-                    _categoryFilterAlert()
-                  },
-                ),
+                padding: const EdgeInsets.only(right:8.0),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18.0),
+                    child: Image.network(doc['thumbnail_img'],
+                      fit: BoxFit.cover,width: 100,height: 100,)),
               ),
-            ],
-          ),
-        ),
-
-//    Navigator.push(context, MaterialPageRoute(builder: (context){
-//    var doc = Firestore.instance.collection('uploaded_product').document(widget.docId).snapshots().toList();
-//                        print(doc);
-//                       return ProductDetail(widget.user, );
-//    }));
-
-        for(var i=0; i<30; i++)
-          InkWell(
-            onTap: (){
-
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(left:25.0,top:10,right: 25),
-              child: Container(
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right:8.0),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(18.0),
-                          child: Image.network(widget.productStream[i]['thumbnail_img'],fit: BoxFit.cover,width: 100,height: 100,)),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: Colors.white
-                        ),
-                        child: Row(
+              Expanded(
+                child: Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      color: Colors.white
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left:8.0, right: 10.0),
+                        child: Container(
+                            width:45,
+                            child: Center(child: Text("${index+1}",style: TextStyle(fontWeight: FontWeight.w100 ,fontSize: 35,fontStyle: FontStyle.italic),))),
+                      ),
+                      Container(
+                        width: 150,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Text("캐주얼 노멀 하이퀄 니트",style: TextStyle(fontSize: 13),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis),
                             Padding(
-                              padding: const EdgeInsets.only(left:8.0, right: 10.0),
-                              child: Container(
-                                  width:45,
-                                  child: Center(child: Text("${i+1}",style: TextStyle(fontWeight: FontWeight.w100 ,fontSize: 24,fontStyle: FontStyle.italic),))),
+                              padding: const EdgeInsets.only(top:2.0),
+                              child: Text(doc['category'],style: TextStyle(fontWeight: FontWeight.w700,color: Colors.blue),),
                             ),
-                            Container(
-                              width: 150,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("캐주얼 노멀 하이퀄 니트",style: TextStyle(fontSize: 13),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top:2.0),
-                                    child: Text("${widget.productStream[i]['category']}",style: TextStyle(fontWeight: FontWeight.w700,color: Colors.blue),),
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Image.asset('assets/star/star1.png', width:70,),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top:3.0,left: 10),
-                                        child: Text("₩12,900",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
-                                      ),
-                                    ],
-                                  ),
-                                  //Text('${widget.productStream[i]['productName']}'),
-                                  //Text('${widget.productStream[i]['price']}')
-                                ],
-                              ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/star/star1.png', width:70,),
+                                Padding(
+                                  padding: const EdgeInsets.only(top:3.0,left: 10),
+                                  child: Text("₩12,900",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          )
-      ]
+              )
+            ],
+          ),
+        ),
+      ),
     );
+
   }
 
   Map<String, bool> top = {
@@ -1038,18 +1068,9 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-//  Widget _buildInkwell(index, String docId) {
-//    return StreamBuilder(
-//      stream: Firestore.instance.collection('uploaded_product').document(widget.docId).snapshots(),
-//      builder: (context, snapshot){
-//        if(!snapshot.hasData){
-//          return Center(child:  CircularProgressIndicator());
-//        }
-//        Navigator.push(context, MaterialPageRoute(builder: (context){
-//         return ProductDetail(widget.user, snapshot.data.document);
-//       }));
-//      },
-//    );
-//  }
+
+
+
+
 
 }

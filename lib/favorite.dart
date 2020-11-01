@@ -220,6 +220,7 @@ class _FavoriteState extends State<Favorite> {
       Hero(
         tag: document['thumbnail_img'],
         child: Material(
+          color: Colors.transparent,
           child: InkWell(
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context){

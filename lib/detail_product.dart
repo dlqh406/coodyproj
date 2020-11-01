@@ -147,9 +147,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Widget _buildFirstBody(context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Column(
       children: [
         SizedBox(

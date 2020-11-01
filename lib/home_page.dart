@@ -68,7 +68,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _productStream();
 
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection("user_data").document(widget.user.uid).snapshots(),
@@ -318,15 +317,6 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-  }
-  void _productStream() {
-    Firestore.instance.collection('uploaded_product').orderBy('soldCount', descending: true).getDocuments().then((value){
-      value.documents.forEach((element) {
-        setState(() {
-          widget.productStream.add(element.data);
-        });
-      });
-    });
   }
     Widget divideTag(){
     return Column(
@@ -603,7 +593,7 @@ class _HomePageState extends State<HomePage> {
                     child: GestureDetector(
                       onTap: (){
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SearchPage(widget.user, widget.productStream)));
+                            MaterialPageRoute(builder: (context) => SearchPage(widget.user)));
                       },
                       child: Image.asset('assets/icons/bar.png',height: 40,),
                     ),
