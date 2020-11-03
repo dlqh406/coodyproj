@@ -26,6 +26,24 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading:  IconButton(
+            icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.black,),
+            onPressed: (){
+              Navigator.pop(context);
+            }
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(bottom:5.0),
+            child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.black,),
+                onPressed: () => {
+                }),
+          ),
+        ],
+      ),
           body: Column(
             children: [
               _buildCart(context),
@@ -37,97 +55,89 @@ class _CartPageState extends State<CartPage> {
 
   Widget _buildCart(context) {
     Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(
-            top: 30.0, right: 10.0, left: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
+    return Padding(
+      padding: const EdgeInsets.only(
+          top: 15.0, right: 10.0, left: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
 
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back_ios),
-                      onPressed: (){
-                        Navigator.pop(context);
-                      }
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("장바구니",
-                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right:8.0),
-                  child: SizedBox(
-                    width: 60,
-                    height: 30,
-                    child: RaisedButton(
-                      color: Color(0xFF5D70F8),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7)
-                      ),
-                      onPressed: () {
-                        _deleteCart();
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(context, MaterialPageRoute(
-                            builder: (BuildContext context) =>  CartPage(widget.user)));
-                      },
-                      child: Text("삭제",style: TextStyle(color: Colors.white),),
-                    ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text("장바구니",
+                      style: TextStyle(fontSize: 37, fontWeight: FontWeight.bold),),
                   ),
-                )
-
-              ],
-            ),
-            StreamBuilder<QuerySnapshot>(
-              stream: _cartStream(),
-              builder: (context, snapshot) {
-                if(!snapshot.hasData){
-                  return Center(child: CircularProgressIndicator());
-                }
-                else{
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 17.0, bottom: 10.0),
-                  );
-                }
-              }
-            ),
-            Container(
-              height: size.height*0.52,
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: _cartStream(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return snapshot.data.documents.length!=0
-                        ?CupertinoScrollbar(
-                      controller: widget._controllerOne,
-                      isAlwaysShown: true,
-                      child: ListView.builder(
-                        controller: widget._controllerOne,
-                        itemCount: snapshot.data.documents.length,
-                        itemBuilder:(BuildContext context, int index){
-                          return _buildListView(context, snapshot.data.documents[index],index, snapshot.data.documents.length,);
-                        },
-                      ),
-                    ):Center(child: Text("장바구니 비였음"));
-
-                  }
+                ],
               ),
+              Padding(
+                padding: const EdgeInsets.only(right:8.0),
+                child: SizedBox(
+                  width: 60,
+                  height: 30,
+                  child: RaisedButton(
+                    color: Color(0xFF5D70F8),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7)
+                    ),
+                    onPressed: () {
+                      _deleteCart();
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(context, MaterialPageRoute(
+                          builder: (BuildContext context) =>  CartPage(widget.user)));
+                    },
+                    child: Text("삭제",style: TextStyle(color: Colors.white),),
+                  ),
+                ),
+              )
+
+            ],
+          ),
+          StreamBuilder<QuerySnapshot>(
+            stream: _cartStream(),
+            builder: (context, snapshot) {
+              if(!snapshot.hasData){
+                return Center(child: CircularProgressIndicator());
+              }
+              else{
+                return Padding(
+                  padding: const EdgeInsets.only(top: 17.0, bottom: 10.0),
+                );
+              }
+            }
+          ),
+          Container(
+            height: size.height*0.52,
+            child: StreamBuilder<QuerySnapshot>(
+                stream: _cartStream(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return snapshot.data.documents.length!=0
+                      ?CupertinoScrollbar(
+                    controller: widget._controllerOne,
+                    isAlwaysShown: true,
+                    child: ListView.builder(
+                      controller: widget._controllerOne,
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder:(BuildContext context, int index){
+                        return _buildListView(context, snapshot.data.documents[index],index, snapshot.data.documents.length,);
+                      },
+                    ),
+                  ):Center(child: Text("장바구니 비였음"));
+
+                }
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -222,7 +232,7 @@ class _CartPageState extends State<CartPage> {
                                       child: CircularProgressIndicator(),
                                     );
                                   }
-                                  return Text("₩ ${snapshot.data['price']}",
+                                  return Text("₩ ${numberWithComma(int.parse(snapshot.data['price']))}",
                                       style:TextStyle(fontWeight: FontWeight.bold)
                                   );
                                 },

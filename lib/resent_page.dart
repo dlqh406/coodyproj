@@ -26,7 +26,7 @@ class _RecentPageState extends State<RecentPage> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading:  IconButton(
-                icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.white,),
+                icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.black,),
                 onPressed: (){
                   Navigator.pop(context);
                 }
@@ -34,13 +34,13 @@ class _RecentPageState extends State<RecentPage> {
             actions: [
               Padding(
                 padding: const EdgeInsets.only(bottom:5.0),
-                child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.white,),
+                child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.black,),
                     onPressed: () => {
                     }),
               ),
             ],
           ),
-          backgroundColor: Color(0xff142035),
+          backgroundColor: Colors.white,
           body: _bodyBuilder(),
         ),
       );
@@ -64,10 +64,10 @@ class _RecentPageState extends State<RecentPage> {
               children: [
                 Text("최근 본 상품",
                   style: TextStyle(
-                    fontSize: 37, fontWeight: FontWeight.bold,color: Colors.white, letterSpacing:-1,),),
+                    fontSize: 37, fontWeight: FontWeight.bold,color: Colors.black, letterSpacing:-1,),),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0,bottom:3),
-                  child: Text('최대 30개',style: TextStyle(color: Colors.white),),
+                  child: Text('최대 30개',style: TextStyle(color: Colors.black),),
                 )
               ],
             ),
@@ -136,73 +136,81 @@ class _RecentPageState extends State<RecentPage> {
         },
         child: Padding(
           padding: const EdgeInsets.only(left:18.0,top:10,right:18),
-          child: Container(
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right:8.0),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Image.network(doc['thumbnail_img'],
-                        fit: BoxFit.cover,width: 75,height: 75,)),
-                ),
-                Expanded(
-                  child: Container(
-                    height: 75,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white
+          child: Column(
+            children: [
+              Container(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right:8.0),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network(doc['thumbnail_img'],
+                            fit: BoxFit.cover,width: 75,height: 75,)),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left:20.0),
+                    Expanded(
                       child: Container(
-                        width: 150,
-                        child: Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                        height: 75,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left:20.0),
+                          child: Container(
+                            width: 150,
+                            child: Row(
                               children: [
-                                Text("캐주얼 노멀 하이퀄 니트",style: TextStyle(fontSize: 15),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis),
-                                Text(doc['category'],style: TextStyle(fontWeight: FontWeight.w700,color: Colors.blue)),
-                                Padding(
-                                  padding: const EdgeInsets.only(top:3.0),
-                                  child: Text("₩12,900",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("캐주얼 노멀 하이퀄 니트",style: TextStyle(fontSize: 15),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis),
+                                    Text(doc['category'],style: TextStyle(fontWeight: FontWeight.w700,color: Colors.blue)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top:3.0),
+                                      child: Text("₩12,900",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                    ),
+                                  ],
                                 ),
+                                Spacer(),
+                                IconButton(
+                                  icon: Icon(Icons.cancel,color: Colors.grey,size: 15,),
+                                  onPressed: (){
+                                    print(doc.documentID);
+                                    Firestore.instance.collection('user_data').document(widget.user.uid).collection('recent')
+                                        .orderBy('date',descending: true).getDocuments().then((value) {
+                                      Firestore.instance.collection('user_data').document(widget.user.uid)
+                                          .collection('recent').document(value.documents[index].documentID).delete();
+                                    });
+                                  }
+                                )
                               ],
                             ),
-                            Spacer(),
-                            IconButton(
-                              icon: Icon(Icons.cancel,color: Colors.grey,size: 15,),
-                              onPressed: (){
-                                print(doc.documentID);
-                                Firestore.instance.collection('user_data').document(widget.user.uid).collection('recent')
-                                    .orderBy('date',descending: true).getDocuments().then((value) {
-                                  Firestore.instance.collection('user_data').document(widget.user.uid)
-                                      .collection('recent').document(value.documents[index].documentID).delete();
-                                });
-                              }
-                            )
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                )
-              ],
-            ),
+                    )
+                  ],
+                ),
+              ),
+              Opacity(
+                  opacity: 0.15,
+                  child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 15.0, bottom: 5.0),
+                      child: Container(
+                        height: 1,
+                        color: Colors.black38,
+                      ))),
+
+            ],
           ),
         ),
       );
 
     }
-    String _timeStampToString(date) {
-      Timestamp t = date;
-      DateTime d = t.toDate();
-      var list = d.toString().replaceAll('-', '.').split(" ");
-      return list[0];
-    }
+
 
   }

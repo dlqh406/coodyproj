@@ -51,6 +51,7 @@ class _FavoriteState extends State<Favorite> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
            child:AppBar(
                titleSpacing: 6.0,

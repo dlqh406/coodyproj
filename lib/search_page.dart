@@ -6,6 +6,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/detail_product.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/services.dart';
 
 class SearchPage extends StatefulWidget {
   bool filter = false;
@@ -49,48 +50,68 @@ class _SearchPageState extends State<SearchPage> {
     _searchFilter.addListener(() {
       setState(() {
         _searchText = _searchFilter.text;
-        print(_searchText);
+        print("_searchFilter: ${_searchFilter.text}");
+        print('_searchText: ${_searchText}');
       });
     });
   }
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle.dark.copyWith(
+          statusBarBrightness: Brightness.light,));
 
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading:  IconButton(
-              icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.white,),
-              onPressed: (){
-                Navigator.pop(context);
-              }
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home:
+
+      Container(
+        decoration: BoxDecoration(
+          gradient:  LinearGradient(
+            colors: [
+//              Colors.blue,
+              Colors.deepPurple[700],
+              Colors.purple[500]
+            ],
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(bottom:5.0),
-              child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.white,),
-                  onPressed: () => {
-                  }),
-            ),
-          ],
         ),
-        backgroundColor: Color(0xff142035),
-        body: ListView(
-        children: [
-          _buildTitleBar(),
-          _buildSearchBar(),
-          _buildGridView(),
-          _buildKeywordBar(),
-          _buildBestSellingView(),
-          ],
-          ));
+        child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading:  IconButton(
+                    icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.white,),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    }
+                ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom:5.0),
+                    child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.white,),
+                        onPressed: () => {
+                        }),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.transparent,
+              body: ListView(
+              children: [
+                _buildTitleBar(),
+                _buildSearchBar(),
+                _buildGridView(),
+                _buildKeywordBar(),
+                _buildBestSellingView(),
+                ],
+                )),
+      ),
+    )
+    ;
   }
   Widget _buildTitleBar() {
     return Column(
@@ -110,6 +131,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildSearchBar() {
+
     return Padding(
       padding:EdgeInsets.only(left:16.0,right:16.0),
       child: Center(
@@ -135,7 +157,7 @@ class _SearchPageState extends State<SearchPage> {
                         prefixIcon: Icon(Icons.search, color: Colors.white60, size: 20,),
                         suffixIcon: focusNode.hasFocus
                             ? IconButton(
-                          icon: Icon(Icons.cancel, size: 20),
+                          icon: Icon(Icons.cancel, size: 20,color: Colors.white,),
                           onPressed: () {
                             setState(() {
                               _searchFilter.clear();
@@ -148,13 +170,13 @@ class _SearchPageState extends State<SearchPage> {
                         labelStyle: TextStyle(color: Colors.white),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.all(Radius.circular(15))),
+                            borderRadius: BorderRadius.all(Radius.circular(30))),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.all(Radius.circular(15))),
+                            borderRadius: BorderRadius.all(Radius.circular(30))),
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.all(Radius.circular(15))),
+                            borderRadius: BorderRadius.all(Radius.circular(30))),
                       ),
                     ),
                   ),
@@ -269,11 +291,20 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _buildListCarouseSlider(context, document) {
-    return ClipRRect(
-          borderRadius: BorderRadius.circular(7.0),
-          child: Image.network(document['img'],fit: BoxFit.fill,),
-        );
+  Widget _buildListCarouseSlider(context, doc) {
+    return InkWell(
+      onTap: (){
+        focusNode.requestFocus();
+        print(doc['keyWord']);
+        setState(() {
+          _searchFilter.text = doc['keyWord'];
+        });
+      },
+      child: ClipRRect(
+            borderRadius: BorderRadius.circular(7.0),
+            child: Image.network(doc['img'],fit: BoxFit.fill,),
+          ),
+    );
   }
 
   Widget _buildBestSellingView() {

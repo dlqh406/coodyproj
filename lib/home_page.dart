@@ -13,7 +13,7 @@ import 'favorite.dart';
 import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/constants.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-
+import 'package:flutter/services.dart';
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
   var productStream = [];
@@ -612,16 +612,7 @@ class _HomePageState extends State<HomePage> {
 
                         Padding(
                           padding: const EdgeInsets.only(left:27.0),
-                          child: RotateAnimatedTextKit(
-                            onTap: () {
-                              // 위 GestureDetector 랑 똑같이 구현 해야함
-                              print("Tap Event");
-                            },
-                            isRepeatingAnimation: true,
-                            totalRepeatCount: 60000,
-                            text: contents,
-                            textStyle: TextStyle(fontSize: 13.0,color: Colors.white),
-                          ),
+                          child: Text("asd")
                         ),
                       ],
                     ),
