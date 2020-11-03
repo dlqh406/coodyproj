@@ -596,13 +596,15 @@ class _HomePageState extends State<HomePage> {
               child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top:2.3,right: 10,left: 5),
+                    padding: const EdgeInsets.only(right: 10,left: 5),
                     child: GestureDetector(
                       onTap: (){
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => SearchPage(widget.user)));
                       },
-                      child: Image.asset('assets/icons/bar.png',height: 40,),
+                      child: Container(
+                          height: 40,
+                          child: Image.asset('assets/icons/bar.png')),
                     ),
                   ),
                   Padding(
@@ -612,7 +614,7 @@ class _HomePageState extends State<HomePage> {
 
                         Padding(
                           padding: const EdgeInsets.only(left:27.0),
-                          child: Text("asd")
+                          child: Text("")
                         ),
                       ],
                     ),

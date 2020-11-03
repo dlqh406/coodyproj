@@ -121,7 +121,7 @@ class _SearchPageState extends State<SearchPage> {
           visible: _searchText != "" ? false : true,
           child: Padding(
             padding: const EdgeInsets.only(top:15,left:20.0),
-            child: Text("쿠디 트렌드 검색",
+            child: Text("쿠디 트렌드 서치",
               style: TextStyle(
                 fontSize: 37, fontWeight: FontWeight.bold,color: Colors.white, letterSpacing:-1,),),
           ),
