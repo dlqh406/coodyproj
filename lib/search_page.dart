@@ -61,18 +61,18 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         backgroundColor: Color(0xff142035),
         body: ListView(
-          children: [
-            _buildTitleBar(),
-            _buildSearchBar(),
-            _buildGridView(),
-            _buildKeywordBar(),
-            _buildBestSellingView(),
+        children: [
+          _buildTitleBar(),
+          _buildSearchBar(),
+          _buildGridView(),
+          _buildKeywordBar(),
+          _buildBestSellingView(),
           ],
-        )
-    );
+          ));
   }
   Widget _buildTitleBar() {
     return Column(
@@ -124,6 +124,7 @@ class _SearchPageState extends State<SearchPage> {
                       cursorColor: Colors.white,
                       focusNode: focusNode,
                       style: TextStyle(
+                          color: Colors.white,
                           fontSize: 15
                       ),
                       controller: _searchFilter,
@@ -140,8 +141,6 @@ class _SearchPageState extends State<SearchPage> {
                               _searchText = "";
                               focusNode.unfocus();
                             });
-                            Navigator.pushReplacement(context, MaterialPageRoute(
-                                builder: (BuildContext context) =>  SearchPage(widget.user)));
                           },)
                             : Container(),
                         hintText: '찾고싶은 키워드를 입력하세요',
@@ -354,7 +353,7 @@ class _SearchPageState extends State<SearchPage> {
         }));
       },
       child: Padding(
-        padding: const EdgeInsets.only(left:25.0,top:10,right: 25),
+        padding: const EdgeInsets.only(left:18.0,top:10,right:18),
         child: Container(
           child: Row(
             children: [

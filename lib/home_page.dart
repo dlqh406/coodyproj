@@ -1,4 +1,5 @@
 import 'package:coodyproj/cart.dart';
+import 'package:coodyproj/resent_page.dart';
 import 'package:coodyproj/search_page.dart';
 import 'package:coodyproj/test.dart';
 import 'package:flutter/material.dart';
@@ -135,6 +136,7 @@ class _HomePageState extends State<HomePage> {
           divideTag(),
           AI_recommendationView(),
           recommendationView(),
+          _gridBuilder(),
         ],
       ),
     );
@@ -207,6 +209,11 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.black,
                       ),
                       onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context){
+                              return RecentPage(widget.user);
+                            }));
+
 
                       },
                     )
@@ -653,6 +660,36 @@ class _HomePageState extends State<HomePage> {
                 })
           ],
         )
+    );
+  }
+
+  Widget _gridBuilder() {
+
+    return StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection('user_data')
+            .document(widget.user.uid).collection('recent')
+            .orderBy('date',descending: true).snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData){
+            return Center(child:Text("최근본 상품이 없습니다",style: TextStyle(color: Colors.grey),));
+          }
+          for(var i= snapshot.data.documents.length-1; i>0; i--){
+            for(var j=0; j<i; j++){
+              if(snapshot.data.documents[i]["docID"] == snapshot.data.documents[j]['docID']){
+                Firestore.instance.collection('user_data').document(widget.user.uid)
+                    .collection('recent').document(snapshot.data.documents[i].documentID).delete();
+              }
+            }
+          }
+          //30개
+          //31개~
+          for(var i=30; i< snapshot.data.documents.length; i++) {
+              Firestore.instance.collection('user_data').document(widget.user.uid)
+                  .collection('recent').document(snapshot.data.documents[i].documentID).delete();
+            }
+
+          return Container();
+        }
     );
   }
 }

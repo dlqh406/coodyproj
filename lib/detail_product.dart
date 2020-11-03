@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 
 class ProductDetail extends StatefulWidget {
@@ -38,6 +37,21 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+
+  @override
+  void initState() {
+    super.initState();
+    final data = {
+      'docID' : widget.document.documentID,
+      'date' : DateTime.now()};
+    // 댓글 추가
+    Firestore.instance
+        .collection('user_data')
+        .document(widget.user.uid)
+        .collection('recent')
+        .add(data);
+
+  }
 
 
   @override
@@ -350,7 +364,6 @@ class _ProductDetailState extends State<ProductDetail> {
       //                                      return ProductDetail(widget.user,snapshot.data);
       //                                    }));
                                           },);
-
                               }
                               }
                         )
@@ -584,8 +597,6 @@ class _ProductDetailState extends State<ProductDetail> {
       ),
     );
   }
-
-
 
 
   Widget _buildMainInfoBody(BuildContext context) {
