@@ -6,7 +6,8 @@ import 'detail_product.dart';
 import 'dart:io' show Platform;
 
 class RecentPage extends StatefulWidget {
-
+  bool more_Btn = true;
+  bool cancel_Btn = false;
 
   final FirebaseUser user;
   RecentPage(this.user);
@@ -174,7 +175,7 @@ class _RecentPageState extends State<RecentPage> {
                             ),
                             Spacer(),
                             IconButton(
-                              icon: Icon(Icons.cancel,color: Colors.grey,size: 17,),
+                              icon: Icon(Icons.cancel,color: Colors.grey,size: 15,),
                               onPressed: (){
                                 print(doc.documentID);
                                 Firestore.instance.collection('user_data').document(widget.user.uid).collection('recent')

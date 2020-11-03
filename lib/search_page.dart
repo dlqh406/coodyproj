@@ -63,6 +63,24 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading:  IconButton(
+              icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.white,),
+              onPressed: (){
+                Navigator.pop(context);
+              }
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(bottom:5.0),
+              child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.white,),
+                  onPressed: () => {
+                  }),
+            ),
+          ],
+        ),
         backgroundColor: Color(0xff142035),
         body: ListView(
         children: [
@@ -78,23 +96,6 @@ class _SearchPageState extends State<SearchPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-                icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.white,),
-                onPressed: (){
-                  Navigator.pop(context);
-                }
-            ),
-            IconButton(
-              icon: Icon(Icons.more_vert,color: Colors.white,),
-              onPressed: (){
-                setState(() {
-                });
-              },)
-          ],
-        ),
         Visibility(
           visible: _searchText != "" ? false : true,
           child: Padding(
@@ -353,7 +354,7 @@ class _SearchPageState extends State<SearchPage> {
         }));
       },
       child: Padding(
-        padding: const EdgeInsets.only(left:18.0,top:10,right:18),
+        padding: const EdgeInsets.only(left:18.0,top:15,right:18),
         child: Container(
           child: Row(
             children: [
@@ -362,11 +363,11 @@ class _SearchPageState extends State<SearchPage> {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(18.0),
                     child: Image.network(doc['thumbnail_img'],
-                      fit: BoxFit.cover,width: 100,height: 100,)),
+                      fit: BoxFit.cover,width: 85,height: 85,)),
               ),
               Expanded(
                 child: Container(
-                  height: 100,
+                  height: 80,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(18),
                       color: Colors.white
@@ -380,7 +381,7 @@ class _SearchPageState extends State<SearchPage> {
                             child: Center(child: Text("${index+1}",style: TextStyle(fontWeight: FontWeight.w100 ,fontSize: 35,fontStyle: FontStyle.italic),))),
                       ),
                       Container(
-                        width: 150,
+                        width: 135,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -405,6 +406,12 @@ class _SearchPageState extends State<SearchPage> {
                           ],
                         ),
                       ),
+                      Spacer(),
+                      IconButton(
+                          icon: Icon(Icons.arrow_forward_ios,color: Colors.grey,size: 12,),
+                          onPressed: (){
+                          }
+                      )
                     ],
                   ),
                 ),
