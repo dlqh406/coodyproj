@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'detail_product.dart';
 import 'dart:io' show Platform;
-import 'package:animated_text_kit/animated_text_kit.dart';
+
 import 'package:coodyproj/test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -47,6 +47,7 @@ class _FavoriteState extends State<Favorite> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,19 +87,7 @@ class _FavoriteState extends State<Favorite> {
                           padding: const EdgeInsets.only(left:11.0),
                           child: Row(
                             children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left:27.0),
-                                child: RotateAnimatedTextKit(
-                                  onTap: () {
-                                    // 위 GestureDetector 랑 똑같이 구현 해야함
-                                    print("Tap Event");
-                                  },
-                                  isRepeatingAnimation: true,
-                                  totalRepeatCount: 60000,
-                                  text: ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"],
-                                  textStyle: TextStyle(fontSize: 13.0,color: Colors.white),
-                                ),
-                              ),
+
                             ],
                           ),
                         )
@@ -230,14 +219,14 @@ class _FavoriteState extends State<Favorite> {
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
-                child: Image.network(
-                    document['thumbnail_img'],
-                    fit : BoxFit.cover),
+                child: FadeInImage.assetNetwork(
+                    placeholder:'assets/images/loading.png',
+                  image: document['thumbnail_img'],
+                      fit : BoxFit.cover),
+                ),
               )
           ),
-        ),
-      );
-
+        );
   }
 
   Stream<QuerySnapshot> _productStream() {

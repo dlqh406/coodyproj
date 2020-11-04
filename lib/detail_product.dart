@@ -1343,7 +1343,9 @@ class ReleatedCard extends StatelessWidget {
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 ),
-                child: Image.network(image)),
+                child: FadeInImage.assetNetwork(
+                    placeholder:'assets/images/19.png',
+                    image: image)),
           ),
           GestureDetector(
             onTap: press,

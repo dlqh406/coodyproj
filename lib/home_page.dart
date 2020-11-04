@@ -1,7 +1,6 @@
 import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/resent_page.dart';
 import 'package:coodyproj/search_page.dart';
-import 'package:coodyproj/test.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -10,11 +9,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'favorite_analysis_page.dart';
 import 'loading_page.dart';
 import 'favorite.dart';
-import 'package:coodyproj/cart.dart';
-import 'package:coodyproj/constants.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flutter/services.dart';
 import 'package:transparent_image/transparent_image.dart';
+
+
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
   var productStream = [];
@@ -41,7 +38,6 @@ const kTextColor = Color(0xFF3C4046);
 const kBackgroundColor = Color(0xFFF9F8FD);
 const double kDefaultPadding = 20.0;
 
-List<String> contents = ["두번보는 쿠디사용설명서", "카디건 활용방법", "Hello World"];
 
 class _HomePageState extends State<HomePage> {
 
@@ -188,7 +184,7 @@ class _HomePageState extends State<HomePage> {
 //              ),
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(top:15),
+              padding: EdgeInsets.only(top:18),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
@@ -197,12 +193,27 @@ class _HomePageState extends State<HomePage> {
                     Text("Magazine",
                       style: TextStyle(
                         color: Colors.black,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Archivo',
-                        fontSize: 30.0,
-                        letterSpacing: 0,
+//                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Montserrat',
+                        letterSpacing: -1.3,
+                        fontSize: 27.0,
                       ),),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xFFff6e6e),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 22.0, vertical: 6.0),
+                          child: Text("Contents",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.add,
@@ -222,34 +233,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top:5,left: 20.0),
-            child: Row(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFff6e6e),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 22.0, vertical: 6.0),
-                      child: Text("CONTENTS",
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 15.0,
-                ),
-                Text("${images.length}+ Stories",
-                    style: TextStyle(color: Colors.black)),
-                Spacer(),
 
-              ],
-            ),
-          ),
           SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -272,64 +256,52 @@ class _HomePageState extends State<HomePage> {
     );
   }
     Widget divideTag(){
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text("Recommend",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Archivo',
-                  fontSize: 30.0,
-                  letterSpacing: 0,
-                ),),
-              IconButton(
-                icon: Icon(
-                  Icons.search,
-                  size: 25.0,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-
-                },
-              )
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top:5,left: 20.0),
-          child: Row(
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 22.0, vertical: 6.0),
-                    child: Text("STORE",
-                        style: TextStyle(color: Colors.white)),
+    return Container(
+      color: Colors.transparent,
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text("Recommend",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Montserrat',
+                    letterSpacing: -1.3,
+                    fontSize: 27.0,
+                  ),),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 22.0, vertical: 6.0),
+                      child: Text("Store",
+                          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 15.0,
-              ),
-              Text("${images.length}+ Stories",
-                  style: TextStyle(color: Colors.black)),
-              Spacer(),
+                IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    size: 25.0,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
 
-            ],
+                  },
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+
+        ],
+      ),
     );
   }
     Widget AI_recommendationView(){
@@ -355,7 +327,13 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22),
                 color: Colors.lightBlue,
-                boxShadow: [kDefaultShadow],
+                boxShadow: [
+                  BoxShadow(
+                  offset: Offset(0, 20),
+              blurRadius: 20,
+              color: Colors.black12,
+            ),
+          ],
               ),
               child: Container(
                 margin: EdgeInsets.only(right: 10),
@@ -445,7 +423,13 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22),
                 color: Colors.blue,
-                boxShadow: [kDefaultShadow],
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 20),
+                    blurRadius: 20,
+                    color: Colors.black12,
+                  ),
+                ],
               ),
               child: Container(
                 margin: EdgeInsets.only(right: 10),
@@ -652,20 +636,20 @@ class ContentsCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(
         left: kDefaultPadding,
-        top: kDefaultPadding / 2,
-        bottom: kDefaultPadding * 2.5,
+        top: kDefaultPadding / 1,
+        bottom: kDefaultPadding * 1.5,
       ),
       width: size.width * 0.4,
       child: Column(
         children: <Widget>[
           ClipRRect(
               borderRadius:BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
-              child: FadeInImage(
-                  placeholder: MemoryImage(kTransparentImage),
-              image : NetworkImage(image)
+              child: FadeInImage.assetNetwork(
+                  placeholder:'assets/images/19.png',
+              image : image,fit: BoxFit.cover,
               )
           ),
           GestureDetector(
@@ -681,7 +665,7 @@ class ContentsCard extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     offset: Offset(0, 10),
-                    blurRadius: 34,
+                    blurRadius: 18,
                     color: Colors.black12,
                   ),
                 ],

@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/detail_product.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class SearchPage extends StatefulWidget {
   bool filter = false;
@@ -62,12 +63,15 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle.dark.copyWith(
-          statusBarBrightness: Brightness.light,));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.light,
+        ));
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Kopup',
+      ),
       home:
 
       Container(
@@ -120,10 +124,29 @@ class _SearchPageState extends State<SearchPage> {
         Visibility(
           visible: _searchText != "" ? false : true,
           child: Padding(
-            padding: const EdgeInsets.only(top:15,left:20.0),
-            child: Text("쿠디 트렌드 서치",
-              style: TextStyle(
-                fontSize: 37, fontWeight: FontWeight.bold,color: Colors.white, letterSpacing:-1,),),
+            padding: const EdgeInsets.only(left:20.0),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 4,right:10.0),
+                  child: Image.asset('assets/icons/chart.png',width: 35,),
+                ),
+                Text("Trend",
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontFamily: 'Montserrat',
+                    letterSpacing: -1.3,
+                    color: Colors.lightBlueAccent,
+                    ),),
+                Text(" Search",
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontFamily: 'Montserrat',
+                    letterSpacing: -1.3,
+                    color: Colors.redAccent,
+                  ),),
+              ],
+            ),
           ),
         ),
       ],
@@ -256,10 +279,14 @@ class _SearchPageState extends State<SearchPage> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left:20.0,top:5,bottom: 11),
+            padding: const EdgeInsets.only(left:25.0,top:5,bottom: 11),
             child: Row(
               children: [
-                Text('추천 트렌드 키워드',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Colors.white),),
+                Text('추천 트렌드 키워드',style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15, color: Colors.white,
+                    ),
+                    ),
               ],
             ),
           ),
@@ -271,7 +298,7 @@ class _SearchPageState extends State<SearchPage> {
                     return Center(child:  CircularProgressIndicator());
                   }
                   return CarouselSlider.builder(
-                      height: 160,
+                      height: 180,
                       enlargeCenterPage: true,
                       viewportFraction: 0.3,
                       autoPlay: true,
@@ -302,7 +329,9 @@ class _SearchPageState extends State<SearchPage> {
       },
       child: ClipRRect(
             borderRadius: BorderRadius.circular(7.0),
-            child: Image.network(doc['img'],fit: BoxFit.fill,),
+            child: FadeInImage.assetNetwork(
+              placeholder: 'assets/images/loading.png',
+              image: doc['img'], fit: BoxFit.cover,height: 180,),
           ),
     );
   }
@@ -313,7 +342,7 @@ class _SearchPageState extends State<SearchPage> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left:25.0,top:20,bottom: 11),
+            padding: const EdgeInsets.only(left:25.0,top:20,bottom: 0),
             child: Row(
               children: [
                 GestureDetector(
@@ -376,6 +405,8 @@ class _SearchPageState extends State<SearchPage> {
   Stream<QuerySnapshot> _productStream() {
     return Firestore.instance.collection("uploaded_product").orderBy('soldCount', descending: true).snapshots();
   }
+
+
   Widget _buildBestSelling(context,doc,index){
 
     return InkWell(
@@ -393,9 +424,11 @@ class _SearchPageState extends State<SearchPage> {
                 padding: const EdgeInsets.only(right:8.0),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(18.0),
-                    child: Image.network(doc['thumbnail_img'],
-                      fit: BoxFit.cover,width: 85,height: 85,)),
-              ),
+                    child: FadeInImage.assetNetwork(
+                      placeholder:'assets/images/19.png',
+                      image: doc['thumbnail_img'],
+                        fit: BoxFit.cover,width: 85,height: 85,),
+                    )),
               Expanded(
                 child: Container(
                   height: 80,

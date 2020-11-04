@@ -50,12 +50,16 @@ flutter:
     -  assets/icons/medal.png
     -  assets/icons/cart2.png
     -  assets/icons/bag.png
+    -  assets/icons/chart.png
     -  assets/icons/
     -  assets/logo/blue.png
     -  assets/logo/blacklogo.png
     -  assets/star/star1.png
     -  assets/star/star11.png
     -  assets/star/starhalf.png
+    -  assets/images/Item_1.png
+    -  assets/images/19.png
+    -  assets/images/loading.png
 
 
   fonts:
@@ -71,3 +75,20 @@ flutter:
       fonts:
         - asset: assets/fonts/Archivo-SemiBold.ttf
         - asset: assets/fonts/Archivo-SemiBoldItalic.ttf
+
+    - family: Pacifico
+      fonts:
+        - asset: assets/fonts/Pacifico-Regular.ttf
+
+    - family: LuckiestGuy
+      fonts:
+        - asset: assets/fonts/LuckiestGuy-Regular.ttf
+
+    - family: Staatliches
+      fonts:
+        - asset: assets/fonts/Staatliches-Regular.ttf
+
+
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-ExtraBold.ttf

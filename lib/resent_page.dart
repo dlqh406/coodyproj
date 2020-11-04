@@ -40,6 +40,7 @@ class _RecentPageState extends State<RecentPage> {
               ),
             ],
           ),
+
           backgroundColor: Colors.white,
           body: _bodyBuilder(),
         ),
@@ -49,7 +50,8 @@ class _RecentPageState extends State<RecentPage> {
       return ListView(
         children: [
           _buildTitleBar(),
-          _gridBuilder()
+          _gridBuilder(),
+//          _clearBtn()
         ],
       );
     }
@@ -68,7 +70,8 @@ class _RecentPageState extends State<RecentPage> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0,bottom:3),
                   child: Text('최대 30개',style: TextStyle(color: Colors.black),),
-                )
+                ),
+
               ],
             ),
           ),
@@ -145,9 +148,11 @@ class _RecentPageState extends State<RecentPage> {
                       padding: const EdgeInsets.only(right:8.0),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
-                          child: Image.network(doc['thumbnail_img'],
-                            fit: BoxFit.cover,width: 75,height: 75,)),
-                    ),
+                          child: FadeInImage.assetNetwork(
+                            placeholder:'assets/images/19.png',
+                            image: doc['thumbnail_img'],
+                              fit: BoxFit.cover,width: 75,height: 75,),
+                          )),
                     Expanded(
                       child: Container(
                         height: 75,
@@ -211,6 +216,28 @@ class _RecentPageState extends State<RecentPage> {
       );
 
     }
+
+  Widget _clearBtn() {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: SizedBox(
+          height: 46,
+          width: MediaQuery.of(context).size.width*1,
+          child: RaisedButton(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),),
+            color: Colors.blueAccent,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => null));
+            },
+            child: const Text('바로 구매하기',
+                style: TextStyle(color: Colors.white, fontSize: 13,fontWeight: FontWeight.bold)),
+          ),
+        ),
+      );
+  }
 
 
   }

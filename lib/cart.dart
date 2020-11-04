@@ -161,7 +161,9 @@ class _CartPageState extends State<CartPage> {
                 }
                 return ClipRRect(
                     borderRadius: BorderRadius.circular(18.0),
-                    child: Image.network(snapshot.data['thumbnail_img'],width: 90,height: 90,fit: BoxFit.cover,));
+                    child: FadeInImage.assetNetwork(
+                      placeholder:'assets/images/19.png',
+                        image: snapshot.data['thumbnail_img'],width: 90,height: 90,fit: BoxFit.cover,));
               },
             ),
             Expanded(
