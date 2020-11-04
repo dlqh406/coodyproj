@@ -188,7 +188,7 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Text("Magazine",
                       style: TextStyle(
@@ -198,22 +198,27 @@ class _HomePageState extends State<HomePage> {
                         letterSpacing: -1.3,
                         fontSize: 27.0,
                       ),),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFFff6e6e),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 22.0, vertical: 6.0),
-                          child: Text("Contents",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left:15.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFFff6e6e),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 22.0, vertical: 6.0),
+                            child: Text("Contents",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ),
                         ),
                       ),
                     ),
+                    Spacer(),
                     IconButton(
                       icon: Icon(
                         Icons.add,
@@ -263,7 +268,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text("Recommend",
                   style: TextStyle(
@@ -272,20 +277,25 @@ class _HomePageState extends State<HomePage> {
                     letterSpacing: -1.3,
                     fontSize: 27.0,
                   ),),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 22.0, vertical: 6.0),
-                      child: Text("Store",
-                          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+
+                Padding(
+                  padding: const EdgeInsets.only(left:15.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 22.0, vertical: 6.0),
+                        child: Text("Store",
+                            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                      ),
                     ),
                   ),
                 ),
+                Spacer(),
                 IconButton(
                   icon: Icon(
                     Icons.search,
@@ -323,10 +333,17 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             // Those are our background
             Container(
-              height: 136,
+              height: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22),
-                color: Colors.lightBlue,
+            gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Color(0xff00ffa9),
+                  Color(0xff0d4dff),
+                ],
+            ),
                 boxShadow: [
                   BoxShadow(
                   offset: Offset(0, 20),
@@ -335,24 +352,18 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
               ),
-              child: Container(
-                margin: EdgeInsets.only(right: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(22),
-                ),
-              ),
             ),
             // our product image
             Positioned(
               top: 0,
               right: 0,
               child: Container(
+
                 padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
                 height: 160,
                 // image is square but we add extra 20 + 20 padding thats why width is 200
                 width: 200,
-                child: Image.asset("assets/images/Item_1.png", fit: BoxFit.cover,),
+                child: Image.asset("assets/images/giphy.gif", fit: BoxFit.cover,),
               ),
             ),
             // Product title and price
@@ -370,9 +381,7 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: kDefaultPadding),
-                      child: Text(
-                        "product.title"
-                      ),
+                      child: Text("A.I 맞춤 스타일 추천", style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
                     ),
                     // it use the available space
                     Spacer(),
@@ -389,7 +398,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       child: Text(
-                        "price",
+                        "Custom",
                         style: TextStyle(color:Colors.white),
                       ),
                     ),
@@ -419,10 +428,18 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             // Those are our background
             Container(
-              height: 136,
+              height: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22),
-                color: Colors.blue,
+                color: Colors.lightBlueAccent,
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    _getColorFromHex("#FFE53B"),
+                    _getColorFromHex("#FF2525"),
+                  ],
+                ),
                 boxShadow: [
                   BoxShadow(
                     offset: Offset(0, 20),
@@ -431,13 +448,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              child: Container(
-                margin: EdgeInsets.only(right: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(22),
-                ),
-              ),
             ),
             // our product image
             Positioned(
@@ -445,10 +455,13 @@ class _HomePageState extends State<HomePage> {
               right: 0,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                height: 160,
+                height: 100,
                 // image is square but we add extra 20 + 20 padding thats why width is 200
-                width: 200,
-                child: Image.asset("assets/images/Item_1.png", fit: BoxFit.cover,),
+                width: 330,
+                child: Padding(
+                  padding: const EdgeInsets.only(left:100.0),
+                  child: Image.asset("assets/images/giphy2.gif",fit: BoxFit.cover, ),
+                ),
               ),
             ),
             // Product title and price
@@ -614,6 +627,15 @@ class _HomePageState extends State<HomePage> {
           return Container();
         }
     );
+  }
+  Color _getColorFromHex(String hexColor) {
+    hexColor = hexColor.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
   }
 }
 class ContentsCard extends StatelessWidget {

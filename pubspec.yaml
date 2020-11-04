@@ -60,6 +60,8 @@ flutter:
     -  assets/images/Item_1.png
     -  assets/images/19.png
     -  assets/images/loading.png
+    -  assets/images/giphy.gif
+    -  assets/images/giphy2.gif
 
 
   fonts:

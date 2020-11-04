@@ -331,7 +331,7 @@ class _SearchPageState extends State<SearchPage> {
             borderRadius: BorderRadius.circular(7.0),
             child: FadeInImage.assetNetwork(
               placeholder: 'assets/images/loading.png',
-              image: doc['img'], fit: BoxFit.cover,height: 180,),
+              image: doc['img'], fit: BoxFit.cover),
           ),
     );
   }
