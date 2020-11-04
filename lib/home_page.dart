@@ -317,12 +317,21 @@ class _HomePageState extends State<HomePage> {
     Widget AI_recommendationView(){
     Size size = MediaQuery.of(context).size;
     return   Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+            BoxShadow(
+              offset: Offset(10,23),
+              blurRadius: 28,
+              color: Colors.black12,
+            ),
+        ],
+      ),
       margin: EdgeInsets.symmetric(
         horizontal: kDefaultPadding,
-        vertical: kDefaultPadding / 2,
+        vertical: kDefaultPadding / 8,
       ),
       // color: Colors.blueAccent,
-      height: 160,
+      height: 130,
       child: InkWell(
         onTap: (){
           Navigator.push(context,
@@ -333,7 +342,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             // Those are our background
             Container(
-              height: 120,
+              height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22),
             gradient: LinearGradient(
@@ -344,13 +353,6 @@ class _HomePageState extends State<HomePage> {
                   Color(0xff0d4dff),
                 ],
             ),
-                boxShadow: [
-                  BoxShadow(
-                  offset: Offset(0, 20),
-              blurRadius: 20,
-              color: Colors.black12,
-            ),
-          ],
               ),
             ),
             // our product image
@@ -358,14 +360,16 @@ class _HomePageState extends State<HomePage> {
               top: 0,
               right: 0,
               child: Container(
-
-                padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                height: 160,
+                height: 100,
                 // image is square but we add extra 20 + 20 padding thats why width is 200
-                width: 200,
-                child: Image.asset("assets/images/giphy.gif", fit: BoxFit.cover,),
+                width: 300,
+                child: Padding(
+                  padding: const EdgeInsets.only(left:100.0),
+                  child: Image.asset("assets/images/giphy2.gif",fit: BoxFit.cover, ),
+                ),
               ),
             ),
+
             // Product title and price
             Positioned(
               bottom: 0,
@@ -373,15 +377,18 @@ class _HomePageState extends State<HomePage> {
               child: SizedBox(
                 height: 136,
                 // our image take 200 width, thats why we set out total width - 200
-                width: size.width - 200,
+                width: size.width - 150,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Spacer(),
+                    SizedBox(
+                      height: 45,
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: kDefaultPadding),
-                      child: Text("A.I 맞춤 스타일 추천", style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
+                      child: Text("A.I 맞춤 스타일 추천", style: TextStyle(fontSize: 15,color: Colors.white,fontWeight:FontWeight.bold),),
                     ),
                     // it use the available space
                     Spacer(),
@@ -417,10 +424,19 @@ class _HomePageState extends State<HomePage> {
     return   Container(
       margin: EdgeInsets.symmetric(
         horizontal: kDefaultPadding,
-        vertical: kDefaultPadding / 2,
+        vertical: kDefaultPadding / 6,
+      ),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(10,23),
+            blurRadius: 28,
+            color: Colors.black12
+          ),
+        ],
       ),
       // color: Colors.blueAccent,
-      height: 160,
+      height: 140,
       child: InkWell(
         onTap: (){},
         child: Stack(
@@ -428,7 +444,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             // Those are our background
             Container(
-              height: 120,
+              height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22),
                 color: Colors.lightBlueAccent,
@@ -436,17 +452,11 @@ class _HomePageState extends State<HomePage> {
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [
-                    _getColorFromHex("#FFE53B"),
-                    _getColorFromHex("#FF2525"),
+                    _getColorFromHex("#a32cdf"),
+                    _getColorFromHex("#106ad2"),
                   ],
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 20),
-                    blurRadius: 20,
-                    color: Colors.black12,
-                  ),
-                ],
+
               ),
             ),
             // our product image
@@ -454,14 +464,10 @@ class _HomePageState extends State<HomePage> {
               top: 0,
               right: 0,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                height: 100,
+                height: 160,
                 // image is square but we add extra 20 + 20 padding thats why width is 200
-                width: 330,
-                child: Padding(
-                  padding: const EdgeInsets.only(left:100.0),
-                  child: Image.asset("assets/images/giphy2.gif",fit: BoxFit.cover, ),
-                ),
+                width: 200,
+                child: Image.asset("assets/images/giphy.gif", fit: BoxFit.cover,),
               ),
             ),
             // Product title and price
@@ -476,33 +482,16 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Spacer(),
+                    SizedBox(
+                      height: 30,
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: kDefaultPadding),
-                      child: Text(
-                        "product.title",
-                        style: Theme.of(context).textTheme.button,
-                      ),
+                      child: Text("에스레저 ", style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
                     ),
                     // it use the available space
                     Spacer(),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: kDefaultPadding * 1.5, // 30 padding
-                        vertical: kDefaultPadding / 4, // 5 top and bottom
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(22),
-                          topRight: Radius.circular(22),
-                        ),
-                      ),
-                      child: Text(
-                        "price",
-                        style: Theme.of(context).textTheme.button,
-                      ),
-                    ),
                   ],
                 ),
               ),
