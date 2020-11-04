@@ -27,6 +27,7 @@ dependencies:
   multiselect_formfield: ^0.1.4
   list_tile_switch: ^0.0.2
   flutter_html: ^1.0.2
+  transparent_image: ^1.0.0
 
 
 dev_dependencies:
@@ -55,7 +56,6 @@ flutter:
     -  assets/star/star1.png
     -  assets/star/star11.png
     -  assets/star/starhalf.png
-    -  assets/images/
 
 
   fonts:

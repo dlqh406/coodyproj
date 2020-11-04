@@ -14,6 +14,7 @@ import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/constants.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/services.dart';
+import 'package:transparent_image/transparent_image.dart';
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
   var productStream = [];
@@ -184,7 +185,7 @@ class _HomePageState extends State<HomePage> {
 //                    )
 //                  ],
 //                ),
-//              ),ddsa
+//              ),
           SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(top:15),
@@ -213,7 +214,6 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(builder: (context){
                               return RecentPage(widget.user);
                             }));
-
 
                       },
                     )
@@ -257,70 +257,16 @@ class _HomePageState extends State<HomePage> {
                     Row(
                         children: [
                           for(var i=0; i< images.length; i++)
+
                             ContentsCard(
-                                image: "${images[i]}",
-                                title: "${title[i]}",
-                                country: "Russia",
-                                price: 440,
-                                press: (){}
+                                  image: "${images[i]}",
+                                  title: "${title[i]}",
+                                  country: "Russia",
+                                  price: 440,
+                                  press: (){}
+                              ,
                             ),
                         ])])),
-          //Padding(
-//                padding: EdgeInsets.only(top:00),
-//                child: Padding(
-//                  padding: EdgeInsets.symmetric(horizontal: 30.0),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                    children: <Widget>[
-//                      Text("A.I 스타일추천",
-//                          style: TextStyle(
-//                            fontWeight: FontWeight.bold,
-//                            color: Colors.black,
-//                            fontSize: 30.0,
-//                            letterSpacing: 0.1,
-//                          )),
-//                      IconButton(
-//                        icon: Icon(
-//                          Icons.add,
-//                          size: 25.0,
-//                          color: Colors.black,
-//                        ),
-//                        onPressed: () {
-//                          Navigator.push(context,
-//                              MaterialPageRoute(builder: (context) => Favorite(widget.user)));
-//                        },
-//                      )
-//                    ],
-//                  ),
-//                ),
-//              ),
-//              Padding(
-//                padding: const EdgeInsets.only(top:5.0,left: 20.0),
-//                child: Row(
-//                  children: <Widget>[
-//                    Container(
-//                      decoration: BoxDecoration(
-//                        color: Colors.blueAccent,
-//                        borderRadius: BorderRadius.circular(20.0),
-//                      ),
-//                      child: Center(
-//                        child: Padding(
-//                          padding: EdgeInsets.symmetric(
-//                              horizontal: 22.0, vertical: 6.0),
-//                          child: Text("Store",
-//                              style: TextStyle(color: Colors.white)),
-//                        ),
-//                      ),
-//                    ),
-//                    SizedBox(
-//                      width: 15.0,
-//                    ),
-//                    Text("1235+",
-//                        style: TextStyle(color: Colors.black)),
-//                    Spacer(),
-//                  ],
-//                ),
-//              ),
         ],
       ),
     );
@@ -717,7 +663,11 @@ class ContentsCard extends StatelessWidget {
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ),
-              child: Image.network(image)),
+              child: FadeInImage(
+                  placeholder: MemoryImage(kTransparentImage),
+              image : NetworkImage(image)
+              )
+          ),
           GestureDetector(
             onTap: press,
             child: Container(
