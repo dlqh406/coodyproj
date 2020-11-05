@@ -20,9 +20,8 @@ class SearchPage extends StatefulWidget {
   bool innerWear_downbtn = false;
   bool fitnessWear_downbtn = false;
 
-  var stopTrigger = 1;
-  var unchanging;
 
+  var snapData;
   var docId ="";
 
   int selectedCount =0;
@@ -40,6 +39,7 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 class _SearchPageState extends State<SearchPage> {
+  var stopTrigger = 1;
 
   var keywordLength =0;
   final TextEditingController _searchFilter = TextEditingController();
@@ -293,6 +293,7 @@ class _SearchPageState extends State<SearchPage> {
                   if(!snapshot.hasData){
                     return Center(child:  CircularProgressIndicator());
                   }
+
                   return CarouselSlider.builder(
                       height: 180,
                       enlargeCenterPage: true,
@@ -315,6 +316,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildListCarouseSlider(context, doc) {
+
     return InkWell(
       onTap: (){
         focusNode.requestFocus();
@@ -372,22 +374,25 @@ class _SearchPageState extends State<SearchPage> {
                   if(!snapshot.hasData){
                     return Center(child:  CircularProgressIndicator());
                   }
+
                   return ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: 25,
                       itemBuilder: (BuildContext context, int index){
-                        var items;
-                        if(widget.filter == false){
-                          items = snapshot.data.documents;
+                        if(stopTrigger == 1 ){
+                          if(widget.filter == false){
+                             widget.snapData = snapshot.data.documents;
+                          }
+                          stopTrigger +=1;
                         }
                         else if(widget.filter == true){
                           print("true");
-                          items = snapshot.data.documents
+                          widget.snapData = snapshot.data.documents
                               .where((doc)=> doc['category'] == widget.selectedCategoryList[0])
                               .toList();
                         }
-                        return _buildBestSelling(context, items[index], index);
+                        return _buildBestSelling(context, widget.snapData[index], index);
                       }
                   );
                 }
@@ -401,7 +406,6 @@ class _SearchPageState extends State<SearchPage> {
   Stream<QuerySnapshot> _productStream() {
     return Firestore.instance.collection("uploaded_product").orderBy('soldCount', descending: true).snapshots();
   }
-
 
   Widget _buildBestSelling(context,doc,index){
 
@@ -498,7 +502,7 @@ class _SearchPageState extends State<SearchPage> {
     '래더': false,
   };
   Map<String, bool> dress = {
-    '롱&미디': false, '숏': false
+    '롱&미디': false, '숏': false, '원피스' : false
   };
   Map<String, bool> beachWear = {
     '비키니': false, '모노키니': false, '로브': false,
@@ -1118,6 +1122,7 @@ class _SearchPageState extends State<SearchPage> {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
+          stopTrigger = 1;
           widget.VisibiltyTriger = true;
           widget.filter = true;
         })
@@ -1127,6 +1132,7 @@ class _SearchPageState extends State<SearchPage> {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
+          stopTrigger = 1;
           widget.selectedCategoryList=[];
           widget.filter = false;
           _reset();

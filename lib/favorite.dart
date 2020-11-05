@@ -37,7 +37,6 @@ class Favorite extends StatefulWidget {
 
 class _FavoriteState extends State<Favorite> {
   var stopTrigger = 1;
-  var unchanging;
 
 
   @override
