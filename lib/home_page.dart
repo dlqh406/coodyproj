@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
             querySnapshot.documents.forEach((result) {
             setState(() {
               images.add(result.data['thumbnail_img']);
-              title.add(result.data['shortTitile']);
+              title.add(result.data['shortTitle']);
               detail_img.add(result.data['detail_img']);
               date.add(_timeStampToString(result.data['date']));
               currentPage = images.length - 1.0;
@@ -137,8 +137,8 @@ class _HomePageState extends State<HomePage> {
         children: [
           magazineView(),
           divideTag(),
-          AI_recommendationView(),
-          recommendationView(),
+          recommendationView_1(),
+          recommendationView_2(),
           _gridBuilder(),
         ],
       ),
@@ -323,7 +323,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-    Widget AI_recommendationView(){
+    Widget recommendationView_1(){
     Size size = MediaQuery.of(context).size;
     return   Container(
       decoration: BoxDecoration(
@@ -392,12 +392,17 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Spacer(),
                     SizedBox(
-                      height: 45,
+                      height: 15,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: kDefaultPadding),
-                      child: Text("A.I 맞춤 스타일 추천", style: TextStyle(fontSize: 15,color: Colors.white,fontWeight:FontWeight.bold),),
+                      child: Row(
+                        children: [
+                          Text("AI", style: TextStyle(fontFamily:"Montserrat",fontSize: 20,color: Colors.redAccent,fontWeight:FontWeight.bold),),
+                          Text(" 맞춤 스타일 추천", style: TextStyle(fontSize: 15,color: Colors.white,fontWeight:FontWeight.bold),),
+                        ],
+                      ),
                     ),
                     // it use the available space
                     Spacer(),
@@ -427,7 +432,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-    Widget recommendationView(){
+    Widget recommendationView_2(){
       Size size = MediaQuery.of(context).size;
 
     return   Container(
@@ -461,8 +466,8 @@ class _HomePageState extends State<HomePage> {
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [
-                    _getColorFromHex("#a32cdf"),
-                    _getColorFromHex("#106ad2"),
+                    _getColorFromHex("#fccf31"),
+                    _getColorFromHex("#f55555"),
                   ],
                 ),
 
@@ -491,13 +496,16 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Spacer(),
-                    SizedBox(
-                      height: 30,
-                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: kDefaultPadding),
-                      child: Text("에스레저 ", style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("에스레저 ", style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
+                          Text("#운동할때 입기 좋은", style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.w100),),
+                        ],
+                      ),
                     ),
                     // it use the available space
                     Spacer(),
@@ -679,8 +687,8 @@ class ContentsCard extends StatelessWidget {
                   topRight: Radius.circular(20),
                 ),
                 child: FadeInImage.assetNetwork(
-                    placeholder:'assets/images/19.png',
-                image : image,fit: BoxFit.cover
+                    placeholder:'assets/images/loading.png',
+                image : image,fit: BoxFit.cover,width: size.width * 0.4,height: size.height*0.26,
                 )
             ),
             GestureDetector(

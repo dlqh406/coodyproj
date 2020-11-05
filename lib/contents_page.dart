@@ -11,27 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ContentsPage extends StatefulWidget {
-  bool filter = false;
-  bool VisibiltyTriger=false;
-  bool top_downbtn = false;
-  bool bottom_downbtn = false;
-  bool dress_downbtn = false;
-  bool beachWear_downbtn = false;
-  bool outer_downbtn = false;
-  bool innerWear_downbtn = false;
-  bool fitnessWear_downbtn = false;
-
-  var stopTrigger = 1;
-  var unchanging;
-
-  var docId ="";
-
-  int selectedCount =0;
-  var selectedCategoryList=[];
-
-  var keywordArrayLength =0;
-  var productStream = [];
-
 
   final FirebaseUser user;
   ContentsPage(this.user);
@@ -132,7 +111,7 @@ class _ContentsPageState extends State<ContentsPage> {
                 ),
                 Text(" Magazine",
                   style: TextStyle(
-                    fontSize: 35,
+                    fontSize: 45,
                     fontFamily: 'Montserrat',
                     letterSpacing: -1.3,
                     color: Colors.redAccent,
