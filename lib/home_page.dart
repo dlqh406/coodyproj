@@ -41,7 +41,9 @@ const kBackgroundColor = Color(0xFFF9F8FD);
 const double kDefaultPadding = 20.0;
 
 
+
 class _HomePageState extends State<HomePage> {
+
 
   var images=[];
   var title = [];
@@ -64,7 +66,6 @@ class _HomePageState extends State<HomePage> {
             });
           })
       );
-    print(images);
     super.initState();
   }
   final GoogleSignIn _googleSignIn = GoogleSignIn();

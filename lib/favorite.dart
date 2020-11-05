@@ -20,8 +20,8 @@ class Favorite extends StatefulWidget {
   bool innerWear_downbtn = false;
   bool fitnessWear_downbtn = false;
 
-  var stopTrigger = 1;
-  var unchanging;
+
+
 
   int selectedCount =0;
   var selectedCategoryList=[];
@@ -34,22 +34,26 @@ class Favorite extends StatefulWidget {
 }
 
 class _FavoriteState extends State<Favorite> {
+  var stopTrigger = 1;
+  var unchanging;
 
   @override
   void initState() {
     super.initState();
-    if (widget.stopTrigger == 1) {
+    if (stopTrigger == 1) {
       setState(() {
-        widget.unchanging =
-            Firestore.instance.collection("uploaded_product")
-                .snapshots();
+        unchanging =
+            Firestore.instance.collection("uploaded_product").snapshots();
       });
     }
   }
 
 
+
   @override
   Widget build(BuildContext context) {
+    print("start");
+
     return Container(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -149,8 +153,9 @@ class _FavoriteState extends State<Favorite> {
   Widget _gridBuilder() {
     return Expanded(
       child: Container(
-        child: StreamBuilder <QuerySnapshot>(
+        child: StreamBuilder (
           stream: _productStream(),
+//      Firestore.instance.collection("uploaded_product").snapshots(),
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if(!snapshot.hasData){
               return Center(child:  CircularProgressIndicator());
@@ -159,19 +164,27 @@ class _FavoriteState extends State<Favorite> {
             var fF;
             var sF;
             var tF;
+
             if(widget.filter == false){
-              widget.stopTrigger = 2;
-              items =  snapshot.data?.documents ??[];
-              fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
-              sF = items.where((doc)=> doc['style'] == "로맨틱").toList();
-              tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
+//              items =  snapshot.data?.documents ??[];
+//              snapshot.data.documents.toList().suffle();
+              fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
+              sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
+              tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
               fF.addAll(sF);
               fF.addAll(tF);
-              if(widget.stopTrigger == 2 ){
+
+              print("stopTrigger111: ${stopTrigger}");
+              if(stopTrigger == 2 ){
+                print('in');
+                unchanging = fF;
                 fF.shuffle();
-                widget.unchanging = fF;
               }
+              stopTrigger+=1;
+              print("stopTrigger222: ${stopTrigger}");
+              print("--------------------------------");
             }
+
             else if(widget.filter == true){
               items =  snapshot.data?.documents??[];
               for(var i=0; i<widget.selectedCategoryList.length; i++){
@@ -183,7 +196,9 @@ class _FavoriteState extends State<Favorite> {
 
               }
               fF.shuffle();
+
             }
+
             return Padding(
               padding: const EdgeInsets.only(top:4,left:4,right:4),
               child: StaggeredGridView.countBuilder(
@@ -231,9 +246,11 @@ class _FavoriteState extends State<Favorite> {
 
   Stream<QuerySnapshot> _productStream() {
 
-    widget.stopTrigger +=1;
-    if(widget.stopTrigger == 2 ){
-      return widget.unchanging;
+    stopTrigger +=1;
+    print("stopTrigger000: ${stopTrigger}");
+    if(stopTrigger == 2 ){
+      print('in2');
+      return unchanging;
     }
 
   }
