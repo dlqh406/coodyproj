@@ -1,4 +1,5 @@
 import 'package:coodyproj/cart.dart';
+import 'package:coodyproj/detail_contents.dart';
 import 'package:coodyproj/resent_page.dart';
 import 'package:coodyproj/search_page.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,8 @@ class _HomePageState extends State<HomePage> {
 
   var images=[];
   var title = [];
+  var detail_img = [];
+  var date =[];
   var currentPage=0.0;
 
   @override
@@ -54,6 +57,8 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               images.add(result.data['thumbnail_img']);
               title.add(result.data['shortTitile']);
+              detail_img.add(result.data['detail_img']);
+              date.add(_timeStampToString(result.data['date']));
               currentPage = images.length - 1.0;
             });
           })
@@ -138,6 +143,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
     }
+
+
     Widget magazineView(){
     return SingleChildScrollView(
       child: Column(
@@ -250,9 +257,10 @@ class _HomePageState extends State<HomePage> {
                             ContentsCard(
                                   image: "${images[i]}",
                                   title: "${title[i]}",
-                                  country: "Russia",
-                                  price: 440,
-                                  press: (){}
+                                  detail_img: "${detail_img[i]}",
+                                  date : "${date[i]}",
+                                  press: (){
+                                  }
                               ,
                             ),
                         ])])),
@@ -517,7 +525,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(left: 10.0),
             child: Container(
               child: GestureDetector(
-                  child: Image.asset('assets/logo/blacklogo.png'),
+                  child: Image.asset('assets/logo/darkblue.png'),
                   onTap: (){
 
                   }),
@@ -617,6 +625,12 @@ class _HomePageState extends State<HomePage> {
         }
     );
   }
+  String _timeStampToString(date) {
+    Timestamp t = date;
+    DateTime d = t.toDate();
+    var list = d.toString().replaceAll('-', '.').split(" ");
+    return list[0];
+  }
   Color _getColorFromHex(String hexColor) {
     hexColor = hexColor.replaceAll("#", "");
     if (hexColor.length == 6) {
@@ -632,66 +646,73 @@ class ContentsCard extends StatelessWidget {
     Key key,
     this.image,
     this.title,
-    this.country,
-    this.price,
     this.press,
+    this.date,
+    this.detail_img
   }) : super(key: key);
 
-  final String image, title, country;
-  final int price;
+  final String image, title, date, detail_img;
   final Function press;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Container(
-      margin: EdgeInsets.only(
-        left: kDefaultPadding,
-        top: kDefaultPadding / 1,
-        bottom: kDefaultPadding * 1.5,
-      ),
-      width: size.width * 0.4,
-      child: Column(
-        children: <Widget>[
-          ClipRRect(
-              borderRadius:BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-              child: FadeInImage.assetNetwork(
-                  placeholder:'assets/images/19.png',
-              image : image,fit: BoxFit.cover,
-              )
-          ),
-          GestureDetector(
-            onTap: press,
-            child: Container(
-              padding: EdgeInsets.all(kDefaultPadding / 2),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
+    return InkWell(
+      onTap: (){
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>
+                DetailContents(image, title, date, detail_img)));
+      },
+      child: Container(
+        margin: EdgeInsets.only(
+          left: kDefaultPadding,
+          top: kDefaultPadding / 1,
+          bottom: kDefaultPadding * 1.5,
+        ),
+        width: size.width * 0.4,
+        child: Column(
+          children: <Widget>[
+            ClipRRect(
+                borderRadius:BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 10),
-                    blurRadius: 18,
-                    color: Colors.black12,
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                 Text("$title",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
-                ],
-              ),
+                child: FadeInImage.assetNetwork(
+                    placeholder:'assets/images/19.png',
+                image : image,fit: BoxFit.cover
+                )
             ),
-          )
-        ],
+            GestureDetector(
+              onTap: press,
+              child: Container(
+                padding: EdgeInsets.all(kDefaultPadding / 2),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 10),
+                      blurRadius: 18,
+                      color: Colors.black12,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                   Text("$title",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
+
 }
 
