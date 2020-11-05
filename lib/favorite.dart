@@ -21,7 +21,9 @@ class Favorite extends StatefulWidget {
   bool fitnessWear_downbtn = false;
 
 
-
+  var fF;
+  var sF;
+  var tF;
 
   int selectedCount =0;
   var selectedCategoryList=[];
@@ -37,23 +39,9 @@ class _FavoriteState extends State<Favorite> {
   var stopTrigger = 1;
   var unchanging;
 
-  @override
-  void initState() {
-    super.initState();
-    if (stopTrigger == 1) {
-      setState(() {
-        unchanging =
-            Firestore.instance.collection("uploaded_product").snapshots();
-      });
-    }
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
-    print("start");
-
     return Container(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -154,48 +142,40 @@ class _FavoriteState extends State<Favorite> {
     return Expanded(
       child: Container(
         child: StreamBuilder (
-          stream: _productStream(),
-//      Firestore.instance.collection("uploaded_product").snapshots(),
+          stream:Firestore.instance.collection("uploaded_product").snapshots(),
+          //_productStream(),
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if(!snapshot.hasData){
               return Center(child:  CircularProgressIndicator());
             }
-            var items;
-            var fF;
-            var sF;
-            var tF;
 
-            if(widget.filter == false){
-//              items =  snapshot.data?.documents ??[];
-//              snapshot.data.documents.toList().suffle();
-              fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
-              sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
-              tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
-              fF.addAll(sF);
-              fF.addAll(tF);
+            if(stopTrigger == 1 ){
+                if(widget.filter == false){
+                  widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
+                  widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
+                  widget.tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
+                  widget.fF.addAll(widget.sF);
+                  widget.fF.addAll(widget.tF);
 
-              print("stopTrigger111: ${stopTrigger}");
-              if(stopTrigger == 2 ){
-                print('in');
-                unchanging = fF;
-                fF.shuffle();
-              }
+                  print("stopTrigger111: ${stopTrigger}");
+                  print('in');
+                  widget.fF.shuffle();
+                }
               stopTrigger+=1;
               print("stopTrigger222: ${stopTrigger}");
               print("--------------------------------");
             }
 
             else if(widget.filter == true){
-              items =  snapshot.data?.documents??[];
               for(var i=0; i<widget.selectedCategoryList.length; i++){
                 if(i==0){
-                  fF=items.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
+                  widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
                 }else{
-                  fF.addAll(items.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList());
+                  widget.fF.addAll( snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList());
                 }
 
               }
-              fF.shuffle();
+              widget.fF.shuffle();
 
             }
 
@@ -205,10 +185,10 @@ class _FavoriteState extends State<Favorite> {
                   crossAxisCount: 3,
                   mainAxisSpacing: 6.0,
                   crossAxisSpacing: 6.0,
-                  itemCount: fF.length,
+                  itemCount: widget.fF.length,
                   staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?1.2 : 1.8),
                   itemBuilder: (BuildContext context, int index) {
-                    return _buildListItem(context,fF[index]);
+                    return _buildListItem(context,widget.fF[index]);
                   }
               ),
             );
@@ -244,16 +224,6 @@ class _FavoriteState extends State<Favorite> {
         );
   }
 
-  Stream<QuerySnapshot> _productStream() {
-
-    stopTrigger +=1;
-    print("stopTrigger000: ${stopTrigger}");
-    if(stopTrigger == 2 ){
-      print('in2');
-      return unchanging;
-    }
-
-  }
 
   Map<String, bool> top = {
     '니트': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
@@ -269,7 +239,7 @@ class _FavoriteState extends State<Favorite> {
     '래더': false,
   };
   Map<String, bool> dress = {
-    '롱&미디': false, '숏': false
+    '롱&미디': false, '숏': false, '원피스': false
   };
   Map<String, bool> beachWear = {
     '비키니': false, '모노키니': false, '로브': false,
@@ -305,7 +275,7 @@ class _FavoriteState extends State<Favorite> {
       '래더': false,
     };
      dress = {
-      '롱&미디': false, '숏': false
+      '롱&미디': false, '숏': false, '원피스': false
     };
      beachWear = {
       '비키니': false, '모노키니': false, '로브': false,
@@ -774,7 +744,11 @@ class _FavoriteState extends State<Favorite> {
                   FlatButton(
                     onPressed: () {
                       Navigator.pop(context,null);
-                      _getDelayForFilter();
+                      if(widget.selectedCategoryList.length == 0){
+                        _getDelayForReset();
+                      }else{
+                        _getDelayForFilter();
+                      }
                     },
                     child: Text('적용',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
                   ),
@@ -790,16 +764,19 @@ class _FavoriteState extends State<Favorite> {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
+        stopTrigger = 1;
         widget.VisibiltyTriger = true;
         widget.filter = true;
         _gridBuilder();
          })
     );
   }
+
   Future _getDelayForReset() {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
+          stopTrigger = 1;
           widget.selectedCategoryList=[];
           widget.filter = false;
           _reset();
