@@ -4,9 +4,9 @@ import 'dart:io' show Platform;
 
 class DetailContents extends StatefulWidget {
 
-  final String image, title, date, detail_img;
+  final title, date, detail_img;
 
-  DetailContents(this.image, this.title, this.date, this.detail_img);
+  DetailContents( this.title, this.date, this.detail_img);
 
   @override
   _DetailContentsState createState() => _DetailContentsState();

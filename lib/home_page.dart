@@ -1,4 +1,5 @@
 import 'package:coodyproj/cart.dart';
+import 'package:coodyproj/contents_page.dart';
 import 'package:coodyproj/detail_contents.dart';
 import 'package:coodyproj/resent_page.dart';
 import 'package:coodyproj/search_page.dart';
@@ -235,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context){
-                              return RecentPage(widget.user);
+                              return ContentsPage(widget.user);
                             }));
 
                       },
@@ -661,7 +662,7 @@ class ContentsCard extends StatelessWidget {
       onTap: (){
         Navigator.push(context,
             MaterialPageRoute(builder: (context) =>
-                DetailContents(image, title, date, detail_img)));
+                DetailContents(title, date, detail_img)));
       },
       child: Container(
         margin: EdgeInsets.only(
