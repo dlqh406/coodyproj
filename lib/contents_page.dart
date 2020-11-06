@@ -127,7 +127,8 @@ class _ContentsPageState extends State<ContentsPage> {
   Widget _buildBestSellingView() {
     return Visibility(
       visible: _searchText != "" ? false : true,
-      child: Column(
+      child:
+      Column(
           children: [
             Padding(
               padding: const EdgeInsets.only(left:25.0,top:20,bottom: 0),
@@ -136,23 +137,21 @@ class _ContentsPageState extends State<ContentsPage> {
                 ],
               ),
             ),
-            Container(
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: _contentsStream(),
-                  builder: (context, snapshot) {
-                    if(!snapshot.hasData){
-                      return Center(child:  CircularProgressIndicator());
-                    }
-                    return ListView.builder(
+            StreamBuilder<QuerySnapshot>(
+                stream: _contentsStream(),
+                builder: (context, snapshot) {
+                  if(!snapshot.hasData){
+                    return Center(child:  CircularProgressIndicator());
+                  }
+                  return ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data.documents.length,
-                        itemBuilder: (BuildContext context, int index){
-                          return _buildContents(context, snapshot.data.documents[index]);
-                        }
-                    );
-                  }
-              ),
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (BuildContext context, int index){
+                        return _buildContents(context, snapshot.data.documents[index]);
+                      }
+                  );
+                }
             )
           ]
       ),
@@ -208,12 +207,23 @@ class _ContentsPageState extends State<ContentsPage> {
                 ),
               ),
 
-              ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: FadeInImage.assetNetwork(
-                  placeholder:'assets/images/loading.png',
-                  image: doc['wide_thumbnail_img'],
-                  fit: BoxFit.cover,width: 400,height: 200,),
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(10,23),
+                      blurRadius: 40,
+                      color: Colors.black12,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: FadeInImage.assetNetwork(
+                    placeholder:'assets/images/loading.png',
+                    image: doc['wide_thumbnail_img'],
+                    fit: BoxFit.cover,width: 400,height: 200,),
+                ),
               ),
               Row(
                 children: [

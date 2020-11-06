@@ -139,78 +139,91 @@ class _RecentPageState extends State<RecentPage> {
         },
         child: Padding(
           padding: const EdgeInsets.only(left:18.0,top:10,right:18),
-          child: Column(
-            children: [
-              Container(
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right:8.0),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: FadeInImage.assetNetwork(
-                            placeholder:'assets/images/19.png',
-                            image: doc['thumbnail_img'],
-                              fit: BoxFit.cover,width: 75,height: 75,),
-                          )),
-                    Expanded(
-                      child: Container(
-                        height: 75,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left:20.0),
-                          child: Container(
-                            width: 150,
-                            child: Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text("캐주얼 노멀 하이퀄 니트",style: TextStyle(fontSize: 15),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis),
-                                    Text(doc['category'],style: TextStyle(fontWeight: FontWeight.w700,color: Colors.blue)),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top:3.0),
-                                      child: Text("₩12,900",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
-                                    ),
-                                  ],
-                                ),
-                                Spacer(),
-                                IconButton(
-                                  icon: Icon(Icons.cancel,color: Colors.grey,size: 15,),
-                                  onPressed: (){
-                                    print(doc.documentID);
-                                    Firestore.instance.collection('user_data').document(widget.user.uid).collection('recent')
-                                        .orderBy('date',descending: true).getDocuments().then((value) {
-                                      Firestore.instance.collection('user_data').document(widget.user.uid)
-                                          .collection('recent').document(value.documents[index].documentID).delete();
-                                    });
-                                  }
-                                )
-                              ],
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(10,23),
+                    blurRadius: 40,
+                    color: Colors.black12,
+                  ),
+                ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right:8.0),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: FadeInImage.assetNetwork(
+                              placeholder:'assets/images/19.png',
+                              image: doc['thumbnail_img'],
+                                fit: BoxFit.cover,width: 75,height: 75,),
+                            )),
+                      Expanded(
+                        child: Container(
+                          height: 75,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left:20.0),
+                            child: Container(
+                              width: 150,
+                              child: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("캐주얼 노멀 하이퀄 니트",style: TextStyle(fontSize: 15),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis),
+                                      Text(doc['category'],style: TextStyle(fontWeight: FontWeight.w700,color: Colors.blue)),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top:3.0),
+                                        child: Text("₩12,900",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                      ),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  IconButton(
+                                    icon: Icon(Icons.cancel,color: Colors.grey,size: 15,),
+                                    onPressed: (){
+                                      print(doc.documentID);
+                                      Firestore.instance.collection('user_data').document(widget.user.uid).collection('recent')
+                                          .orderBy('date',descending: true).getDocuments().then((value) {
+                                        Firestore.instance.collection('user_data').document(widget.user.uid)
+                                            .collection('recent').document(value.documents[index].documentID).delete();
+                                      });
+                                    }
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Opacity(
-                  opacity: 0.15,
-                  child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 15.0, bottom: 5.0),
-                      child: Container(
-                        height: 1,
-                        color: Colors.black38,
-                      ))),
+//                Opacity(
+//                    opacity: 0.15,
+//                    child: Padding(
+//                        padding: const EdgeInsets.only(
+//                            top: 15.0, bottom: 5.0),
+//                        child: Container(
+//                          height: 1,
+//                          color: Colors.black38,
+//                        ))),
 
-            ],
+              ],
+            ),
           ),
         ),
       );

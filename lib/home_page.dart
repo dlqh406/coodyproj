@@ -606,50 +606,50 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _gridBuilder() {
+    Widget _gridBuilder() {
 
-    return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('user_data')
-            .document(widget.user.uid).collection('recent')
-            .orderBy('date',descending: true).snapshots(),
-        builder: (context, snapshot) {
-          if(!snapshot.hasData){
-            return Center(child:Text("최근본 상품이 없습니다",style: TextStyle(color: Colors.grey),));
-          }
-          for(var i= snapshot.data.documents.length-1; i>0; i--){
-            for(var j=0; j<i; j++){
-              if(snapshot.data.documents[i]["docID"] == snapshot.data.documents[j]['docID']){
+      return StreamBuilder<QuerySnapshot>(
+          stream: Firestore.instance.collection('user_data')
+              .document(widget.user.uid).collection('recent')
+              .orderBy('date',descending: true).snapshots(),
+          builder: (context, snapshot) {
+            if(!snapshot.hasData){
+              return Center(child:Text("최근본 상품이 없습니다",style: TextStyle(color: Colors.grey),));
+            }
+            for(var i= snapshot.data.documents.length-1; i>0; i--){
+              for(var j=0; j<i; j++){
+                if(snapshot.data.documents[i]["docID"] == snapshot.data.documents[j]['docID']){
+                  Firestore.instance.collection('user_data').document(widget.user.uid)
+                      .collection('recent').document(snapshot.data.documents[i].documentID).delete();
+                }
+              }
+            }
+            //30개
+            //31개~
+            for(var i=30; i< snapshot.data.documents.length; i++) {
                 Firestore.instance.collection('user_data').document(widget.user.uid)
                     .collection('recent').document(snapshot.data.documents[i].documentID).delete();
               }
-            }
-          }
-          //30개
-          //31개~
-          for(var i=30; i< snapshot.data.documents.length; i++) {
-              Firestore.instance.collection('user_data').document(widget.user.uid)
-                  .collection('recent').document(snapshot.data.documents[i].documentID).delete();
-            }
 
-          return Container();
-        }
-    );
-  }
-  String _timeStampToString(date) {
-    Timestamp t = date;
-    DateTime d = t.toDate();
-    var list = d.toString().replaceAll('-', '.').split(" ");
-    return list[0];
-  }
-  Color _getColorFromHex(String hexColor) {
-    hexColor = hexColor.replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF" + hexColor;
+            return Container();
+          }
+      );
     }
-    if (hexColor.length == 8) {
-      return Color(int.parse("0x$hexColor"));
+    String _timeStampToString(date) {
+      Timestamp t = date;
+      DateTime d = t.toDate();
+      var list = d.toString().replaceAll('-', '.').split(" ");
+      return list[0];
     }
-  }
+    Color _getColorFromHex(String hexColor) {
+      hexColor = hexColor.replaceAll("#", "");
+      if (hexColor.length == 6) {
+        hexColor = "FF" + hexColor;
+      }
+      if (hexColor.length == 8) {
+        return Color(int.parse("0x$hexColor"));
+      }
+    }
 }
 class ContentsCard extends StatelessWidget {
   const ContentsCard({

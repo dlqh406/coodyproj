@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
+import 'detail_product.dart';
+
 
 class CartPage extends StatefulWidget {
   final FirebaseUser user;
@@ -141,6 +143,7 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
   Widget _buildListView(context, doc, index, length){
     if( widget.checkboxList.length != length){
       for(var i=0; i< length; i++){
@@ -152,18 +155,26 @@ class _CartPageState extends State<CartPage> {
         Row(
           children: [
             StreamBuilder(
-              stream: Firestore.instance.collection('uploaded_product').document("${doc['product']}").snapshots(),
+              stream: Firestore.instance.collection('uploaded_product')
+                  .document("${doc['product']}").snapshots(),
               builder: (context, snapshot){
                 if(!snapshot.hasData){
                   return Center(
                     child: CircularProgressIndicator(),
                   );
                 }
-                return ClipRRect(
-                    borderRadius: BorderRadius.circular(18.0),
-                    child: FadeInImage.assetNetwork(
-                      placeholder:'assets/images/19.png',
-                        image: snapshot.data['thumbnail_img'],width: 90,height: 90,fit: BoxFit.cover,));
+                return InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return ProductDetail(widget.user, snapshot.data);
+                    }));
+                  },
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(18.0),
+                      child: FadeInImage.assetNetwork(
+                        placeholder:'assets/images/19.png',
+                          image: snapshot.data['thumbnail_img'],width: 90,height:90,fit: BoxFit.cover,)),
+                );
               },
             ),
             Expanded(
@@ -210,18 +221,14 @@ class _CartPageState extends State<CartPage> {
                     ),
                     Text("옵션: ${doc['selectedColor']} / ${doc['selectedSize']}", style: TextStyle(fontSize:14 ,color: Colors.black87),),
                     Padding(
-                      padding: const EdgeInsets.only(top:5.0),
+                      padding: const EdgeInsets.only(top:5.0,bottom: 10),
                       child: Container(
                         child: Row(
                           children: [
-                            GestureDetector(
-                                child: Icon(Icons.arrow_drop_down),
-                                onTap:(){
-                                }),
-                            Text('${doc['selectedQuantity']}',style: TextStyle(fontWeight: FontWeight.bold)),
-                            GestureDetector(child: Icon(Icons.arrow_drop_up),
-                                onTap:(){
-                                }
+
+                            Padding(
+                              padding: const EdgeInsets.only(left: 1),
+                              child: Text('${doc['selectedQuantity']}개',style: TextStyle(fontWeight: FontWeight.bold)),
                             ),
                             Spacer(),
                             Padding(
@@ -254,7 +261,7 @@ class _CartPageState extends State<CartPage> {
             opacity: 0.15,
             child: Padding(
                 padding: const EdgeInsets.only(
-                    top: 15.0, bottom: 15.0),
+                    top: 8.0, bottom: 8.0),
                 child: Container(
                   height: 1,
                   color: Colors.black38,
