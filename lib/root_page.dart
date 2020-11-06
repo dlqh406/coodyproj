@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'favorite_analysis_page.dart';
 import 'login_page.dart';
 import 'home.dart';
+import 'my_page.dart';
 
 //root: 뿌려주는 페이지니깐 stateless로
 class RootPage extends StatelessWidget {
@@ -18,7 +19,7 @@ class RootPage extends StatelessWidget {
           return CircularProgressIndicator();
         }
         else if(snapshot.hasData){
-          return Home(snapshot.data);
+          return MyPage(snapshot.data);
         }
         else{
           return LoginPage();
