@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:coodyproj/my_page.dart';
 
 
+
 class DrawerScreen extends StatefulWidget {
   final FirebaseUser user;
 
@@ -45,7 +46,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 ),
                 SizedBox(width: 20,),
                 Text('${widget.user.displayName}님 반가워요!',
-                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 25),),
+                  style: TextStyle(color: Colors.white,
+                      fontWeight: FontWeight.bold,fontSize: 25),),
                 Padding(
                   padding: const EdgeInsets.only(right:18.0),
                 )
