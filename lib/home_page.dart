@@ -580,7 +580,7 @@ class _HomePageState extends State<HomePage> {
                           onTap: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) =>
-                                    SearchPage(widget.user)));
+                                    SearchPage(widget.user,0)));
                           },
                           child: Container(
                               height: 40,

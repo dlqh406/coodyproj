@@ -57,45 +57,42 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(context),
-        floatingActionButton: Platform.isIOS?Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-                  padding: const EdgeInsets.only(left:31.0),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(Icons.arrow_back_ios,color: Colors.white,),
-                    backgroundColor: Colors.black.withOpacity(0.7),
-                  ),
+        appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
+            child:Platform.isIOS?
+            AppBar(
+              titleSpacing: 6.0,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Container(
+                  child: GestureDetector(
+                      child:
+                      Platform.isAndroid?Image.asset('assets/logo/blacklogo.png')
+                          :Icon(Icons.arrow_back_ios,size: 18,),
+
+                      onTap: (){
+                        Navigator.pop(context);
+
+                      }),
                 ),
-            SizedBox(
-              width: 60,
-              height: 60,
-              child: RaisedButton(
-                color: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)
-                ),
-                onPressed: () {
-                  showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: buildBottomSheet
-                  );
-                },
-                child: Image.asset('assets/icons/cart.png',width: 34),
               ),
-            )
+              actions: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom:8.0),
+                  child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
+                      onPressed: () => {
+                      }),
+                ),
               ],
-            ): SizedBox(
-          width: 60,
-          height: 60,
+
+            ):null),
+      body: _buildBody(context),
+        floatingActionButton: SizedBox(
+          width: 70,
+          height: 70,
           child: RaisedButton(
-            color: Colors.blue,
+            color: Colors.lightBlueAccent,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50)
             ),

@@ -8,6 +8,7 @@ import 'package:coodyproj/detail_product.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'dart:io' show Platform;
 
 class SearchPage extends StatefulWidget {
   bool filter = false;
@@ -29,10 +30,10 @@ class SearchPage extends StatefulWidget {
 
   var keywordArrayLength =0;
   var productStream = [];
-
+  var from;
 
   final FirebaseUser user;
-  SearchPage(this.user);
+  SearchPage(this.user,this.from);
 
 
   @override
@@ -69,6 +70,8 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
         child: Scaffold(
+            //latform.isIOS && widget.from == 1
+              appBar: Platform.isIOS && widget.from == 1?_appBar():null,
               backgroundColor: Colors.transparent,
               body: ListView(
               children: [
@@ -77,9 +80,42 @@ class _SearchPageState extends State<SearchPage> {
                 _buildGridView(),
                 _buildKeywordBar(),
                 _buildBestSellingView(),
+                Platform.isIOS && widget.from == 1? Container()
+                :SizedBox(
+                  height: 60
+                )
                 ],
                 )),
       );
+  }
+  Widget _appBar(){
+    return AppBar(
+      titleSpacing: 6.0,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Container(
+          child: GestureDetector(
+              child:
+              Platform.isAndroid?Image.asset('assets/logo/blacklogo.png')
+                  :Icon(Icons.arrow_back_ios,color: Colors.white,size: 18,),
+
+              onTap: (){
+                Navigator.pop(context);
+
+              }),
+        ),
+      ),
+      actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(bottom:8.0),
+          child: new IconButton( icon: new Icon(Icons.more_vert,color: Colors.white,size: 28,),
+              onPressed: () => {
+              }),
+        ),
+      ],
+    );
   }
   Widget _buildTitleBar() {
     return Column(
@@ -87,7 +123,7 @@ class _SearchPageState extends State<SearchPage> {
         Visibility(
           visible: _searchText != "" ? false : true,
           child: Padding(
-            padding: const EdgeInsets.only(left:18.0,top:30),
+            padding: Platform.isIOS && widget.from == 1?EdgeInsets.only(left:18.0,top: 10):EdgeInsets.only(left:18.0,top: 30),
             child: Row(
               children: [
                 Padding(
@@ -262,7 +298,7 @@ class _SearchPageState extends State<SearchPage> {
                   }
 
                   return CarouselSlider.builder(
-                      height: 180,
+                      height: 160,
                       enlargeCenterPage: true,
                       viewportFraction: 0.3,
                       autoPlay: true,

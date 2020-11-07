@@ -21,25 +21,25 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading:  IconButton(
-            icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.black,),
-            onPressed: (){
-              Navigator.pop(context);
-            }
-        ),
-        title :  Text("마이페이지"),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(bottom:5.0),
-            child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.black,),
-                onPressed: () => {
-                }),
-          ),
-        ],
-      ),
+//      appBar: AppBar(
+//        backgroundColor: Colors.transparent,
+//        elevation: 0,
+//        leading:  IconButton(
+//            icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.black,),
+//            onPressed: (){
+//              Navigator.pop(context);
+//            }
+//        ),
+//        title :  Text("마이페이지"),
+//        actions: [
+//          Padding(
+//            padding: const EdgeInsets.only(bottom:5.0),
+//            child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.black,),
+//                onPressed: () => {
+//                }),
+//          ),
+//        ],
+//      ),
 
 
       body: _bodyBuilder(),

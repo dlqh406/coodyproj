@@ -1,12 +1,11 @@
 import 'package:coodyproj/cart.dart';
+import 'package:coodyproj/favorite.dart';
 import 'package:coodyproj/my_page.dart';
-import 'package:coodyproj/resent_page.dart';
+
 import 'package:coodyproj/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/style.dart';
 import 'drawer_screen.dart';
-import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'home_page.dart';
 
 class Home extends StatefulWidget {
@@ -14,8 +13,8 @@ class Home extends StatefulWidget {
   bool isDrawerOpen = false;
 
   final FirebaseUser user;
-
-  Home(this.user);
+  var index;
+  Home(this.user,[this.index]);
 
   @override
   _HomeState createState() => _HomeState();
@@ -26,29 +25,29 @@ class Home extends StatefulWidget {
     var currentIndex;
     List<Widget> pageList;
 
-    GlobalKey _bottomNavigationKey = GlobalKey();
 
     final PageController _pageController = PageController(
-        initialPage: 0, keepPage: true
+        initialPage: 1 , keepPage: true
     );
 
     @override
     void initState() {
       super.initState();
-      currentIndex = 0;
-       pageList =[
-        HomePage(widget.user),
-        RecentPage(widget.user),
-        SearchPage(widget.user),
-        MyPage(widget.user),
-      ];
+        currentIndex = 1;
+        pageList =[
+          SearchPage(widget.user,0),
+          HomePage(widget.user),
+          MyPage(widget.user),
+        ];
+
     }
 
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      appBar:appBarBuild() ,
+      appBar: appBarBuild(),
       body: Stack(
         children: [
           DrawerScreen(widget.user),
@@ -56,28 +55,22 @@ class Home extends StatefulWidget {
             controller: _pageController,
             children: pageList,
             ),
-        ],
-      ),
-      bottomNavigationBar: SnakeNavigationBar(
-//        showUnselectedLabels: true,
-        selectedIconColor: Colors.white,
-        selectionColor: Colors.blueAccent,
-        currentIndex: currentIndex,
-        onTap:changePage,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.notifications)),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications)),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications)),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: bottomNavigationBar,
+          ),
         ],
       ),
     );
   }
-  Widget appBarBuild() {
+   Widget appBarBuild() {
     return
       PreferredSize(preferredSize: Size.fromHeight(40.0),
           child: Container(
             decoration: BoxDecoration(
-              gradient: currentIndex ==2?LinearGradient(
+              gradient: currentIndex ==0?LinearGradient(
                 colors: [
 //              Colors.blue,
                   Colors.deepPurple[700],
@@ -99,9 +92,10 @@ class Home extends StatefulWidget {
                 padding: const EdgeInsets.only(left: 10.0),
                 child: Container(
                   child: GestureDetector(
-                      child: Image.asset('assets/logo/darkblue.png',color: currentIndex ==2? Colors.white:Colors.black,),
-                      onTap: () {
-
+                      child: Image.asset('assets/logo/darkblue.png',color: currentIndex ==0? Colors.white:Colors.black,),
+                      onTap: (
+                          ) {
+                        changePage(1);
                       }),
                 ),
               ),
@@ -113,9 +107,9 @@ class Home extends StatefulWidget {
                         padding: const EdgeInsets.only(right: 10, left: 5),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) =>
-                                    SearchPage(widget.user)));
+                            setState(() {
+                              changePage(0);
+                            });
                           },
                           child: Container(
                               height: 40,
@@ -141,7 +135,7 @@ class Home extends StatefulWidget {
                 InkWell(
                   child: new Container(
                       width: 25,
-                      child: Image.asset('assets/icons/bag.png',color: currentIndex ==2? Colors.white:Colors.black)),
+                      child: Image.asset('assets/icons/bag.png',color: currentIndex ==0? Colors.white:Colors.black)),
                   onTap: () =>
                   {
                     Navigator.push(context,
@@ -150,7 +144,7 @@ class Home extends StatefulWidget {
                   },
                 ),
                 widget.isDrawerOpen ? IconButton(
-                  icon: Icon(Icons.more_vert,color: currentIndex ==2? Colors.white:Colors.black),
+                  icon: Icon(Icons.more_vert,color: currentIndex ==0? Colors.white:Colors.black),
                   onPressed: () {
 //                  setState(() {
 //                    widget.xOffset = 0;
@@ -159,7 +153,7 @@ class Home extends StatefulWidget {
 //                    widget.isDrawerOpen = false;
 //                  });
                   },)
-                    : IconButton(icon: new Icon(Icons.more_vert,color: currentIndex ==2? Colors.white:Colors.black, size: 28,),
+                    : IconButton(icon: new Icon(Icons.more_vert,color: currentIndex ==0? Colors.white:Colors.black, size: 28,),
                     onPressed: () =>
                     {
 //                    setState(() {
@@ -174,6 +168,27 @@ class Home extends StatefulWidget {
           )
       );
   }
+    Widget get bottomNavigationBar {
+      return ClipRRect(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(40),
+          topLeft: Radius.circular(40),
+        ),
+        child: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('검색')),
+            BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('쿠디 홈')),
+            BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('마이 쿠디')),
+          ],
+          elevation: 0,
+          currentIndex: currentIndex,
+          unselectedItemColor: Colors.grey,
+          selectedItemColor: Colors.blueAccent,
+          showUnselectedLabels: true,
+          onTap:changePage,
+        ),
+      );
+    }
     void changePage(int index) {
       setState(() {
         currentIndex = index;

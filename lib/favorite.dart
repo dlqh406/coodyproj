@@ -1,3 +1,5 @@
+import 'package:coodyproj/home.dart';
+import 'package:coodyproj/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,7 +47,7 @@ class _FavoriteState extends State<Favorite> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
-           child:AppBar(
+           child: AppBar(
                titleSpacing: 6.0,
                 backgroundColor: Colors.white,
                 elevation: 0,
@@ -53,12 +55,12 @@ class _FavoriteState extends State<Favorite> {
                   padding: const EdgeInsets.only(left: 10.0),
                   child: Container(
                     child: GestureDetector(
-                        child: Image.asset('assets/logo/blacklogo.png'),
+                        child:
+                        Platform.isAndroid?Image.asset('assets/logo/blacklogo.png')
+                        :Icon(Icons.arrow_back_ios,size: 24,),
+
                         onTap: (){
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context){
-                            return TestPage(widget.user);
-                          }));
+                          Navigator.pop(context);
 
                         }),
                   ),
@@ -70,7 +72,13 @@ class _FavoriteState extends State<Favorite> {
                         Padding(
                           padding: const EdgeInsets.only(top:2.3,right: 10,left: 5),
                           child: GestureDetector(
-                            onTap: (){print("Tap GTD");},
+                            onTap: (){
+
+                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                return SearchPage(widget.user,1);
+                              }));
+
+                              },
                             child: Image.asset('assets/icons/bar.png',height: 40,),
                           ),
                         ),
@@ -105,26 +113,6 @@ class _FavoriteState extends State<Favorite> {
             )
         ),
         body: _bodyBuilder(),
-        floatingActionButton:
-        Visibility(
-          visible: !Platform.isAndroid,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left:31.0),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(Icons.arrow_back_ios,color: Colors.white,),
-                  backgroundColor: Colors.black.withOpacity(0.7),
-                ),
-              ),
-            ],
-          ),
-        ),
-
       ),
     );
   }

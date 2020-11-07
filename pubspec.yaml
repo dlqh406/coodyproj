@@ -28,7 +28,6 @@ dependencies:
   list_tile_switch: ^0.0.2
   flutter_html: ^1.0.2
   transparent_image: ^1.0.0
-  flutter_snake_navigationbar: ^0.2.0
 
 
 dev_dependencies:
@@ -56,6 +55,7 @@ flutter:
     -  assets/icons/3d.png
     -  assets/icons/coin2.png
     -  assets/icons/discount.png
+    -  assets/icons/
     -  assets/logo/blue.png
     -  assets/logo/darkblue.png
     -  assets/logo/blacklogo.png
