@@ -59,46 +59,16 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.light,
-        ));
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Kopup',
-      ),
-      home:
-
-      Container(
+    return Container(
         decoration: BoxDecoration(
           gradient:  LinearGradient(
             colors: [
-//              Colors.blue,
               Colors.deepPurple[700],
               Colors.purple[500]
             ],
           ),
         ),
         child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading:  IconButton(
-                    icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.white,),
-                    onPressed: (){
-                      Navigator.pop(context);
-                    }
-                ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom:5.0),
-                    child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.white,),
-                        onPressed: () => {
-                        }),
-                  ),
-                ],
-              ),
               backgroundColor: Colors.transparent,
               body: ListView(
               children: [
@@ -109,18 +79,15 @@ class _SearchPageState extends State<SearchPage> {
                 _buildBestSellingView(),
                 ],
                 )),
-      ),
-    )
-    ;
+      );
   }
   Widget _buildTitleBar() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Visibility(
           visible: _searchText != "" ? false : true,
           child: Padding(
-            padding: const EdgeInsets.only(left:20.0),
+            padding: const EdgeInsets.only(left:18.0,top:30),
             child: Row(
               children: [
                 Padding(

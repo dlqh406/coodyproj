@@ -22,26 +22,6 @@ class _RecentPageState extends State<RecentPage> {
     Widget build(BuildContext context) {
       return Container(
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading:  IconButton(
-                icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.black,),
-                onPressed: (){
-                  Navigator.pop(context);
-                }
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(bottom:5.0),
-                child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.black,),
-                    onPressed: () => {
-                    }),
-              ),
-            ],
-          ),
-
-          backgroundColor: Colors.white,
           body: _bodyBuilder(),
         ),
       );
@@ -51,7 +31,6 @@ class _RecentPageState extends State<RecentPage> {
         children: [
           _buildTitleBar(),
           _gridBuilder(),
-//          _clearBtn()
         ],
       );
     }
@@ -60,7 +39,7 @@ class _RecentPageState extends State<RecentPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top:15,left:20.0,bottom: 30),
+            padding: const EdgeInsets.only(top:35,left:20.0,bottom: 30),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -159,18 +138,15 @@ class _RecentPageState extends State<RecentPage> {
                       Padding(
                         padding: const EdgeInsets.only(right:8.0),
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(15.0),
                             child: FadeInImage.assetNetwork(
                               placeholder:'assets/images/19.png',
                               image: doc['thumbnail_img'],
-                                fit: BoxFit.cover,width: 75,height: 75,),
+                                fit: BoxFit.cover,width: 80,height: 80),
                             )),
                       Expanded(
                         child: Container(
                           height: 75,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                          ),
                           child: Padding(
                             padding: const EdgeInsets.only(left:20.0),
                             child: Container(

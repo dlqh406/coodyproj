@@ -771,7 +771,7 @@ class _FavoriteState extends State<Favorite> {
     );
   }
 
-  Future _getDelayForReset() {
+  Future _getDelayForReset() {   
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
