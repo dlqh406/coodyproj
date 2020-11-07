@@ -10,7 +10,8 @@ import 'home_page.dart';
 
 class Home extends StatefulWidget {
 
-  bool isDrawerOpen = false;
+
+
 
   final FirebaseUser user;
   var index;
@@ -47,23 +48,24 @@ class Home extends StatefulWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: appBarBuild(),
-      body: Stack(
-        children: [
-          DrawerScreen(widget.user),
-          PageView(
-            controller: _pageController,
-            children: pageList,
-            ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: bottomNavigationBar,
+          appBar: appBarBuild(),
+          body: Stack(
+            children: [
+              DrawerScreen(widget.user),
+              PageView(
+                controller: _pageController,
+                children: pageList,
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: bottomNavigationBar,
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
+
   }
    Widget appBarBuild() {
     return
@@ -83,11 +85,6 @@ class Home extends StatefulWidget {
               titleSpacing: 6.0,
               backgroundColor: Colors.transparent,
               elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(widget.isDrawerOpen ? 27 : 0.0),
-                  )
-              ),
               leading: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: Container(
@@ -143,26 +140,11 @@ class Home extends StatefulWidget {
                             builder: (context) => CartPage(widget.user)))
                   },
                 ),
-                widget.isDrawerOpen ? IconButton(
+                IconButton(
                   icon: Icon(Icons.more_vert,color: currentIndex ==0? Colors.white:Colors.black),
                   onPressed: () {
-//                  setState(() {
-//                    widget.xOffset = 0;
-//                    widget.yOffset = 0;
-//                    widget.scaleFactor = 1;
-//                    widget.isDrawerOpen = false;
-//                  });
+//
                   },)
-                    : IconButton(icon: new Icon(Icons.more_vert,color: currentIndex ==0? Colors.white:Colors.black, size: 28,),
-                    onPressed: () =>
-                    {
-//                    setState(() {
-//                      widget.xOffset = -60;
-//                      widget.yOffset = 170;
-//                      widget.scaleFactor = 0.6;
-//                      widget.isDrawerOpen = true;
-//                    })
-                    })
               ],
             ),
           )

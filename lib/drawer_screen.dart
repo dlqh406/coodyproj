@@ -144,34 +144,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 ),
               ),
             )
-//
-//          Column(
-//            children: drawerItems.map((element) =>
-//                Padding(
-//              padding: const EdgeInsets.only(top: 40.0,right: 40),
-//              child: Row(
-//                mainAxisAlignment: MainAxisAlignment.end,
-//                children: [
-//                  Icon(element['icon'],color: Colors.white,size: 30,),
-//                  SizedBox(width: 10,),
-//                  GestureDetector(
-//                    onTap: (){
-//                      Navigator.push(context, MaterialPageRoute(builder: (context){
-//                        return element['push'](widget.user);
-//                      }));
-//                    },
-//                    child: Text(element['title'],style:
-//                    TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20)),
-//                  )
-//                ],
-//
-//              ),
-//            )).toList(),
-//          ),
-
-//          SizedBox(
-//            height: 100,
-//          )
         ],
       ),
 

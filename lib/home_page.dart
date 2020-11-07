@@ -16,12 +16,6 @@ class HomePage extends StatefulWidget {
   final FirebaseUser user;
   var productStream = [];
 
-  double xOffset = 0;
-  double yOffset = 0;
-  double scaleFactor = 1;
-  bool isDrawerOpen= false;
-
-
   @override
   HomePage(this.user,);
 
@@ -88,50 +82,10 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               if (snapshot.data.data == null) {
                 return FavoriteAnalysisPage(widget.user);
-              } else {
-                return widget.isDrawerOpen
-                    ? AnimatedContainer(
-                    transform: Matrix4.translationValues(
-                        widget.xOffset, widget.yOffset, 0)
-                      ..scale(widget.scaleFactor)
-                      ..rotateY(widget.isDrawerOpen ? -0.5 : 0),
-                    duration: Duration(milliseconds: 250),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                            widget.isDrawerOpen ? 40 : 0.0)
-                    ), child:
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      widget.xOffset = 0;
-                      widget.yOffset = 0;
-                      widget.scaleFactor = 1;
-                      widget.isDrawerOpen = false;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [kDefaultShadow],
-                    ),
-                    child: Scaffold(
-                      body: bodyBuild(),
-
-                    ),
-                  ),
-                ))
-                    : AnimatedContainer(
-                  transform: Matrix4.translationValues(
-                      widget.xOffset, widget.yOffset, 0)
-                    ..scale(widget.scaleFactor)
-                    ..rotateY(widget.isDrawerOpen ? -0.5 : 0),
-                  duration: Duration(milliseconds: 250),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                          widget.isDrawerOpen ? 40 : 0.0)
-                  ), child:
-                Scaffold(
+              }
+              else {
+                return Scaffold(
                   body: bodyBuild(),
-                ),
                 );
               }
             }
@@ -142,22 +96,14 @@ class _HomePageState extends State<HomePage> {
       );
     }
     Widget bodyBuild() {
-      return Container(
-        decoration: BoxDecoration(
-
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(widget.isDrawerOpen ? 27 : 0.0),
-                bottomLeft: Radius.circular(widget.isDrawerOpen ? 27 : 0.0))
-        ),
-        child: ListView(
-          children: [
-            magazineView(),
-            divideTag(),
-            recommendationView_1(),
-            recommendationView_2(),
-            _gridBuilder(),
-          ],
-        ),
+      return ListView(
+        children: [
+          magazineView(),
+          divideTag(),
+          recommendationView_1(),
+          recommendationView_2(),
+          _gridBuilder(),
+        ],
       );
     }
     Widget magazineView() {
@@ -555,11 +501,7 @@ class _HomePageState extends State<HomePage> {
               titleSpacing: 6.0,
               backgroundColor: Colors.white,
               elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(widget.isDrawerOpen ? 27 : 0.0),
-                  )
-              ),
+
               leading: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: Container(
@@ -614,26 +556,13 @@ class _HomePageState extends State<HomePage> {
                             builder: (context) => CartPage(widget.user)))
                   },
                 ),
-                widget.isDrawerOpen ? IconButton(
+                IconButton(
                   icon: Icon(Icons.more_vert,),
                   onPressed: () {
                     setState(() {
-                      widget.xOffset = 0;
-                      widget.yOffset = 0;
-                      widget.scaleFactor = 1;
-                      widget.isDrawerOpen = false;
                     });
                   },)
-                    : IconButton(icon: new Icon(Icons.more_vert, size: 28,),
-                    onPressed: () =>
-                    {
-                      setState(() {
-                        widget.xOffset = -60;
-                        widget.yOffset = 170;
-                        widget.scaleFactor = 0.6;
-                        widget.isDrawerOpen = true;
-                      })
-                    })
+
               ],
             )
         );
@@ -712,6 +641,7 @@ class ContentsCard extends StatelessWidget {
                 DetailContents(title, date, detail_img)));
       },
       child: Container(
+
         margin: EdgeInsets.only(
           left: kDefaultPadding,
           top: kDefaultPadding / 1,
@@ -737,8 +667,8 @@ class ContentsCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
                   ),
                   boxShadow: [
                     BoxShadow(
