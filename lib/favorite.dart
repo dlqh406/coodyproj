@@ -46,7 +46,7 @@ class _FavoriteState extends State<Favorite> {
     return Container(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
+        appBar:PreferredSize(preferredSize: Size.fromHeight(45.0),
            child: AppBar(
                titleSpacing: 6.0,
                 backgroundColor: Colors.white,
@@ -56,7 +56,7 @@ class _FavoriteState extends State<Favorite> {
                   child: Container(
                     child: GestureDetector(
                         child:
-                        Platform.isAndroid?Image.asset('assets/logo/blacklogo.png')
+                        Platform.isAndroid?Image.asset('assets/logo/darkblue.png')
                         :Icon(Icons.arrow_back_ios,size: 24,),
 
                         onTap: (){
@@ -70,7 +70,7 @@ class _FavoriteState extends State<Favorite> {
                     child: Stack(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(right: 15,left: 5),
+                          padding: const EdgeInsets.only(right: 10,left: 5),
                           child: GestureDetector(
                             onTap: (){
 

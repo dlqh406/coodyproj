@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'drawer_screen.dart';
 import 'home_page.dart';
+import 'dart:io' show Platform;
 
 class Home extends StatefulWidget {
 
@@ -68,7 +69,7 @@ class Home extends StatefulWidget {
   }
    Widget appBarBuild() {
     return
-      PreferredSize(preferredSize: Size.fromHeight(40.0),
+      PreferredSize(preferredSize: Size.fromHeight(45.0),
           child: Container(
             decoration: BoxDecoration(
               gradient: currentIndex ==0?LinearGradient(
@@ -100,7 +101,7 @@ class Home extends StatefulWidget {
                   child: Stack(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left:5,right: 15),
+                        padding: Platform.isAndroid? const EdgeInsets.only(left:5,right: 0):const EdgeInsets.only(left:5,right: 15),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -129,11 +130,12 @@ class Home extends StatefulWidget {
               ),
               actions: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(right:32.0),
+                  padding: const EdgeInsets.only(right:25.0),
                   child: InkWell(
                     child: new Container(
-                        width: 25,
-                        child: Image.asset('assets/icons/bag.png',color: currentIndex ==0? Colors.white:Colors.black)),
+                        child: Icon(Icons.shopping_cart,size: 26,)
+                        //Image.asset('assets/icons/bag.png',color: currentIndex ==0? Colors.white:Colors.black)
+                    ),
                     onTap: () =>
                     {
                       Navigator.push(context,
@@ -142,11 +144,12 @@ class Home extends StatefulWidget {
                     },
                   ),
                 ),
-//                IconButton(
-//                  icon: Icon(Icons.more_vert,color: currentIndex ==0? Colors.white:Colors.black),
-//                  onPressed: () {
-////
-//                  },)
+//                SizedBox(
+//                  width: 20,
+//                  child: CircleAvatar(
+//                    backgroundImage: NetworkImage(widget.user.photoUrl) ,
+//                  ),
+//                )
               ],
             ),
           )
