@@ -70,7 +70,7 @@ class _FavoriteState extends State<Favorite> {
                     child: Stack(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top:2.3,right: 10,left: 5),
+                          padding: const EdgeInsets.only(right: 15,left: 5),
                           child: GestureDetector(
                             onTap: (){
 
@@ -94,20 +94,18 @@ class _FavoriteState extends State<Favorite> {
                     ),),
                 ),
                 actions: <Widget>[
-                  InkWell(
-                    child: new Container(
-                      width: 25,
-                      child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/filter.png') ),
-                      onTap: () => {
-                      _categoryFilterAlert()
-                      },
-                  ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom:5.0),
-                    child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
-                        onPressed: () => {
-                        }),
+                    padding: const EdgeInsets.only(right:32.0),
+                    child: InkWell(
+                      child: new Container(
+                        width: 25,
+                        child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/filter.png') ),
+                        onTap: () => {
+                        _categoryFilterAlert()
+                        },
+                    ),
                   ),
+
                 ],
 
             )

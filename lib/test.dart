@@ -12,8 +12,6 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
 
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
@@ -22,16 +20,11 @@ class _TestPageState extends State<TestPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
+    return Scaffold(
         body: Center(
-          child: Text('Running on:'),
+          child: Text('Tst'),
         ),
-      ),
-    );
+      );
   }
 }
 

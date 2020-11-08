@@ -51,7 +51,6 @@ class Home extends StatefulWidget {
           appBar: appBarBuild(),
           body: Stack(
             children: [
-              DrawerScreen(widget.user),
               PageView(
                 controller: _pageController,
                 children: pageList,
@@ -101,7 +100,7 @@ class Home extends StatefulWidget {
                   child: Stack(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 10, left: 5),
+                        padding: const EdgeInsets.only(left:5,right: 15),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -129,22 +128,25 @@ class Home extends StatefulWidget {
                   ),),
               ),
               actions: <Widget>[
-                InkWell(
-                  child: new Container(
-                      width: 25,
-                      child: Image.asset('assets/icons/bag.png',color: currentIndex ==0? Colors.white:Colors.black)),
-                  onTap: () =>
-                  {
-                    Navigator.push(context,
-                        MaterialPageRoute(
-                            builder: (context) => CartPage(widget.user)))
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(right:32.0),
+                  child: InkWell(
+                    child: new Container(
+                        width: 25,
+                        child: Image.asset('assets/icons/bag.png',color: currentIndex ==0? Colors.white:Colors.black)),
+                    onTap: () =>
+                    {
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) => CartPage(widget.user)))
+                    },
+                  ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.more_vert,color: currentIndex ==0? Colors.white:Colors.black),
-                  onPressed: () {
-//
-                  },)
+//                IconButton(
+//                  icon: Icon(Icons.more_vert,color: currentIndex ==0? Colors.white:Colors.black),
+//                  onPressed: () {
+////
+//                  },)
               ],
             ),
           )
