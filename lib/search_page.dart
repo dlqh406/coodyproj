@@ -20,7 +20,7 @@ class SearchPage extends StatefulWidget {
   bool outer_downbtn = false;
   bool innerWear_downbtn = false;
   bool fitnessWear_downbtn = false;
-
+  bool accessory_downbtn = false;
 
   var snapData;
   var docId ="";
@@ -492,7 +492,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Map<String, bool> top = {
-    '니트': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
+    '니트&스웨터': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
     '브라우스': false, '셔츠': false,'반팔': false,
     '민소매': false,
   };
@@ -516,6 +516,9 @@ class _SearchPageState extends State<SearchPage> {
   Map<String, bool> fitnessWear = {
     '트레이닝': false, '레깅스': false, '탑': false,
   };
+  Map<String, bool> accessory = {
+    '전체' : false
+  };
 
   _reset(){
     widget.filter = false;
@@ -528,7 +531,7 @@ class _SearchPageState extends State<SearchPage> {
     widget.innerWear_downbtn = false;
     widget.fitnessWear_downbtn = false;
     top = {
-      '니트': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
+      '니트&스웨터': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
       '브라우스': false, '셔츠': false,'반팔': false,
       '민소매': false,
     };
@@ -550,7 +553,10 @@ class _SearchPageState extends State<SearchPage> {
       '파운데이션': false, '란제리': false,
     };
     fitnessWear = {
-      '트레이닝': false, '레깅스': false, '탑': false,
+      '스포츠': false, '레깅스': false,
+    };
+    accessory = {
+      '전체' : false
     };
   }
   _resetBox(){
@@ -562,6 +568,7 @@ class _SearchPageState extends State<SearchPage> {
     widget.outer_downbtn = false;
     widget.innerWear_downbtn = false;
     widget.fitnessWear_downbtn = false;
+    widget.accessory_downbtn = false;
 
     top = {
       '니트': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
@@ -586,7 +593,7 @@ class _SearchPageState extends State<SearchPage> {
       '파운데이션': false, '란제리': false,
     };
     fitnessWear = {
-      '트레이닝': false, '레깅스': false, '탑': false,
+      '스포츠': false, '레깅스': false,
     };
 
   }
@@ -610,7 +617,7 @@ class _SearchPageState extends State<SearchPage> {
                 content: SingleChildScrollView(
                   child: Container(
                     width: double.minPositive,
-                    height: 2000,
+                    height: 2300,
                     child: Column(
                       children: [
 
@@ -1022,7 +1029,6 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         ),
 
-
                         SizedBox(
                           width: 600,
                           child: RaisedButton(
@@ -1090,6 +1096,68 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                           ),
                         ),
+
+
+
+
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:Colors.blue,
+                            onPressed: (){
+                              setState(() {
+                                widget.accessory_downbtn = !widget.accessory_downbtn;
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Image.asset('assets/icons/swimwear.png',width: 20,),
+                                SizedBox(width: 14),
+                                Text('악세서리', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                widget.accessory_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
+                              ],
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: widget.accessory_downbtn,
+                          child: Container(
+                            height: 500,
+                            child: Scrollbar(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: accessory.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  String _key = accessory.keys.elementAt(index);
+                                  return Theme(
+                                    data: ThemeData(
+                                      unselectedWidgetColor: Colors.white, // Your color
+                                    ),
+                                    child: CheckboxListTile(
+                                      activeColor: Colors.blue,
+                                      value: accessory[_key],
+                                      title: Text(_key,style: TextStyle(color: Colors.white),),
+                                      onChanged: (val) {
+                                        setState(() {
+                                          accessory[_key] = val;
+                                          setState(() {
+                                            accessory[_key] ? widget.selectedCategoryList.add(_key)
+                                                : widget.selectedCategoryList.remove(_key);
+                                          });
+                                          print(widget.selectedCategoryList);
+                                        });
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+
                       ],
                     ),
                   ),

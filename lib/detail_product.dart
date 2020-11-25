@@ -9,6 +9,9 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl/intl.dart';
 import 'dart:io' show Platform;
 
+import 'detail_seller.dart';
+
+
 class ProductDetail extends StatefulWidget {
 
 
@@ -37,6 +40,8 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  final myController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -57,19 +62,18 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
-            child:Platform.isIOS?
+            child:
             AppBar(
               titleSpacing: 6.0,
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
+                padding: const EdgeInsets.only(left: 00.0),
                 child: Container(
                   child: GestureDetector(
-                      child:
-                      Platform.isAndroid?Image.asset('assets/logo/blacklogo.png')
-                          :Icon(Icons.arrow_back_ios,size: 18,),
+                      child: Icon(Icons.arrow_back_ios,size: 18,),
 
                       onTap: (){
                         Navigator.pop(context);
@@ -79,14 +83,15 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
               actions: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(bottom:8.0),
-                  child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,),
+                  padding: const EdgeInsets.only(right:10.0),
+                  child: new IconButton( icon: new Icon(Icons.home,size: 23,),
                       onPressed: () => {
+
                       }),
                 ),
               ],
 
-            ):null),
+            )),
       body: _buildBody(context),
         floatingActionButton: SizedBox(
           width: 70,
@@ -176,26 +181,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       children: [
                         Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(13.0),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 3.0),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      backgroundImage: NetworkImage(
-                                          "https://lh3.googleusercontent.com/FK8EcHV1SJGHeTUJCsUhCQl0hmQu-QbC4wG6bM59S0v-rLv-jQl16YC3LQ4x-ZpPwS1cUs_4Idap57kYgcTCOQFB"),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: Text(''),
-                                  )
-                                ],
-                              ),
-                            ),
+                            sellerInfo(),
                             Padding(
                               padding: const EdgeInsets.all(13.0),
                               child: Column(
@@ -252,20 +238,26 @@ class _ProductDetailState extends State<ProductDetail> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(13.0),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 4.0),
-                                    child: Image.asset(
-                                      'assets/icons/medal.png', width: 45,
-                                      height: 40,),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('1:1문의'),
-                                  )
-                                ],
+                              child: GestureDetector(
+                                onTap: (){
+                                  print("hi");
+                                  _showAlert();
+                                },
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 4.0),
+                                      child: Image.asset(
+                                        'assets/icons/medal.png', width: 45,
+                                        height: 40,),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('1:1문의'),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -1308,10 +1300,184 @@ class _ProductDetailState extends State<ProductDetail> {
   String numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
+  Widget _showAlert() {
 
+    AlertDialog dialog = new AlertDialog(
+
+
+      content: new Container(
+        width: 260.0,
+        height: 230.0,
+        decoration: new BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: const Color(0xFFFFFF),
+          borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
+        ),
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            // dialog top
+            new Expanded(
+              child: new Row(
+                children: <Widget>[
+                  new Container(
+                    // padding: new EdgeInsets.all(10.0),
+                    decoration: new BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: new Text(
+                      '1:1 문의',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontFamily: 'helvetica_neue_light',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Spacer(),
+                  GestureDetector(
+                      onTap: (){
+                        myController.clear();
+                        Navigator.pop(context, true);
+                      },
+                      child: Icon(Icons.clear))
+                ],
+              ),
+            ),
+
+            // dialog centre
+            new Expanded(
+              child: new Container(
+                  child: new TextField(
+                    controller: myController,
+                    decoration: new InputDecoration(
+                      border: InputBorder.none,
+                      filled: false,
+                      contentPadding: new EdgeInsets.only(
+                          left: 10.0, top: 10.0, bottom: 10.0, right: 10.0),
+                      hintText: '질문을 남겨주시면 셀러가 확인 후 답을 드립니다',
+                      hintStyle: new TextStyle(
+                        color: Colors.grey.shade500,
+                        fontSize: 12.0,
+
+                      ),
+                    ),
+                  )),
+              flex: 2,
+            ),
+
+            // dialog bottom
+            new Expanded(
+              child: GestureDetector(
+                onTap: () async {
+                  print(myController.text);
+                  print(widget.document['sellerCode']);
+                  final _addData = {
+                    'answer': "",
+                    'name' : widget.user.displayName,
+                    'productCode' : widget.document.documentID,
+                    'question' : myController.text,
+                    'state' : "ongoing",
+                    'date' : DateTime.now()
+                  };
+                  Firestore.instance
+                      .collection('seller_data')
+                      .document(widget.document['sellerCode'])
+                      .collection('inquiry')
+                      .add(_addData);
+
+
+                  //
+                  // final Email email = Email(
+                  //   body: "hi ",
+                  //   subject: 'Email subject',
+                  //   recipients: ['boseong.lee@coody.cool'],
+                  //   isHTML: false,
+                  // );
+                  // String platformResponse;
+                  // try {
+                  //   await FlutterEmailSender.send(email);
+                  //   platformResponse = 'success';
+                  // } catch (error) {
+                  //   platformResponse = error.toString();
+                  // }
+                  // print(platformResponse);
+                  // if (!mounted) return;
+                  // _scaffoldKey.currentState.showSnackBar(SnackBar(
+                  //   content: Text(platformResponse),
+                  // ));
+
+                  myController.clear();
+                  Navigator.pop(context, true);
+                },
+                child: new Container(
+                  padding: new EdgeInsets.all(16.0),
+                  decoration: new BoxDecoration(
+                    color:Colors.blue,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top:5.0),
+                    child: new Text(
+                      '질문 등록',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 17.0,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    showDialog(context: context, child: dialog);
+  }
+  Widget sellerInfo(){
+
+
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context,
+        MaterialPageRoute(builder: (context){
+           return DetailSeller(widget.user,widget.document['sellerCode']);
+        }));
+
+      },
+      child: StreamBuilder<DocumentSnapshot>(
+        stream: Firestore.instance.collection('seller_data')
+                .document(widget.document['sellerCode']).snapshots(),
+        builder: (context, snapshot) {
+          return Padding(
+            padding: const EdgeInsets.all(13.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      right: 3.0),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: NetworkImage(snapshot.data.data['thumbnail_img']),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:10.0),
+                  child: Text('${snapshot.data.data['companyName']}'),
+                )
+              ],
+            ),
+          );
+        }
+      ),
+    );
 
   }
-
+}
 class ReleatedCard extends StatelessWidget {
   const ReleatedCard({
     Key key,

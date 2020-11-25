@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> {
           recommendationView_1(),
           recommendationView_2(),
           _gridBuilder(),
+          SizedBox(height: 70),
         ],
       );
     }

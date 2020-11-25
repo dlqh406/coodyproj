@@ -18,7 +18,8 @@ class RootPage extends StatelessWidget {
       stream : FirebaseAuth.instance.onAuthStateChanged,
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(!snapshot.hasData){
-          return CircularProgressIndicator();
+          return 
+            Center(child: CircularProgressIndicator());
         }
         else if(snapshot.hasData){
           return Home(snapshot.data);

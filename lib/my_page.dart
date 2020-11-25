@@ -51,12 +51,16 @@ class _MyPageState extends State<MyPage> {
         SizedBox(height: 15),
         _buildHeader(),
         SizedBox(height: 20),
-        _buildOrder()
+        _buildOrder(),
+        SizedBox(height: 20),
+        _buildOrder2(),
+        SizedBox(height: 20),
+        _buildOrder3()
       ],
     );
   }
 
- Widget _buildHeader() {
+  Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
@@ -345,7 +349,286 @@ class _MyPageState extends State<MyPage> {
       ),
     );
   }
+  Widget _buildOrder2() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(10,23),
+              blurRadius: 40,
+              color: Colors.black12,
+            ),
+          ],
+        ),
+        child:
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left:18.0),
+              child:
+              Text("후기를 남겨주세요",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
 
+
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left:20),
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('결제 완료',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric( horizontal: 7),
+                          child: Icon(
+                            Icons.arrow_forward_ios, size: 15,color: Colors.grey,
+
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('배송준비중',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric( horizontal: 7),
+                          child: Icon(
+                              Icons.arrow_forward_ios, size: 15,color: Colors.grey
+
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('배송중',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric( horizontal: 7),
+                          child: Icon(
+                              Icons.arrow_forward_ios, size: 15,color: Colors.grey
+
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('배송완료',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric( horizontal: 7),
+                          child: Icon(
+                              Icons.arrow_forward_ios, size: 15,color: Colors.grey
+
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('구매확정',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+
+
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            )
+//            Padding(
+//              padding: const EdgeInsets.symmetric(horizontal: 10),
+//              child: Opacity(
+//                  opacity: 0.15,
+//                  child: Padding(
+//                      padding: const EdgeInsets.only(
+//                         top: 35, bottom: 10.0),
+//                      child: Container(
+//                        height: 1,
+//                        color: Colors.black38,
+//                      ))),
+//            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _buildOrder3() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(10,23),
+              blurRadius: 40,
+              color: Colors.black12,
+            ),
+          ],
+        ),
+        child:
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left:18.0),
+              child:
+              Text("나의 1:1 문의",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+
+
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left:20),
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('결제 완료',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric( horizontal: 7),
+                          child: Icon(
+                            Icons.arrow_forward_ios, size: 15,color: Colors.grey,
+
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('배송준비중',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric( horizontal: 7),
+                          child: Icon(
+                              Icons.arrow_forward_ios, size: 15,color: Colors.grey
+
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('배송중',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric( horizontal: 7),
+                          child: Icon(
+                              Icons.arrow_forward_ios, size: 15,color: Colors.grey
+
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('배송완료',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric( horizontal: 7),
+                          child: Icon(
+                              Icons.arrow_forward_ios, size: 15,color: Colors.grey
+
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+                            SizedBox(height: 10,),
+                            Text('구매확정',style: TextStyle(fontSize: 11),),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+
+
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            )
+//            Padding(
+//              padding: const EdgeInsets.symmetric(horizontal: 10),
+//              child: Opacity(
+//                  opacity: 0.15,
+//                  child: Padding(
+//                      padding: const EdgeInsets.only(
+//                         top: 35, bottom: 10.0),
+//                      child: Container(
+//                        height: 1,
+//                        color: Colors.black38,
+//                      ))),
+//            ),
+          ],
+        ),
+      ),
+    );
+  }
 
 
 }

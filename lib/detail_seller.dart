@@ -10,7 +10,7 @@ import 'dart:io' show Platform;
 import 'package:coodyproj/test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class Favorite extends StatefulWidget {
+class DetailSeller extends StatefulWidget {
 
   bool filter = false;
   bool VisibiltyTriger=false;
@@ -32,13 +32,14 @@ class Favorite extends StatefulWidget {
   var selectedCategoryList=[];
 
   final FirebaseUser user;
-  Favorite(this.user);
+  final sellerCode;
+  DetailSeller(this.user,this.sellerCode);
 
   @override
-  _FavoriteState createState() => _FavoriteState();
+  _DetailSellerState createState() => _DetailSellerState();
 }
 
-class _FavoriteState extends State<Favorite> {
+class _DetailSellerState extends State<DetailSeller> {
   var stopTrigger = 1;
 
 
@@ -47,82 +48,59 @@ class _FavoriteState extends State<Favorite> {
     return Container(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar:PreferredSize(preferredSize: Size.fromHeight(45.0),
-           child: AppBar(
-               titleSpacing: 6.0,
-                backgroundColor: Colors.white,
-                elevation: 0,
-                leading: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Container(
-                    child: GestureDetector(
-                        child:
-                        Platform.isAndroid?Image.asset('assets/logo/darkblue.png')
-                        :Icon(Icons.arrow_back_ios,size: 24,),
+        appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
+            child:
+            AppBar(
+              titleSpacing: 6.0,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 00.0),
+                child: Container(
+                  child: GestureDetector(
+                      child: Icon(Icons.arrow_back_ios,size: 18,),
 
-                        onTap: (){
-                          Navigator.pop(context);
+                      onTap: (){
+                        Navigator.pop(context);
 
-                        }),
-                  ),
+                      }),
                 ),
-                title: Container(
-                  child: Container(
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10,left: 5),
-                          child: GestureDetector(
-                            onTap: (){
+              ),
+              actions: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right:10.0),
+                  child: new IconButton( icon: new Icon(Icons.home,size: 23,),
+                      onPressed: () => {
 
-                              Navigator.push(context, MaterialPageRoute(builder: (context){
-                                return SearchPage(widget.user,1);
-                              }));
-
-                              },
-                            child: Image.asset('assets/icons/bar.png',height: 40,),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left:11.0),
-                          child: Row(
-                            children: <Widget>[
-
-                            ],
-                          ),
-                        )
-                      ],
-                    ),),
+                      }),
                 ),
-                actions: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right:32.0),
-                    child: InkWell(
-                      child: new Container(
-                        width: 25,
-                        child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/filter.png') ),
-                        onTap: () => {
-                        _categoryFilterAlert()
-                        },
-                    ),
-                  ),
+              ],
 
-                ],
-
-            )
-        ),
+            )),
         body: _bodyBuilder(),
       ),
     );
+
   }
   Widget _bodyBuilder() {
     return Column(
-        children: [
-          SizedBox(height:10,
-          child: Container(color: Colors.white)),
-          _gridBuilder()
-        ],
-      );
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right:32.0),
+          child: InkWell(
+            child: new Container(
+                width: 25,
+                child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/filter.png') ),
+            onTap: () => {
+              _categoryFilterAlert()
+            },
+          ),
+        ),
+        SizedBox(height:10,
+            child: Container(color: Colors.white)),
+        _gridBuilder()
+      ],
+    );
   }
   Widget _gridBuilder() {
     return Expanded(
@@ -136,17 +114,12 @@ class _FavoriteState extends State<Favorite> {
             }
 
             if(stopTrigger == 1 ){
-                if(widget.filter == false){
-                  widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
-                  widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
-                  widget.tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
-                  widget.fF.addAll(widget.sF);
-                  widget.fF.addAll(widget.tF);
-
-                  print("stopTrigger111: ${stopTrigger}");
-                  print('in');
-                  widget.fF.shuffle();
-                }
+              if(widget.filter == false){
+                widget.fF = snapshot.data.documents.where((doc)=> doc['sellerCode'] == widget.sellerCode).toList();
+                print("stopTrigger111: ${stopTrigger}");
+                print('in');
+                widget.fF.shuffle();
+              }
               stopTrigger+=1;
               print("stopTrigger222: ${stopTrigger}");
               print("--------------------------------");
@@ -191,8 +164,8 @@ class _FavoriteState extends State<Favorite> {
       Hero(
         tag: document['thumbnail_img'],
         child: Material(
-          color: Colors.transparent,
-          child: InkWell(
+            color: Colors.transparent,
+            child: InkWell(
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context){
                   return ProductDetail(widget.user, document);
@@ -202,12 +175,12 @@ class _FavoriteState extends State<Favorite> {
                 borderRadius: BorderRadius.circular(8.0),
                 child: FadeInImage.assetNetwork(
                     placeholder:'assets/images/loading.png',
-                  image: document['thumbnail_img'],
-                      fit : BoxFit.cover),
-                ),
-              )
-          ),
-        );
+                    image: document['thumbnail_img'],
+                    fit : BoxFit.cover),
+              ),
+            )
+        ),
+      );
   }
 
 
@@ -237,7 +210,7 @@ class _FavoriteState extends State<Favorite> {
     '트레이닝': false, '레깅스': false,
   };
   Map<String, bool> accessory = {
-  '전체' : false
+    '전체' : false
   };
 
   _reset(){
@@ -257,24 +230,24 @@ class _FavoriteState extends State<Favorite> {
       '브라우스': false, '셔츠': false,'반팔': false,
       '민소매': false,
     };
-     bottom = {
+    bottom = {
       '롱&미디 스커트': false, '숏 스커트': false, '데님': false, '슬랙스': false,
       '팬츠': false,
     };
-     outer = {
+    outer = {
       '코트': false, '패딩': false, '자켓': false, '퍼 자켓': false,
       '래더': false,
     };
-     dress = {
+    dress = {
       '롱&미디': false, '숏': false, '원피스': false
     };
-     beachWear = {
+    beachWear = {
       '비키니': false, '모노키니': false, '로브': false,
     };
-     innerWear = {
+    innerWear = {
       '파운데이션': false, '란제리': false,
     };
-     fitnessWear = {
+    fitnessWear = {
       '스포츠': false, '레깅스': false,
     };
     accessory = {
@@ -821,15 +794,15 @@ class _FavoriteState extends State<Favorite> {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
-        stopTrigger = 1;
-        widget.VisibiltyTriger = true;
-        widget.filter = true;
-        _gridBuilder();
-         })
+          stopTrigger = 1;
+          widget.VisibiltyTriger = true;
+          widget.filter = true;
+          _gridBuilder();
+        })
     );
   }
 
-  Future _getDelayForReset() {   
+  Future _getDelayForReset() {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){

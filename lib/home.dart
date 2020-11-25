@@ -40,6 +40,7 @@ class Home extends StatefulWidget {
           SearchPage(widget.user,0),
           HomePage(widget.user),
           MyPage(widget.user),
+
         ];
 
     }
@@ -49,6 +50,7 @@ class Home extends StatefulWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
+
           appBar: appBarBuild(),
           body: Stack(
             children: [
@@ -133,7 +135,7 @@ class Home extends StatefulWidget {
                   padding: const EdgeInsets.only(right:25.0),
                   child: InkWell(
                     child: new Container(
-                        child: Icon(Icons.shopping_cart,size: 26,)
+                        child: Icon(Icons.shopping_cart,color: currentIndex ==0? Colors.white:Colors.black,size: 26,)
                         //Image.asset('assets/icons/bag.png',color: currentIndex ==0? Colors.white:Colors.black)
                     ),
                     onTap: () =>
