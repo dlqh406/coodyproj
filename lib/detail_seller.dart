@@ -50,6 +50,7 @@ class _DetailSellerState extends State<DetailSeller> {
         backgroundColor: Colors.white,
         appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
             child:
+
             AppBar(
               titleSpacing: 6.0,
               backgroundColor: Colors.transparent,
@@ -68,6 +69,17 @@ class _DetailSellerState extends State<DetailSeller> {
               ),
               actions: <Widget>[
                 Padding(
+                  padding: const EdgeInsets.only(right:15.0),
+                  child: InkWell(
+                    child: new Container(
+                        width: 20,
+                        child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/filter.png') ),
+                    onTap: () => {
+                      _categoryFilterAlert()
+                    },
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(right:10.0),
                   child: new IconButton( icon: new Icon(Icons.home,size: 23,),
                       onPressed: () => {
@@ -82,22 +94,125 @@ class _DetailSellerState extends State<DetailSeller> {
     );
 
   }
+
+  Widget _buildHeader() {
+    return StreamBuilder<DocumentSnapshot>(
+      stream:  Firestore.instance.collection('seller_data')
+          .document(widget.sellerCode).snapshots(),
+      builder: (context, snapshot) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(10,23),
+                  blurRadius: 40,
+                  color: Colors.black12,
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 30.0),
+                      child: SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(snapshot.data.data['thumbnail_img']),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text('${snapshot.data.data['companyName']}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Image.asset('assets/icons/medal.png',width: 30,),
+                                SizedBox(
+                                  width: 7,
+                                ),
+                                Text('우수 셀러',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 6,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("고객센터 :",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold)),
+                                SizedBox(width: 10),
+
+                                Padding(
+                                  padding: const EdgeInsets.only(top:2.0),
+                                  child: Text("${snapshot.data.data['phoneNum']}",style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold),),
+                                ),
+                                SizedBox(width: 10),
+                                Padding(
+                                  padding: const EdgeInsets.only(top:2.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8.0, vertical: 2.0),
+                                        child: Text("전화 걸기",
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
   Widget _bodyBuilder() {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(right:32.0),
-          child: InkWell(
-            child: new Container(
-                width: 25,
-                child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/filter.png') ),
-            onTap: () => {
-              _categoryFilterAlert()
-            },
-          ),
-        ),
-        SizedBox(height:10,
-            child: Container(color: Colors.white)),
+        _buildHeader(),
+        SizedBox(height:20),
         _gridBuilder()
       ],
     );
@@ -139,7 +254,7 @@ class _DetailSellerState extends State<DetailSeller> {
             }
 
             return Padding(
-              padding: const EdgeInsets.only(top:4,left:4,right:4),
+              padding: const EdgeInsets.only(top:4,left:15,right:15),
               child: StaggeredGridView.countBuilder(
                   crossAxisCount: 3,
                   mainAxisSpacing: 6.0,
