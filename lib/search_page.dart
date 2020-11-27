@@ -9,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'dart:io' show Platform;
-
+import 'package:progressive_image/progressive_image.dart';
 class SearchPage extends StatefulWidget {
   bool filter = false;
   bool VisibiltyTriger=false;
@@ -39,7 +39,10 @@ class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
 }
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
   var stopTrigger = 1;
 
   var keywordLength =0;
@@ -330,8 +333,9 @@ class _SearchPageState extends State<SearchPage> {
       },
       child: ClipRRect(
             borderRadius: BorderRadius.circular(7.0),
-            child: FadeInImage.assetNetwork(
-              placeholder: 'assets/images/loading.png',
+            child:
+            FadeInImage.assetNetwork(
+              placeholder: 'assets/images/giphy(6).gif',
               image: doc['img'], fit: BoxFit.cover),
           ),
     );

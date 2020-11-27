@@ -35,9 +35,10 @@ const double kDefaultPadding = 20.0;
 
 
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
-
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -102,7 +103,7 @@ class _HomePageState extends State<HomePage> {
           divideTag(),
           recommendationView_1(),
           recommendationView_2(),
-          _gridBuilder(),
+          recommendationView_3(),
           SizedBox(height: 70),
         ],
       );
@@ -389,7 +390,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         child: Text(
-                          "Custom",
+                          "사용자 맞춤형",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -422,7 +423,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         // color: Colors.blueAccent,
-        height: 140,
+        height: 110,
         child: InkWell(
           onTap: () {},
           child: Stack(
@@ -438,8 +439,9 @@ class _HomePageState extends State<HomePage> {
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     colors: [
+                      //_getColorFromHex("#f55555"),
+                      Colors.pinkAccent,
                       _getColorFromHex("#fccf31"),
-                      _getColorFromHex("#f55555"),
                     ],
                   ),
 
@@ -447,14 +449,14 @@ class _HomePageState extends State<HomePage> {
               ),
               // our product image
               Positioned(
-                top: 0,
-                right: 0,
+                top: 1,
+                right: 35,
                 child: Container(
-                  height: 160,
+                  height: 110,
                   // image is square but we add extra 20 + 20 padding thats why width is 200
-                  width: 200,
+                  width: 130,
                   child: Image.asset(
-                    "assets/images/giphy.gif", fit: BoxFit.cover,),
+                    "assets/images/12.gif", fit: BoxFit.cover,),
                 ),
               ),
               // Product title and price
@@ -472,16 +474,23 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: kDefaultPadding),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("에스레저 ", style: TextStyle(fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),),
-                            Text("#운동할때 입기 좋은", style: TextStyle(fontSize: 14,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w100),),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(top:25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("액티비티", style: TextStyle(fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),),
+                              SizedBox(height: 10,),
+                              Text("#운동할때 입기 좋은", style: TextStyle(fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w100),),
+                              Text("#운동은 장비빨 ", style: TextStyle(fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w100),),
+                            ],
+                          ),
                         ),
                       ),
                       // it use the available space
@@ -495,6 +504,106 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
+    Widget recommendationView_3() {
+    Size size = MediaQuery
+        .of(context)
+        .size;
+
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: kDefaultPadding,
+        vertical: kDefaultPadding / 6,
+      ),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              offset: Offset(10, 23),
+              blurRadius: 28,
+              color: Colors.black12
+          ),
+        ],
+      ),
+      // color: Colors.blueAccent,
+      height: 110,
+      child: InkWell(
+        onTap: () {},
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            // Those are our background
+            Container(
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                color: Colors.lightBlueAccent,
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    _getColorFromHex("#f55555"),
+                    _getColorFromHex("#ce9ddc"),
+                  ],
+                ),
+
+              ),
+            ),
+            // our product image
+            Positioned(
+              top: 1,
+              right: 25,
+              child: Container(
+                height: 110,
+                // image is square but we add extra 20 + 20 padding thats why width is 200
+                width: 130,
+                child: Image.asset(
+                  "assets/images/cake.gif",fit: BoxFit.cover,),
+              ),
+            ),
+            // Product title and price
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: SizedBox(
+                height: 136,
+                // our image take 200 width, thats why we set out total width - 200
+                width: size.width - 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top:25.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("특별한 날", style: TextStyle(fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),),
+                            SizedBox(height: 10,),
+                            Text("#언니 옷에 힘좀 줬다?", style: TextStyle(fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w100),),
+                            Text("#주인공은 나야나", style: TextStyle(fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w100),),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // it use the available space
+                    Spacer(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
     Widget appBarBuild() {
       return
         PreferredSize(preferredSize: Size.fromHeight(40.0),
@@ -568,40 +677,6 @@ class _HomePageState extends State<HomePage> {
             )
         );
     }
-    Widget _gridBuilder() {
-      return StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('user_data')
-              .document(widget.user.uid).collection('recent')
-              .orderBy('date', descending: true).snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Text(
-                "최근본 상품이 없습니다", style: TextStyle(color: Colors.grey),));
-            }
-            for (var i = snapshot.data.documents.length - 1; i > 0; i--) {
-              for (var j = 0; j < i; j++) {
-                if (snapshot.data.documents[i]["docID"] ==
-                    snapshot.data.documents[j]['docID']) {
-                  Firestore.instance.collection('user_data').document(
-                      widget.user.uid)
-                      .collection('recent').document(
-                      snapshot.data.documents[i].documentID).delete();
-                }
-              }
-            }
-            //30개
-            //31개~
-            for (var i = 30; i < snapshot.data.documents.length; i++) {
-              Firestore.instance.collection('user_data').document(
-                  widget.user.uid)
-                  .collection('recent').document(
-                  snapshot.data.documents[i].documentID).delete();
-            }
-
-            return Container();
-          }
-      );
-    }
     String _timeStampToString(date) {
       Timestamp t = date;
       DateTime d = t.toDate();
@@ -657,7 +732,7 @@ class ContentsCard extends StatelessWidget {
                   topRight: Radius.circular(20),
                 ),
                 child: FadeInImage.assetNetwork(
-                    placeholder:'assets/images/loading.png',
+                    placeholder:'assets/images/giphy(6).gif',
                 image : image,fit: BoxFit.cover,width: size.width * 0.4,height: size.height*0.26,
                 )
             ),

@@ -29,7 +29,7 @@ class Home extends StatefulWidget {
 
 
     final PageController _pageController = PageController(
-        initialPage: 1 , keepPage: true
+        initialPage: 1 , keepPage: true,
     );
 
     @override
@@ -57,6 +57,7 @@ class Home extends StatefulWidget {
               PageView(
                 controller: _pageController,
                 children: pageList,
+                physics: NeverScrollableScrollPhysics()
               ),
               Positioned(
                 left: 0,
@@ -146,12 +147,6 @@ class Home extends StatefulWidget {
                     },
                   ),
                 ),
-//                SizedBox(
-//                  width: 20,
-//                  child: CircleAvatar(
-//                    backgroundImage: NetworkImage(widget.user.photoUrl) ,
-//                  ),
-//                )
               ],
             ),
           )
@@ -180,7 +175,9 @@ class Home extends StatefulWidget {
     }
     void changePage(int index) {
       setState(() {
+
         currentIndex = index;
+        print(currentIndex);
         _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
       });
     }

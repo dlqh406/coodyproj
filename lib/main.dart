@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'root_page.dart';
 import 'package:flutter/services.dart';
+import 'package:coodyproj/splash_page/splash_page.dart';
 
 void main() {
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -25,7 +27,11 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: RootPage(),
+      home: SplashPage(),
+    //   routes: Scaffold(
+    //     backgroundColor: Colors.white,
+    //     body: RootPage()
+    // ),
     );
   }
 }
