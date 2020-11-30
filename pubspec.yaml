@@ -29,7 +29,6 @@ dependencies:
   flutter_html: ^1.0.2
   transparent_image: ^1.0.0
   flutter_email_sender: ^3.0.1
-  progressive_image: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -56,7 +55,6 @@ flutter:
     -  assets/icons/3d.png
     -  assets/icons/coin2.png
     -  assets/icons/discount.png
-    -  assets/icons/
     -  assets/logo/blue.png
     -  assets/logo/darkblue.png
     -  assets/logo/blacklogo.png
@@ -72,6 +70,11 @@ flutter:
     -  assets/images/giphy2.gif
     -  assets/images/cake.gif
     -  assets/images/office.jpg
+    -  assets/splash/loading.gif
+    -  assets/splash/1.png
+    -  assets/splash/2.png
+    -  assets/splash/3.png
+    -  assets/splash/4.png
 
 
   fonts:

@@ -196,10 +196,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                           color: Colors.black,
                         ),
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                                return ContentsPage(widget.user);
-                              }));
+                          // Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) {
+                          //       return ContentsPage(widget.user);
+                          //     }));
+
+
+                       FirebaseAuth.instance.signOut();
+                       _googleSignIn.signOut();
+                       facebookLogin.logOut();
                         },
                       )
                     ],

@@ -28,10 +28,6 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SplashPage(),
-    //   routes: Scaffold(
-    //     backgroundColor: Colors.white,
-    //     body: RootPage()
-    // ),
     );
   }
 }

@@ -9,7 +9,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'dart:io' show Platform;
-import 'package:progressive_image/progressive_image.dart';
+
+
 class SearchPage extends StatefulWidget {
   bool filter = false;
   bool VisibiltyTriger=false;

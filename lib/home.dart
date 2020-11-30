@@ -1,18 +1,13 @@
 import 'package:coodyproj/cart.dart';
-import 'package:coodyproj/favorite.dart';
 import 'package:coodyproj/my_page.dart';
-
 import 'package:coodyproj/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'drawer_screen.dart';
 import 'home_page.dart';
 import 'dart:io' show Platform;
+import 'package:flutter/services.dart';
 
 class Home extends StatefulWidget {
-
-
-
 
   final FirebaseUser user;
   var index;
@@ -40,15 +35,13 @@ class Home extends StatefulWidget {
           SearchPage(widget.user,0),
           HomePage(widget.user),
           MyPage(widget.user),
-
         ];
-
     }
 
 
   @override
   Widget build(BuildContext context) {
-
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top, SystemUiOverlay.bottom]);
     return Scaffold(
 
           appBar: appBarBuild(),
