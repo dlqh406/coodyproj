@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/detail_review.dart';
+import 'package:coodyproj/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -85,9 +86,12 @@ class _ProductDetailState extends State<ProductDetail> {
                 Padding(
                   padding: const EdgeInsets.only(right:10.0),
                   child: new IconButton( icon: new Icon(Icons.home,size: 23,),
-                      onPressed: () => {
-
-                      }),
+                    onPressed: () => {
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return Home(widget.user);
+                      }))
+                    },
+                      ),
                 ),
               ],
 

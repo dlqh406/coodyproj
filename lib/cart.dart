@@ -1,3 +1,4 @@
+import 'package:coodyproj/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,10 +40,14 @@ class _CartPageState extends State<CartPage> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(bottom:5.0),
-            child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.black,),
-                onPressed: () => {
-                }),
+            padding: const EdgeInsets.only(right:10.0),
+            child: new IconButton( icon: new Icon(Icons.home,size: 23,),
+              onPressed: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return Home(widget.user);
+                }))
+              },
+            ),
           ),
         ],
       ),

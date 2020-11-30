@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:coodyproj/home.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -113,10 +114,14 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
       ),
       actions: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(bottom:8.0),
-          child: new IconButton( icon: new Icon(Icons.more_vert,color: Colors.white,size: 28,),
-              onPressed: () => {
-              }),
+          padding: const EdgeInsets.only(right:10.0),
+          child: new IconButton( icon: new Icon(Icons.home,size: 23,color: Colors.white),
+            onPressed: () => {
+              Navigator.push(context, MaterialPageRoute(builder: (context){
+                return Home(widget.user);
+              }))
+            },
+          ),
         ),
       ],
     );

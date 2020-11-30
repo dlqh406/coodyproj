@@ -112,46 +112,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       return SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            //              Padding(
-//                padding: const EdgeInsets.only(
-//                    left: 12.0, right: 12.0, top: 39.0, bottom: 8.0),
-//                child: Row(
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                  children: <Widget>[
-//                    IconButton(
-//                      icon: Icon(
-//                        Icons.close,
-//                        color: Colors.black,
-//                        size: 10.0,
-//                      ),
-//                      onPressed: () {
-//                        FirebaseAuth.instance.signOut();
-//                        _googleSignIn.signOut();
-//                        facebookLogin.logOut();
-//                      },
-//                    ),
-//                    IconButton(
-//                      icon: Icon(
-//                        Icons.brightness_1,
-//                        color: Colors.black,
-//                        size: 10.0,
-//                      ),
-//                      onPressed: () {
-//                        Navigator.push(context,
-//                            MaterialPageRoute(builder: (context) => TestPage()));
-//                      },
-//                    ),
-//                    IconButton(
-//                      icon: Icon(
-//                        Icons.more_vert,
-//                        color: Colors.black,
-//                        size: 30.0,
-//                      ),
-//                      onPressed: () {},
-//                    )
-//                  ],
-//                ),
-//              ),
             SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
@@ -196,15 +156,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                           color: Colors.black,
                         ),
                         onPressed: () {
-                          // Navigator.push(context,
-                          //     MaterialPageRoute(builder: (context) {
-                          //       return ContentsPage(widget.user);
-                          //     }));
-
-
-                       FirebaseAuth.instance.signOut();
-                       _googleSignIn.signOut();
-                       facebookLogin.logOut();
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return ContentsPage(widget.user);
+                              }));
                         },
                       )
                     ],

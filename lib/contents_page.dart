@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coodyproj/detail_contents.dart';
+import 'package:coodyproj/home.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -77,12 +78,15 @@ class _ContentsPageState extends State<ContentsPage> {
               ),
               actions: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom:5.0),
-                  child: new IconButton( icon: new Icon(Icons.more_vert,size: 28,color: Colors.white,),
+                  padding: const EdgeInsets.only(right:10.0),
+                  child: new IconButton( icon: new Icon(Icons.home,size: 23,),
                       onPressed: () => {
-                      }),
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return Home(widget.user);
+                      }))
+                      },
                 ),
-              ],
+                )],
             ),
             backgroundColor: Colors.transparent,
             body: ListView(
@@ -218,11 +222,11 @@ class _ContentsPageState extends State<ContentsPage> {
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(30),
                   child: FadeInImage.assetNetwork(
                     placeholder:'assets/images/loading.png',
                     image: doc['wide_thumbnail_img'],
-                    fit: BoxFit.cover,width: 400,height: 200,),
+                    fit: BoxFit.cover,width:400,height: 200,),
                 ),
               ),
               Row(
