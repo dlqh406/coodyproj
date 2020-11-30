@@ -336,7 +336,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
             borderRadius: BorderRadius.circular(7.0),
             child:
             FadeInImage.assetNetwork(
-              placeholder: 'assets/images/giphy(6).gif',
+              placeholder: 'assets/images/loading.png',
               image: doc['img'], fit: BoxFit.cover),
           ),
     );

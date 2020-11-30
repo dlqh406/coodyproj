@@ -3,6 +3,8 @@ import 'package:coodyproj/my_page.dart';
 import 'package:coodyproj/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'home_page.dart';
 import 'dart:io' show Platform;
 
@@ -42,27 +44,77 @@ class Home extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
 
-          appBar: appBarBuild(),
-          body: Stack(
-            children: [
-              PageView(
-                controller: _pageController,
-                children: pageList,
-                physics: NeverScrollableScrollPhysics()
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: bottomNavigationBar,
-              ),
-            ],
+            appBar: appBarBuild(),
+            body: Stack(
+              children: [
+                PageView(
+                  controller: _pageController,
+                  children: pageList,
+                  physics: NeverScrollableScrollPhysics()
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: bottomNavigationBar,
+                ),
+              ],
+            ),
           ),
-        );
+    );
+
 
   }
+
+  Future<bool> _onBackPressed() {
+      if( currentIndex !=1){
+        changePage(1);
+      }
+      else{
+        return  showDialog(
+            context: context,
+            builder: (_) => NetworkGiffyDialog(
+              image: Container(
+                decoration: BoxDecoration(
+                  color: Colors.pinkAccent.withOpacity(0.7),
+                ),
+                child: Image.asset(
+                  "assets/icons/giphy.gif",
+                ),
+              ),
+              entryAnimation: EntryAnimation.TOP_LEFT,
+              title: Text(
+                '쿠디를 종료할까요?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 22.0, fontWeight: FontWeight.w700),
+              ),
+              description: Text(
+                '다음에 또 만나요!',
+                textAlign: TextAlign.center,
+              ),
+              buttonOkColor: Colors.blue,
+              buttonCancelColor: Colors.redAccent,
+              onOkButtonPressed: (){
+                Navigator.pop(context);
+              },
+              onCancelButtonPressed: (){
+                SystemNavigator.pop();
+              },
+              buttonOkText:Text("조금 더 둘러 볼께요!",style: TextStyle(color: Colors.white),) ,
+              buttonCancelText: Text("앱 종료 (단호)",style: TextStyle(color: Colors.white),),
+
+
+            ));
+        }
+      }
+
+
+
    Widget appBarBuild() {
     return
       PreferredSize(preferredSize: Size.fromHeight(45.0),

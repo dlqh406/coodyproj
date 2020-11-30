@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'root_page.dart';
 import 'package:flutter/services.dart';
 import 'package:coodyproj/splash_page/splash_page.dart';
 

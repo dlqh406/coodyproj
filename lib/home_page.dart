@@ -737,7 +737,7 @@ class ContentsCard extends StatelessWidget {
                   topRight: Radius.circular(20),
                 ),
                 child: FadeInImage.assetNetwork(
-                    placeholder:'assets/images/giphy(6).gif',
+                    placeholder:'assets/images/loading.png',
                 image : image,fit: BoxFit.cover,width: size.width * 0.4,height: size.height*0.26,
                 )
             ),
