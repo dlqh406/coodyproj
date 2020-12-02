@@ -338,7 +338,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
         });
       },
       child: ClipRRect(
-            borderRadius: BorderRadius.circular(7.0),
+            borderRadius: BorderRadius.circular(3.0),
             child:
             FadeInImage.assetNetwork(
               placeholder: 'assets/images/loading.png',

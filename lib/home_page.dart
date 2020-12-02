@@ -11,6 +11,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'favorite_analysis_page.dart';
 import 'loading_page.dart';
 import 'favorite.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:async';
 
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
@@ -109,6 +113,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       );
     }
     Widget magazineView() {
+
       return SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -155,11 +160,29 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                           size: 25.0,
                           color: Colors.black,
                         ),
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                                return ContentsPage(widget.user);
-                              }));
+                        onPressed:
+                          () {
+                            // launchURL() {
+                            //   launch('http://pf.kakao.com/_JxoxexnK/chat');
+                            // }
+                            // launchURL();
+                          // Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) {
+                          //       return ContentsPage(widget.user);
+                          //     }));
+                          //
+                          // void RestApi_Get() async {
+                          //   http.Response response = await http.get(
+                          //       Uri.encodeFull('https://apis.tracker.delivery/carriers/kr.cjlogistics/tracks/635972465074'),
+                          //       headers: {"Accept": "application/json"});
+                          //   Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
+                          //   //전체 API출력
+                          //   print(response.body);
+                          //   //상품준비중
+                          //   print(responseBodyMap["state"]['text']);
+                          //
+                          // }
+                          // RestApi_Get();
                         },
                       )
                     ],
