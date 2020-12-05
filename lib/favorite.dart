@@ -23,6 +23,7 @@ class Favorite extends StatefulWidget {
   bool fitnessWear_downbtn = false;
   bool accessory_downbtn = false;
 
+  var _visible = true;
 
   var fF;
   var sF;
@@ -134,8 +135,8 @@ class _FavoriteState extends State<Favorite> {
             if(!snapshot.hasData){
               return Center(child:  CircularProgressIndicator());
             }
-
-            if(stopTrigger == 1 ){
+// 그리드뷰 개발 끝나고 주석만 풀면됨
+            // if(stopTrigger == 1 ){
                 if(widget.filter == false){
                   widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
                   widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
@@ -150,9 +151,10 @@ class _FavoriteState extends State<Favorite> {
               stopTrigger+=1;
               print("stopTrigger222: ${stopTrigger}");
               print("--------------------------------");
-            }
+            //}
 
-            else if(widget.filter == true){
+            //else if(widget.filter == true){
+            if(widget.filter == true){
               for(var i=0; i<widget.selectedCategoryList.length; i++){
                 if(i==0){
                   widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
@@ -185,31 +187,41 @@ class _FavoriteState extends State<Favorite> {
       ),
     );
   }
-
   Widget _buildListItem(context, document) {
     return
       Hero(
-        tag: document['thumbnail_img'],
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context){
-                  return ProductDetail(widget.user, document);
-                }));
-              },
-              child: Container(
+          tag: document['thumbnail_img'],
+          child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return ProductDetail(widget.user, document);
+                  }));
+                },
+                  //https://www.flaticon.com/free-icon/delivery_876079?term=delivery&page=5&position=21&related_item_id=876079/
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: FadeInImage.assetNetwork(
-                      placeholder:'assets/images/loading.png',
-                       image: document['thumbnail_img'],
-                        fit : BoxFit.cover),
+                  borderRadius: new BorderRadius.circular(10.0),
+                  child: Container(
+
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          FadeInImage.assetNetwork(
+                                placeholder:'assets/images/loading.png',
+                                image: document['thumbnail_img'],
+                                fit : BoxFit.cover),
+                          Positioned(
+                              top:1,
+                              right: 6,
+                              child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:25,):Container())
+                        ],
+                      ),
+                      ),
+                )
                   ),
-              ),
-              )
-        )
-        );
+                ),
+              );
   }
 
 

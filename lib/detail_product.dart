@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/detail_review.dart';
 import 'package:coodyproj/home.dart';
+import 'package:coodyproj/order_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -196,8 +197,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                     padding: const EdgeInsets.only(
                                         right: 4.0),
                                     child: Image.asset(
-                                      'assets/icons/free-shipping.png',
-                                      width: 45,),
+                                      'assets/icons/delivered.png',
+                                      width: 30,),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -214,8 +215,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                     padding: const EdgeInsets.only(
                                         right: 4.0),
                                     child: Image.asset(
-                                      'assets/icons/fast-delivery.png',
-                                      width: 45,),
+                                      'assets/icons/FD.png',
+                                      width: 30,),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -232,7 +233,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                     padding: const EdgeInsets.only(
                                         right: 4.0),
                                     child: Image.asset(
-                                      'assets/icons/medal.png', width: 45,
+                                      'assets/icons/tick.png', width: 30,
                                       height: 40,),
                                   ),
                                   Padding(
@@ -255,7 +256,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                       padding: const EdgeInsets.only(
                                           right: 4.0),
                                       child: Image.asset(
-                                        'assets/icons/medal.png', width: 45,
+                                        'assets/icons/paper-plane.png', width: 30,
                                         height: 40,),
                                     ),
                                     Padding(
@@ -1158,9 +1159,22 @@ class _ProductDetailState extends State<ProductDetail> {
                               widget.modalVisible = true;
                             });
                           }else{
-                            print(widget.selectedList);
-                          }
+                            for( var i=0; i<widget.selectedList.length; i++){
+                              if( widget.selectedList[i].length <= 3){
+                                widget.selectedList[i].add(widget.document.documentID);
+                              }
+                            }
+                            print("구매하기 : ${widget.selectedList}");
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context){
+                                  //return OrderPage(widget.user);
+                                  return OrderPage(widget.user);
+                                  //return OrderPage(widget.user, widget.selectedList);
 
+                                }));
+
+
+                          }
                         },
                         child: const Text('구매하기',
                             style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold)),
@@ -1460,6 +1474,9 @@ class _ProductDetailState extends State<ProductDetail> {
         stream: Firestore.instance.collection('seller_data')
                 .document(widget.document['sellerCode']).snapshots(),
         builder: (context, snapshot) {
+          if( !snapshot.hasData){
+            return Center(child: CircularProgressIndicator(),);
+          }
           return Padding(
             padding: const EdgeInsets.all(13.0),
             child: Column(
