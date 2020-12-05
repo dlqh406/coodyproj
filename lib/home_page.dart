@@ -566,7 +566,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),),
                             SizedBox(height: 10,),
-                            Text("#언니 옷에 힘좀 줬다?", style: TextStyle(fontSize: 14,
+                            Text("#Text를 입력?", style: TextStyle(fontSize: 14,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w100),),
                             Text("#주인공은 나야나", style: TextStyle(fontSize: 14,

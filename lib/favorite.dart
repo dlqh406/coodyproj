@@ -198,15 +198,15 @@ class _FavoriteState extends State<Favorite> {
                   return ProductDetail(widget.user, document);
                 }));
               },
-
-
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: FadeInImage.assetNetwork(
-                    placeholder:'assets/images/loading.png',
-                  image: document['thumbnail_img'],
-                      fit : BoxFit.cover),
-                ),
+              child: Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: FadeInImage.assetNetwork(
+                      placeholder:'assets/images/loading.png',
+                       image: document['thumbnail_img'],
+                        fit : BoxFit.cover),
+                  ),
+              ),
               )
         )
         );
@@ -233,7 +233,7 @@ class _FavoriteState extends State<Favorite> {
     '비키니': false, '모노키니': false, '로브': false,
   };
   Map<String, bool> innerWear = {
-    '파운데이션': false, '란제리': false,
+    '파운데이션': false, '란제리': false, '파자마' : false
   };
   Map<String, bool> fitnessWear = {
     '트레이닝': false, '레깅스': false,
@@ -274,7 +274,7 @@ class _FavoriteState extends State<Favorite> {
       '비키니': false, '모노키니': false, '로브': false,
     };
      innerWear = {
-      '파운데이션': false, '란제리': false,
+      '파운데이션': false, '란제리': false, '파자마' : false
     };
      fitnessWear = {
       '스포츠': false, '레깅스': false,
