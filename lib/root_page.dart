@@ -1,5 +1,7 @@
+import 'package:coodyproj/payment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'home2.dart';
 import 'login_page.dart';
 import 'home.dart';
 import 'package:flutter/services.dart';
@@ -15,10 +17,8 @@ class RootPage extends StatelessWidget {
         if(!snapshot.hasData){
           return  LoginPage();
         }
-        else if(snapshot.hasData){
-          return Home(snapshot.data);
-        }
         else{
+          // return Home2();
           return Home(snapshot.data);
         }
       },

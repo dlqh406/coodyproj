@@ -198,6 +198,8 @@ class _FavoriteState extends State<Favorite> {
                   return ProductDetail(widget.user, document);
                 }));
               },
+
+
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: FadeInImage.assetNetwork(
@@ -206,7 +208,7 @@ class _FavoriteState extends State<Favorite> {
                       fit : BoxFit.cover),
                 ),
               )
-          ),
+        )
         );
   }
 

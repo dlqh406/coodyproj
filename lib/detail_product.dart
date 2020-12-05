@@ -9,9 +9,9 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl/intl.dart';
 import 'dart:io' show Platform;
-
 import 'detail_seller.dart';
-
+import 'package:iamport_flutter/iamport_payment.dart';
+import 'package:iamport_flutter/model/payment_data.dart';
 
 class ProductDetail extends StatefulWidget {
 
@@ -98,22 +98,24 @@ class _ProductDetailState extends State<ProductDetail> {
             )),
       body: _buildBody(context),
         floatingActionButton: SizedBox(
-          width: 70,
-          height: 70,
+          width: 65,
+          height: 65,
           child: RaisedButton(
-            color: Colors.lightBlueAccent,
+            color: Colors.blueAccent,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50)
             ),
             onPressed: () {
               showModalBottomSheet(
                   isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
                   context: context,
                   builder: buildBottomSheet
               );
             },
-            child: Image.asset('assets/icons/cart.png',width: 34),
+            child: Padding(
+              padding: const EdgeInsets.only(right : 2.0),
+              child: Image.asset('assets/icons/cart.png',width: 34),
+            ),
           ),
         )
 
@@ -1158,6 +1160,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           }else{
                             print(widget.selectedList);
                           }
+
                         },
                         child: const Text('구매하기',
                             style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold)),
