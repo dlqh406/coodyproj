@@ -1,3 +1,4 @@
+import 'package:coodyproj/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:coodyproj/splash_page/splash_page.dart';
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SplashPage(),
+      home: RootPage(),
+      //home: SplashPage(),
     );
   }
 }

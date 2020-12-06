@@ -6,6 +6,8 @@ import 'login_page.dart';
 import 'home.dart';
 import 'package:flutter/services.dart';
 
+import 'order_page.dart';
+
 class RootPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,8 +20,9 @@ class RootPage extends StatelessWidget {
           return  LoginPage();
         }
         else{
-          // return Home2();
-          return Home(snapshot.data);
+          // return Home2(); 결제 테스트
+          return OrderPage(snapshot.data);
+         // return home(snapshot.data);
         }
       },
     );

@@ -331,6 +331,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.2"
+  kopo:
+    dependency: "direct main"
+    description:
+      name: kopo
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   list_tile_switch:
     dependency: "direct main"
     description:
