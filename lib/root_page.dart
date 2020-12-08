@@ -20,9 +20,9 @@ class RootPage extends StatelessWidget {
           return  LoginPage();
         }
         else{
-          // return Home2(); 결제 테스트
+           //return Home2();
           return OrderPage(snapshot.data);
-         // return home(snapshot.data);
+          //return Home(snapshot.data);
         }
       },
     );

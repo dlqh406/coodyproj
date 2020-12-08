@@ -132,6 +132,7 @@ class _ProductDetailState extends State<ProductDetail> {
         _buildReviewBody(context),
         _buildMainInfoBody(context),
         _buildTermsInfoBody(context),
+        _buildPravacy(context)
       ],
     );
   }
@@ -1497,6 +1498,32 @@ class _ProductDetailState extends State<ProductDetail> {
             ),
           );
         }
+      ),
+    );
+
+  }
+
+  Widget _buildPravacy(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top:18.0,bottom: 20,left:20),
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('주식회사 쿠디'),
+            SizedBox(height: 10,),
+            Text('대표자 : 이보성  사업자등록번호 : 790-81-02018'),
+            SizedBox(height: 10,),
+            Text('통신판매업 신고 번호 제 2020-서울서초-4253 호'),
+            SizedBox(height: 10,),
+            Text('배송 기간 : 7일이내 '),
+            SizedBox(height: 10,),
+            Text('주소 : 서울특별시 서초구 강남대로 107길 21, 대능빌딩 2 '),SizedBox(height: 10,),
+            Text('대표번호 : 02-82-6869   개인정보보호책임자 이보성'),SizedBox(height: 10,),
+            Text('홈페이지 : www.coody.cool'),SizedBox(height: 10,),
+
+          ],
+        ),
       ),
     );
 

@@ -10,7 +10,8 @@ class OrderPage extends StatefulWidget {
   final FirebaseUser user;
   var tem_zoneCode = "";
   var tem_address = "";
-  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry"]];
+  //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry"]];
+  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"]];
   //final orderList;
   OrderPage(this.user);
 
@@ -46,7 +47,6 @@ class _OrderPageState extends State<OrderPage> {
   }
   @override
   Widget build(BuildContext context) {
-
 
     return Scaffold(
       key: scaffoldKey,
@@ -86,6 +86,8 @@ class _OrderPageState extends State<OrderPage> {
           _orderInfo(context),
           SizedBox(height: 15),
           _orderView()
+          //_calculationView(context)
+
         ],
       ),
     );
@@ -139,13 +141,14 @@ class _OrderPageState extends State<OrderPage> {
                               myController_Request.text
                             ],
                             'deliveryInfoList' :
-                            [
-                              myController_Receiver.text,
-                              myController_PhoneNum.text,
-                              widget.tem_zoneCode,
-                              widget.tem_address,
-                              myController_AddressDetail.text,
-                              myController_Request.text
+                            [{
+                              "0" : myController_Receiver.text,
+                              "1" : myController_PhoneNum.text,
+                              "2" : widget.tem_zoneCode,
+                              "3" : widget.tem_address,
+                              "4" : myController_AddressDetail.text,
+                              "5" : myController_Request.text
+                            }
                             ],
                           };
                           // 댓글 추가
@@ -153,6 +156,9 @@ class _OrderPageState extends State<OrderPage> {
                               .collection('user_data')
                               .document(widget.user.uid)
                               .updateData(data);
+
+
+
                           scaffoldKey.currentState
                               .showSnackBar(SnackBar(content:
                           Padding(
@@ -244,7 +250,7 @@ class _OrderPageState extends State<OrderPage> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("요청 사항 : ",style: TextStyle(fontWeight: FontWeight.bold)),
+            Text("배송 요청 사항 : ",style: TextStyle(fontWeight: FontWeight.bold)),
             Expanded(
               child: Text("${doc['default_deliveryInfo'][5]}",
 
@@ -527,7 +533,7 @@ class _OrderPageState extends State<OrderPage> {
         opacity: 0.15,
         child: Padding(
             padding: const EdgeInsets.only(
-                top: 6.0, bottom: 6.0),
+                top: 1.0, bottom: 1.0),
             child: Container(
               height: 1,
               color: Colors.black38,
@@ -536,6 +542,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Widget _showAlert(Map<String, dynamic> doc) {
+
     AlertDialog dialog = new AlertDialog(
       content: new Container(
         width: 260.0,
@@ -548,11 +555,10 @@ class _OrderPageState extends State<OrderPage> {
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            // dialog top
+            // 주소록 관리
             new Row(
               children: <Widget>[
                 new Container(
-
                   decoration: new BoxDecoration(
                     color: Colors.white,
                   ),
@@ -581,93 +587,21 @@ class _OrderPageState extends State<OrderPage> {
                 )
               ],
             ),
-            SizedBox(height: 15,),
+            SizedBox(height: 5,),
             // dialog centre
             Expanded(
               child: new Container(
                 child: Column(
                 children: [
-                      for(var i=0; i<2; i++)
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                          children: [
-                          Row(
-                          children: [
-                              Text("수령인 : ",style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold),),
-                              Text("${doc['default_deliveryInfo'][0]}",style: TextStyle(fontSize: 11),),
-                              SizedBox(width: 20,),
-                              Text('연락처 : ',style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold)),
-                              Text("${doc['default_deliveryInfo'][1]}",style: TextStyle(fontSize: 11)),
-
-                          ],),
-                          SizedBox(
-                            height:7,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                              Text("주소 : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 11)),
-                          Expanded(
-                          child: Text("[${doc['default_deliveryInfo'][2]}] ${doc['default_deliveryInfo'][3]} ${doc['default_deliveryInfo'][4]} ",
-                              style: TextStyle(fontSize: 11),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,softWrap: false),
-                          ),
-                          ],
-                          ),
-                            SizedBox(
-                              height:7,
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("배송 요청 사항 : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 11)),
-                                Expanded(
-                                  child: Text("${doc['default_deliveryInfo'][5]}",
-                                      style: TextStyle(fontSize: 11),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,softWrap: false),
-                                ),
-                              ],
-                            ),
-                          ],
-                          ),
-                        ),
-                      ),
+                      for(var i=0; i<doc['deliveryInfoList'].length; i++)
+                      addressListWidget(i,doc),
                 ],
-                ),
-
-                  ),
-            ),
-
-            // dialog bottom
-            GestureDetector(
-              onTap: () async {
-              },
-              child: new Container(
-                padding: new EdgeInsets.all(16.0),
-                decoration: new BoxDecoration(
-                  color:Colors.blue,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(top:5.0),
-                  child: new Text(
-                    '질문 등록',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 17.0,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
                 ),
               ),
             ),
+
+            // dialog bottom
+           addAddressList(doc)
           ],
         ),
       ),
@@ -713,5 +647,223 @@ class _OrderPageState extends State<OrderPage> {
     }
   }
 
+  Widget _calculationView(BuildContext context) {
+      return Padding(
+        padding: const EdgeInsets.only(top:25,left:15.0,right:15.0),
+        child: Container(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('배송비',style: TextStyle(fontSize:19,fontWeight: FontWeight.bold),),
+                  Text('무료배송', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top:8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('총 합계',style: TextStyle(fontSize:25,fontWeight: FontWeight.bold),),
+                    Text('₩ 19,000', style: TextStyle(fontSize:23, fontWeight: FontWeight.bold),)
+                  ],
+                ),
+              ),
+              Opacity(
+                  opacity: 0.15,
+                  child: Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: Container(
+                        height: 1,
+                        color: Colors.black38,
+                      ))),
+              Padding(
+                padding: const EdgeInsets.only(top:15.0),
+                child: SizedBox(
+                  height: 46,
+                  width: MediaQuery.of(context).size.width*1,
+                  child: RaisedButton(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),),
+                    color: Colors.blueAccent,
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => null));
+                    },
+                    child: const Text('결제 하기',
+                        style: TextStyle(color: Colors.white, fontSize: 13,fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
+            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+        ),
+      );
+    }
+
+  Widget addressListWidget(int i, Map<String, dynamic> doc) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          opacityLine(),
+          Row(
+            children: [
+              Visibility(
+                child: Container(
+
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 4.0),
+                      child: Text("기본주소",
+                          style: TextStyle(color: Colors.white,
+                              fontWeight: FontWeight.bold, fontSize: 10)),
+                    ),
+                  ),
+                ),
+                visible: i==0?true:false,
+              ),
+              Visibility(
+                visible: i==0?false:true,
+                child: Container(
+                  width: 110,
+                  decoration: BoxDecoration(
+                    color: Colors.pinkAccent,
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 4.0),
+                      child: Text("기본주소로 변경하기",
+                          style: TextStyle(color: Colors.white,
+                              fontWeight: FontWeight.bold, fontSize: 10)),
+                    ),
+                  ),
+                ),
+              ),
+              Spacer(),
+              IconButton(
+                onPressed: (){
+
+                },
+                icon: Icon(Icons.cancel,color: Colors.grey,size: 15,) ,
+              )
+            ],
+          ),
+          Row(
+            children: [
+              Text("수령인 : ",style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold),),
+              Text("${doc['deliveryInfoList'][i]["0"]}",style: TextStyle(fontSize: 11),),
+              SizedBox(width: 20,),
+              Text('연락처 : ',style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold)),
+              Text("${doc['deliveryInfoList'][i]["1"]}",style: TextStyle(fontSize: 11)),
+
+            ],),
+          SizedBox(
+            height:7,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("주소 : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 11)),
+              Expanded(
+                child: Text("[${doc['deliveryInfoList'][i]["2"]}] ${doc['deliveryInfoList'][i]["3"]} ${doc['deliveryInfoList'][i]["4"]} ",
+                    style: TextStyle(fontSize: 11),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,softWrap: false),
+              ),
+            ],
+          ),
+          SizedBox(
+            height:7,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("배송 요청 사항 : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 11)),
+              Expanded(
+                child: Text("${doc['deliveryInfoList'][i]["5"]}",
+                    style: TextStyle(fontSize: 11),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,softWrap: false),
+              ),
+            ],
+          ),
+          SizedBox(height: 10,),
+          i/2 != 0?opacityLine():Container(),
+        ],
+      ),
+    );
+  }
+
+  Widget addAddressList(Map<String, dynamic> doc) {
+    return  GestureDetector(
+      onTap: () async {
+         // 0: 받는사람 , 1: 핸드폰 번호, 2: 우편번호, 3: 주소, 4: 상세주소, 5:배송 요청 사항
+        Map<String, dynamic> data =new Map();
+        data['0']="222";
+        data['1']="222";
+        data['2']="222";
+        data['3']="222";
+        data['4']="222";
+        data['5']="222";
+
+        doc['deliveryInfoList'].add(data);
+        var data0 = {"deliveryInfoList" : doc['deliveryInfoList']};
+
+
+        Firestore.instance
+            .collection('user_data')
+            .document(widget.user.uid)
+            .updateData(
+            data0
+          );
+
+
+      },
+      child: new Container(
+        padding: new EdgeInsets.all(16.0),
+        decoration: new BoxDecoration(
+          color:Colors.blue,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top:5.0),
+          child: new Text(
+            '주소 추가',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: 17.0,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+
 
 }
+class Customer {
+  String name;
+  int age;
+
+  Customer(this.name);
+
+
+  @override
+  String toString() {
+    return '{ "0": ${this.name}, "1": ${this.name}, "2": ${this.name} ,"3": ${this.name},"4": ${this.name},"5": ${this.name}}';
+  }
+
+}
+
