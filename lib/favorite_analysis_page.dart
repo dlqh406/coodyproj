@@ -461,6 +461,7 @@ class _SheetContainerState extends State<SheetContainer>{
             _showMyDialog();
             final _updateData = {
               'userStyleCode': final_styleCode,
+              'reward' : "0"
             };
 
             Firestore.instance

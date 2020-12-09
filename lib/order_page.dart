@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,8 +11,8 @@ class OrderPage extends StatefulWidget {
   final FirebaseUser user;
   var tem_zoneCode = "";
   var tem_address = "";
-  //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry"]];
-  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"]];
+  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry"]];
+  //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"]];
   var receiver,phoneNum,zoneCode,address,addressDetail,request = "";
   var triger = true;
   var addAddress  = false;
@@ -60,7 +61,7 @@ class _OrderPageState extends State<OrderPage> {
       appBar: PreferredSize(preferredSize: Size.fromHeight(40.0),
           child: AppBar(
             titleSpacing: 6.0,
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.white,
             elevation: 0,
             leading: Padding(
               padding: const EdgeInsets.only(left: 00.0),
@@ -74,6 +75,7 @@ class _OrderPageState extends State<OrderPage> {
                     }),
               ),
             ),
+            title: Text("주문서 작성"),
             actions: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(right:10.0),
@@ -91,13 +93,16 @@ class _OrderPageState extends State<OrderPage> {
         children: [
           _orderInfo(context),
           SizedBox(height: 15),
-          _orderView()
+          _orderView(),
+          SizedBox(height: 15),
+          _reward(),
           //_calculationView(context)
 
         ],
       ),
     );
   }
+
   Widget _orderInfo(context){
 
     return StreamBuilder<DocumentSnapshot>(
@@ -320,6 +325,7 @@ class _OrderPageState extends State<OrderPage> {
       }
     );
   }
+
   Widget _orderInfoHasData(Map<String, dynamic> doc){
   if(widget.triger == true){
       widget.receiver = doc['default_deliveryInfo'][0];
@@ -836,12 +842,12 @@ class _OrderPageState extends State<OrderPage> {
            color: Colors.white,
            child:
            Padding(
-             padding: const EdgeInsets.only(top:10,bottom:2.0,left: 20),
+             padding: const EdgeInsets.only(top:10,bottom:7.0,left: 20),
              child: Column(
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Padding(
-                   padding: const EdgeInsets.only(bottom: 10),
+                   padding: const EdgeInsets.only(bottom: 7),
                    child: Text("주문 상품 ",style: TextStyle(fontWeight: FontWeight.bold, fontSize:20),),
                  ),
                  ListView.builder(
@@ -893,7 +899,7 @@ class _OrderPageState extends State<OrderPage> {
                    Row(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(top:5.0),
+                              padding: const EdgeInsets.only(top:14.0),
                               child: Container(
                                   width: 200,
                                   child: Text("${doc['productName']}",
@@ -926,10 +932,11 @@ class _OrderPageState extends State<OrderPage> {
                             Padding(
                               padding: const EdgeInsets.only(left: 1),
                               child:doc['ODD_can']?
-                              Image.asset('assets/icons/FD.png',width: 25,) :Container(),
+                              Image.asset('assets/icons/FD.png',width: 20,) :Container(),
                             ),
-                            SizedBox(width: 10,),
-                            Text("8/21(오늘) 배송 예정 ",style: TextStyle(fontWeight: FontWeight.bold),)
+                            doc['ODD_can']?SizedBox(width: 10,):Container(),
+                            doc['ODD_can'] == true?Text("${cal_data()} 발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),)
+                                :Text("판매자 확인 후 발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
                           ],
                         ),
                       ),
@@ -940,13 +947,23 @@ class _OrderPageState extends State<OrderPage> {
             ),
           ],
         ),
-      // SizedBox(
-      //   height: 10,
-      // )
-        opacityLine()
+
+       index /2 !=0?Container():opacityLine(),
       ],
     );
 
+  }
+  cal_data(){
+    var aa = "8/21(오늘)";
+    var _data;
+    if(DateTime.now().hour < 15){
+      _data = "${DateTime.now().month}/${DateTime.now().day} (오늘)";
+    }
+    else{
+      _data = "내일 발송 예정";
+    }
+    print(DateTime.now());
+    return _data;
   }
 
   Widget opacityLine (){
@@ -1037,124 +1054,6 @@ class _OrderPageState extends State<OrderPage> {
 
     showDialog(context: context, child: _dialog);
   }
-
-  Widget _showAlert_add_address(Map<String, dynamic> doc) {
-  //
-  //   //AlertDialog dialog =
-  //   AlertDialog _dialog = AlertDialog(
-  //     content: new Container(
-  //       width: 260.0,
-  //       height: 700.0,
-  //       decoration: new BoxDecoration(
-  //         shape: BoxShape.rectangle,
-  //         color: const Color(0xFFFFFF),
-  //         borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
-  //       ),
-  //       child: new Column(
-  //         crossAxisAlignment: CrossAxisAlignment.stretch,
-  //         children: <Widget>[
-  //           // 주소록 관리
-  //           new Row(
-  //             children: <Widget>[
-  //               new Container(
-  //                 decoration: new BoxDecoration(
-  //                   color: Colors.white,
-  //                 ),
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.only(top:18.0),
-  //                   child: new Text(
-  //                     '주소록 추가',
-  //                     style: TextStyle(
-  //                       fontWeight: FontWeight.bold,
-  //                       color: Colors.black,
-  //                       fontSize: 25.0,
-  //                     ),
-  //                     textAlign: TextAlign.center,
-  //                   ),
-  //                 ),
-  //               ),
-  //               Spacer(),
-  //               Padding(
-  //                 padding: const EdgeInsets.only(top:18.0),
-  //                 child: GestureDetector(
-  //                     onTap: (){
-  //                       myController_alert.clear();
-  //                       Navigator.pop(context, true);
-  //                     },
-  //                     child: Icon(Icons.clear)),
-  //               )
-  //             ],
-  //           ),
-  //           SizedBox(height: 15,),
-  //           // dialog centre
-  //           Expanded(
-  //             child: new Container(
-  //               child: Column(
-  //                 children: [
-  //                   alert_orderInfoInputData()
-  //                 ],
-  //                   ),
-  //                 ),
-  //               ),
-  //
-  //               InkWell(
-  //               onTap: () async {
-  //
-  //                   if(
-  //                   myController_Receiver.text != "" &&
-  //                   myController_PhoneNum.text != "" &&
-  //                   myController_Address.text != "" &&
-  //                   myController_AddressDetail.text != "" &&
-  //                   myController_Request.text != "") {
-  //                     Map<String, dynamic> data = new Map();
-  //                     data['0'] = myController_Receiver.text;
-  //                     data['1'] = myController_PhoneNum.text;
-  //                     data['2'] = widget.tem_zoneCode;
-  //                     data['3'] = myController_Address.text;
-  //                     data['4'] = myController_AddressDetail.text;
-  //                     data['5'] = myController_Request.text;
-  //
-  //                     doc['deliveryInfoList'].add(data);
-  //                     var data0 = {"deliveryInfoList": doc['deliveryInfoList']};
-  //
-  //                     Firestore.instance
-  //                         .collection('user_data')
-  //                         .document(widget.user.uid)
-  //                         .updateData(data0);
-  //                   }
-  //
-  //              // 0: 받는사람 , 1: 핸드폰 번호, 2: 우편번호, 3: 주소, 4: 상세주소, 5:배송 요청 사항
-  //
-  //
-  //
-  //               },
-  //               child: new Container(
-  //               padding: new EdgeInsets.all(16.0),
-  //               decoration: new BoxDecoration(
-  //               color:Colors.blue,
-  //               ),
-  //                   child: Padding(
-  //                   padding: const EdgeInsets.only(top:5.0),
-  //                   child: new Text(
-  //                   '주소 추가',
-  //               style: TextStyle(
-  //                   fontWeight: FontWeight.bold,
-  //                   color: Colors.white,
-  //                   fontSize: 17.0,
-  //               ),
-  //               textAlign: TextAlign.center,
-  //               ),
-  //               ),
-  //               ),
-  //               )
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  //
-  //
-  //   showDialog(context: context, child: _dialog);
-   }
 
   Widget addressList(Map<String, dynamic> doc) {
     return Column(
@@ -1492,13 +1391,60 @@ class _OrderPageState extends State<OrderPage> {
               ],
             ),
             SizedBox(height: 10,),
-            i/2 != 0?opacityLine():Container(),
-
           ],
         ),
       ),
     );
   }
+
+  Widget _reward(){
+
+    return Container(
+      color: Colors.white,
+      child:
+      Padding(
+        padding: const EdgeInsets.only(top:10,bottom:11.0,left: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 7),
+              child: Text("적립금 ",style: TextStyle(fontWeight: FontWeight.bold, fontSize:20),),
+            ),
+            Row(
+              children: [
+                Text("나의 적립금 : ",style: TextStyle(fontSize: 16),),
+                Text("10,000원",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                Spacer(),
+                Container(
+                  width: 130,
+                  height: 26,
+                  child: TextField(
+                      cursorColor: Colors.black38,
+                      textAlign: TextAlign.right,
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                        ),
+                        focusedBorder:const OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.pinkAccent, width: 1.0),
+                        ),
+
+                        // hintText: 'Hint',
+                      )
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
 
 
 }
