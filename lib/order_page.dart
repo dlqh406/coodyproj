@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'package:kopo/kopo.dart';
+import 'package:intl/intl.dart';
 
 class OrderPage extends StatefulWidget {
   final FirebaseUser user;
@@ -96,7 +97,7 @@ class _OrderPageState extends State<OrderPage> {
           _orderView(),
           SizedBox(height: 15),
           _reward(),
-          //_calculationView(context)
+          _calculationView(context)
 
         ],
       ),
@@ -1399,54 +1400,68 @@ class _OrderPageState extends State<OrderPage> {
 
   Widget _reward(){
 
-    return Container(
-      color: Colors.white,
-      child:
-      Padding(
-        padding: const EdgeInsets.only(top:10,bottom:11.0,left: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 7),
-              child: Text("적립금 ",style: TextStyle(fontWeight: FontWeight.bold, fontSize:20),),
-            ),
-            Row(
+    return StreamBuilder<DocumentSnapshot>(
+      stream:  Firestore.instance.collection("user_data").document(widget.user.uid).snapshots(),
+      builder: (context, snapshot) {
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator());
+        }
+        return Container(
+          color: Colors.white,
+          child:
+          Padding(
+            padding: const EdgeInsets.only(top:13,bottom:11.0,left: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("나의 적립금 : ",style: TextStyle(fontSize: 16),),
-                Text("10,000원",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                Spacer(),
-                Container(
-                  width: 130,
-                  height: 26,
-                  child: TextField(
-                      cursorColor: Colors.black38,
-                      textAlign: TextAlign.right,
-                      decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                        ),
-                        focusedBorder:const OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.pinkAccent, width: 1.0),
-                        ),
-
-                        // hintText: 'Hint',
-                      )
-                  ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 7),
+                  child: Text("적립금 ",style: TextStyle(fontWeight: FontWeight.bold, fontSize:20),),
                 ),
-                SizedBox(
-                  width: 20,
+                Row(
+                  children: [
+                    Text("나의 적립금 : ",style: TextStyle(fontSize: 16),),
+                        Text("${rewardOutput(snapshot.data.data)} 원",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                    Spacer(),
+                    Container(
+                      width: 130,
+                      height: 26,
+                      child: TextField(
+                          cursorColor: Colors.black38,
+                          textAlign: TextAlign.right,
+                          decoration: InputDecoration(
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                            ),
+                            focusedBorder:const OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.pinkAccent, width: 1.0),
+                            ),
+
+                            // hintText: 'Hint',
+                          )
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    )
+                  ],
                 )
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+        );
+      }
     );
   }
 
 
+  rewardOutput(var data){
+    return numberWithComma(int.parse(data['reward']));
+  }
 
+  String numberWithComma(int param){
+    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
+  }
 }
 class Customer {
   String name;
