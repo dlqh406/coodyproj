@@ -24,7 +24,7 @@ class OrderPage extends StatefulWidget {
   var totalPrice_String = "";
   var rewardTotal = 0;
   int _totalPrice=0;
-  bool stopTriger =true;
+  bool stopTriger;
   int paymentValue = 1;
   OrderPage(this.user,this.orderList);
 
@@ -87,6 +87,7 @@ class _OrderPageState extends State<OrderPage> {
     // TODO: implement initState
     super.initState();
     setState(() {
+      widget.stopTriger = true;
       myController_Request.text = "문 앞에 놓아 주세요";
     });
   }
@@ -1134,7 +1135,9 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Widget _calculationView(BuildContext context) {
+    print("@@@@@");
         if(widget.stopTriger){
+          print("^^^^^^^^^");
           setState(() {
             widget._totalPrice = 0;
           });
@@ -1144,12 +1147,16 @@ class _OrderPageState extends State<OrderPage> {
             });}
         }
         else{
+          print("@@@@@ ${widget._totalPrice}");
           setState(() {
             widget._totalPrice -= int.parse(_rewardText==""?"0":_rewardText);
             widget.stopTriger = true;
           });
-        }
 
+          print("@totalPrice: ${widget._totalPrice}");
+          print("@_rewardText: ${_rewardText}");
+        }
+    print("******* ${widget._totalPrice}");
 
 
       return Padding(
@@ -1468,13 +1475,15 @@ class _OrderPageState extends State<OrderPage> {
                             child: Text("적용",style: TextStyle(color: Colors.white),),
                             color: Colors.blueAccent,
                             onPressed: (){
+
                               if(int.parse(_rewardController.text)>9){
                                 setState(() {
                                   widget.stopTriger = false;
                                   _rewardController.clear();
                                   FocusScope.of(context).unfocus();
-                                  // widget._totalPrice -= int.parse(_rewardText);용
+                                  // widget._totalPrice -= int.parse(_rewardText);
                                   print(widget._totalPrice);
+                                  print("%%%%%%");
                                 });
                               }else{
                                 _rewardController.clear();
