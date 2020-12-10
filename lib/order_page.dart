@@ -12,13 +12,16 @@ class OrderPage extends StatefulWidget {
   final FirebaseUser user;
   var tem_zoneCode = "";
   var tem_address = "";
-  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry"]];
+  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","12000"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"]];
   //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"]];
   var receiver,phoneNum,zoneCode,address,addressDetail,request = "";
   var triger = true;
   var addAddress  = false;
   var addAddress2  = true;
-  //final orderList;
+  var totalPrice_String = "";
+  var rewardTotal = 0;
+  int _totalPrice=0;
+
   OrderPage(this.user);
 
   @override
@@ -34,10 +37,53 @@ class _OrderPageState extends State<OrderPage> {
   final myController_AddressDetail = TextEditingController();
   final myController_Request = TextEditingController();
   final myController_alert = TextEditingController();
+  final TextEditingController _rewardController = TextEditingController(
+
+  );
+
+
+  FocusNode focusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  String _rewardText = "";
 
+  _OrderPageState() {
+    _rewardController.addListener(() {
 
-
+        if(widget.rewardTotal < int.parse(_rewardController.text)){
+          print('over');
+          _rewardController.text="0";
+          //_rewardController.clear();
+          totalPrice(0);
+          scaffoldKey.currentState
+              .showSnackBar(SnackBar(content:
+          Padding(
+            padding: const EdgeInsets.only(top:8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.check_circle,color: Colors.blueAccent,),
+                SizedBox(width: 14,),
+                Text("입력한 값이 적립금보다 많아요",
+                  style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
+              ],
+            ),
+          )));
+        }
+        // else if(_rewardController.text.trim() ==""){
+        //   _rewardController.clear();
+        //   setState(() {
+        //     widget._totalPrice = 0;
+        //   });
+        //   totalPrice(0);
+        // }
+        else{
+          setState(() {
+            _rewardText = _rewardController.text;
+          });
+        }
+      }
+    );
+  }
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -113,6 +159,7 @@ class _OrderPageState extends State<OrderPage> {
           return Center(child: CircularProgressIndicator());
         }
         var _doc = snapshot.data.data;
+        widget.rewardTotal = int.parse(_doc['reward']);
         return Container(
           color: Colors.white,
           child:
@@ -402,6 +449,7 @@ class _OrderPageState extends State<OrderPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(left:8.0,bottom: 5),
                       child: TextField(
+                          maxLength: 1,
                         controller: myController_Receiver,
                           style: new TextStyle(
                               color: Colors.black,
@@ -961,9 +1009,8 @@ class _OrderPageState extends State<OrderPage> {
       _data = "${DateTime.now().month}/${DateTime.now().day} (오늘)";
     }
     else{
-      _data = "내일 발송 예정";
+      _data = "내일";
     }
-    print(DateTime.now());
     return _data;
   }
 
@@ -1115,7 +1162,7 @@ class _OrderPageState extends State<OrderPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('총 합계',style: TextStyle(fontSize:25,fontWeight: FontWeight.bold),),
-                    Text('₩ 19,000', style: TextStyle(fontSize:23, fontWeight: FontWeight.bold),)
+                    Text('₩ ${ totalPrice(0)}', style: TextStyle(fontSize:23, fontWeight: FontWeight.bold),)
                   ],
                 ),
               ),
@@ -1416,7 +1463,26 @@ class _OrderPageState extends State<OrderPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 7),
-                  child: Text("적립금 ",style: TextStyle(fontWeight: FontWeight.bold, fontSize:20),),
+                  child: Row(
+                    children: [
+                      Text("적립금 ",style: TextStyle(fontWeight: FontWeight.bold, fontSize:20),),
+                      Spacer(),
+                      Container(
+                        height: 30,
+                        width: 70,
+                        child: RaisedButton(
+                            child: Text("적용",style: TextStyle(color: Colors.white),),
+                            color: Colors.blueAccent,
+                            onPressed: (){
+                              setState(() {
+                                widget._totalPrice -= int.parse(_rewardText);
+                                print(widget._totalPrice);
+                              });
+                            }),
+                      ),
+                      SizedBox(width: 20,)
+                    ],
+                  ),
                 ),
                 Row(
                   children: [
@@ -1427,6 +1493,9 @@ class _OrderPageState extends State<OrderPage> {
                       width: 130,
                       height: 26,
                       child: TextField(
+
+                          focusNode: focusNode,
+                          controller: _rewardController,
                           cursorColor: Colors.black38,
                           textAlign: TextAlign.right,
                           decoration: InputDecoration(
@@ -1454,14 +1523,28 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-
-  rewardOutput(var data){
+   rewardOutput(var data){
     return numberWithComma(int.parse(data['reward']));
   }
 
   String numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
+
+  totalPrice(int filter) {
+
+    widget._totalPrice =0;
+    for( var i =0; i<widget.orderList.length; i++){
+     setState(() {
+       widget._totalPrice += int.parse(widget.orderList[i][4]);
+     });}
+     setState(() {
+        widget._totalPrice -= int.parse(_rewardText==""?"0":_rewardText);
+      });
+    return numberWithComma(widget._totalPrice);
+
+  }
+
 }
 class Customer {
   String name;
