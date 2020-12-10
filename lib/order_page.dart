@@ -23,11 +23,17 @@ class OrderPage extends StatefulWidget {
 
   var totalPrice_String = "";
   var rewardTotal = 0;
-  int _totalPrice=0;
-  bool stopTriger;
-  int paymentValue = 1;
-  OrderPage(this.user,this.orderList);
 
+
+  int _totalPrice=0;
+  int _totalDiscount = 0;
+  int _finalPirce =0;
+  bool stopTriger =true;
+  int paymentValue = 1;
+
+
+  OrderPage(this.user,this.orderList);
+  //OrderPage(this.user);
   @override
   _OrderPageState createState() => _OrderPageState();
 }
@@ -48,13 +54,15 @@ class _OrderPageState extends State<OrderPage> {
   _OrderPageState() {
     _rewardController.addListener(() {
 
-        if(widget.rewardTotal < int.parse(_rewardController.text)){
+      if(widget.rewardTotal < int.parse(_rewardController.text)){
           print('over');
-          //_rewardController.text="0";
           _rewardController.clear();
-          totalPrice(0);
+          setState(() {
+            widget._totalDiscount = 0;
+          });
+
           scaffoldKey.currentState
-              .showSnackBar(SnackBar(content:
+              .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
           Padding(
             padding: const EdgeInsets.only(top:8.0),
             child: Row(
@@ -70,6 +78,7 @@ class _OrderPageState extends State<OrderPage> {
         }
         else{
           setState(() {
+
             _rewardText = _rewardController.text;
           });
         }
@@ -86,8 +95,13 @@ class _OrderPageState extends State<OrderPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    for(var i =0; i<widget.orderList.length; i++){
+      setState(() {
+        widget._totalPrice += int.parse(widget.orderList[i][4]);
+      });}
+
     setState(() {
-      widget.stopTriger = true;
       myController_Request.text = "문 앞에 놓아 주세요";
     });
   }
@@ -219,7 +233,7 @@ class _OrderPageState extends State<OrderPage> {
 
 
                           scaffoldKey.currentState
-                              .showSnackBar(SnackBar(content:
+                              .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
                           Padding(
                             padding: const EdgeInsets.only(top:8.0),
                             child: Row(
@@ -235,7 +249,7 @@ class _OrderPageState extends State<OrderPage> {
 
                         }else{
                           scaffoldKey.currentState
-                              .showSnackBar(SnackBar(content:
+                              .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
                           Padding(
                                 padding: const EdgeInsets.only(top:8.0),
                                 child: Row(
@@ -317,7 +331,7 @@ class _OrderPageState extends State<OrderPage> {
 
 
                             scaffoldKey.currentState
-                                .showSnackBar(SnackBar(content:
+                                .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
                             Padding(
                               padding: const EdgeInsets.only(top:8.0),
                               child: Row(
@@ -334,7 +348,7 @@ class _OrderPageState extends State<OrderPage> {
                           }
                           else{
                             scaffoldKey.currentState
-                                .showSnackBar(SnackBar(content:
+                                .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
                             Padding(
                               padding: const EdgeInsets.only(top:8.0),
                               child: Row(
@@ -1133,84 +1147,116 @@ class _OrderPageState extends State<OrderPage> {
       return Color(int.parse("0x$hexColor"));
     }
   }
+  aa(){
+    print("@@@@@");
+    if(widget.stopTriger){
+      print("^^^^^^^^^");
+      setState(() {
+        widget._totalPrice = 0;
+      });
+      for(var i =0; i<widget.orderList.length; i++){
+        setState(() {
+          widget._totalPrice += int.parse(widget.orderList[i][4]);
+        });}
+    }
+    // else{
+    //   print("@@@@@ ${widget._totalPrice}");
+    //   setState(() {
+    //     widget._totalPrice -= int.parse(_rewardText==""?"0":_rewardText);
+    //     widget.stopTriger = true;
+    //   });
+    //
+    //   print("@totalPrice: ${widget._totalPrice}");
+    //   print("@_rewardText: ${_rewardText}");
+    // }
+    // //widget.stopTriger_int += 1;
+    // print("******* ${widget._totalPrice}");
+  }
+
 
   Widget _calculationView(BuildContext context) {
-    print("@@@@@");
-        if(widget.stopTriger){
-          print("^^^^^^^^^");
-          setState(() {
-            widget._totalPrice = 0;
-          });
-          for(var i =0; i<widget.orderList.length; i++){
-            setState(() {
-              widget._totalPrice += int.parse(widget.orderList[i][4]);
-            });}
-        }
-        else{
-          print("@@@@@ ${widget._totalPrice}");
-          setState(() {
-            widget._totalPrice -= int.parse(_rewardText==""?"0":_rewardText);
-            widget.stopTriger = true;
-          });
+    aa();
 
-          print("@totalPrice: ${widget._totalPrice}");
-          print("@_rewardText: ${_rewardText}");
-        }
-    print("******* ${widget._totalPrice}");
-
-
-      return Padding(
-        padding: const EdgeInsets.only(top:15,left:15.0,right:15.0),
-        child: Container(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return Container(
+        child: Column(
+          children: [
+            Padding(
+              padding:const EdgeInsets.only(top:15,left:15.0,right:15.0),
+              child: Column(
                 children: [
-                  Text('배송비',style: TextStyle(fontSize:19,fontWeight: FontWeight.bold),),
-                  Text('무료배송', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top:8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('총 합계',style: TextStyle(fontSize:25,fontWeight: FontWeight.bold),),
-                    Text('₩ ${ numberWithComma(widget._totalPrice)}', style: TextStyle(fontSize:23, fontWeight: FontWeight.bold),)
-                  ],
-                ),
-              ),
-              Opacity(
-                  opacity: 0.15,
-                  child: Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
-                      child: Container(
-                        height: 1,
-                        color: Colors.black38,
-                      ))),
-              Padding(
-                padding: const EdgeInsets.only(top:7.0),
-                child: SizedBox(
-                  height: 46,
-                  width: MediaQuery.of(context).size.width*1,
-                  child: RaisedButton(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),),
-                    color: Colors.blueAccent,
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => null));
-                    },
-                    child: const Text('결 제 하 기',
-                        style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('배송비',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold),),
+                      Text('무료배송', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
+                    ],
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(top:6.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('합계',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold),),
+                        Text('₩ ${ numberWithComma(widget._totalPrice)}', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top:6.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('할인 합계',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold),),
+                        Text('- ₩ ${ numberWithComma(widget._totalDiscount)}', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top:5.0,bottom: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('최종 합계',style: TextStyle(fontSize:19,fontWeight: FontWeight.bold,color: Colors.redAccent),),
+                          Text('₩ ${ numberWithComma(widget._totalPrice - widget._totalDiscount)}', style: TextStyle(fontSize:19, fontWeight: FontWeight.bold,color:Colors.redAccent),)
+                        ],
+                      ),
+                    ),
+                  ),
+                  Opacity(
+                      opacity: 0.15,
+                      child: Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Container(
+                            height: 1,
+                            color: Colors.black38,
+                          ))),
+                  Padding(
+                    padding: const EdgeInsets.only(top:7.0),
+                    child: SizedBox(
+                      height: 46,
+                      width: MediaQuery.of(context).size.width*1,
+                      child: RaisedButton(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),),
+                        color: Colors.blueAccent,
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => null));
+                        },
+                        child: const Text('결 제 하 기',
+                            style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
               ),
-            ],
-            crossAxisAlignment: CrossAxisAlignment.start,
-          ),
+            ),
+
+
+          ],
         ),
       );
     }
@@ -1475,20 +1521,18 @@ class _OrderPageState extends State<OrderPage> {
                             child: Text("적용",style: TextStyle(color: Colors.white),),
                             color: Colors.blueAccent,
                             onPressed: (){
+                              if(int.parse(_rewardController.text)>9 || int.parse(_rewardController.text) == 0){
+                                    setState(() {
+                                    widget._totalDiscount = int.parse(_rewardController.text);
+                                    _rewardController.clear();
+                                    FocusScope.of(context).unfocus();
+                                    });
+                              }
 
-                              if(int.parse(_rewardController.text)>9){
-                                setState(() {
-                                  widget.stopTriger = false;
-                                  _rewardController.clear();
-                                  FocusScope.of(context).unfocus();
-                                  // widget._totalPrice -= int.parse(_rewardText);
-                                  print(widget._totalPrice);
-                                  print("%%%%%%");
-                                });
-                              }else{
+                              else{
                                 _rewardController.clear();
                                 scaffoldKey.currentState
-                                    .showSnackBar(SnackBar(content:
+                                    .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
                                 Padding(
                                   padding: const EdgeInsets.only(top:8.0),
                                   child: Row(
