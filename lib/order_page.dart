@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coodyproj/privacy.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,27 +11,28 @@ import 'package:intl/intl.dart';
 
 class OrderPage extends StatefulWidget {
   final FirebaseUser user;
+  var orderList;
   var tem_zoneCode = "";
   var tem_address = "";
-  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","12000"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"]];
+  //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","12000"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"],["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"]];
   //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"]];
   var receiver,phoneNum,zoneCode,address,addressDetail,request = "";
   var triger = true;
   var addAddress  = false;
   var addAddress2  = true;
+
   var totalPrice_String = "";
   var rewardTotal = 0;
   int _totalPrice=0;
-
-  OrderPage(this.user);
+  bool stopTriger =true;
+  int paymentValue = 1;
+  OrderPage(this.user,this.orderList);
 
   @override
   _OrderPageState createState() => _OrderPageState();
 }
 
 class _OrderPageState extends State<OrderPage> {
-
-
   final myController_Receiver = TextEditingController();
   final myController_PhoneNum = TextEditingController();
   final myController_Address = TextEditingController();
@@ -38,10 +40,7 @@ class _OrderPageState extends State<OrderPage> {
   final myController_Request = TextEditingController();
   final myController_alert = TextEditingController();
   final TextEditingController _rewardController = TextEditingController(
-
   );
-
-
   FocusNode focusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String _rewardText = "";
@@ -51,8 +50,8 @@ class _OrderPageState extends State<OrderPage> {
 
         if(widget.rewardTotal < int.parse(_rewardController.text)){
           print('over');
-          _rewardController.text="0";
-          //_rewardController.clear();
+          //_rewardController.text="0";
+          _rewardController.clear();
           totalPrice(0);
           scaffoldKey.currentState
               .showSnackBar(SnackBar(content:
@@ -69,13 +68,6 @@ class _OrderPageState extends State<OrderPage> {
             ),
           )));
         }
-        // else if(_rewardController.text.trim() ==""){
-        //   _rewardController.clear();
-        //   setState(() {
-        //     widget._totalPrice = 0;
-        //   });
-        //   totalPrice(0);
-        // }
         else{
           setState(() {
             _rewardText = _rewardController.text;
@@ -90,7 +82,6 @@ class _OrderPageState extends State<OrderPage> {
     myController_Address.dispose();
     super.dispose();
   }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -99,14 +90,16 @@ class _OrderPageState extends State<OrderPage> {
       myController_Request.text = "문 앞에 놓아 주세요";
     });
   }
+
   @override
   Widget build(BuildContext context) {
-
+    print( widget._totalPrice);
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: _getColorFromHex("#f2f2f2"),
       appBar: PreferredSize(preferredSize: Size.fromHeight(40.0),
           child: AppBar(
+            centerTitle: true,
             titleSpacing: 6.0,
             backgroundColor: Colors.white,
             elevation: 0,
@@ -143,7 +136,12 @@ class _OrderPageState extends State<OrderPage> {
           _orderView(),
           SizedBox(height: 15),
           _reward(),
-          _calculationView(context)
+          SizedBox(height: 15),
+          paymentMethod(),
+          SizedBox(height: 15),
+          privacy(),
+          _calculationView(context),
+
 
         ],
       ),
@@ -932,7 +930,7 @@ class _OrderPageState extends State<OrderPage> {
 
     return Column(
       children: [
-
+        index==0?Container():opacityLine(),
         Row(
           children: [
              ClipRRect(
@@ -985,7 +983,10 @@ class _OrderPageState extends State<OrderPage> {
                             ),
                             doc['ODD_can']?SizedBox(width: 10,):Container(),
                             doc['ODD_can'] == true?Text("${cal_data()} 발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),)
-                                :Text("판매자 확인 후 발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                                :Text("판매자 확인 후 발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                            Spacer(),
+                            Text("₩ ${ numberWithComma(int.parse(doc['price']))}",style: TextStyle(fontWeight: FontWeight.bold),),
+                            SizedBox(width: 30,)
                           ],
                         ),
                       ),
@@ -997,21 +998,10 @@ class _OrderPageState extends State<OrderPage> {
           ],
         ),
 
-       index /2 !=0?Container():opacityLine(),
+
       ],
     );
 
-  }
-  cal_data(){
-    var aa = "8/21(오늘)";
-    var _data;
-    if(DateTime.now().hour < 15){
-      _data = "${DateTime.now().month}/${DateTime.now().day} (오늘)";
-    }
-    else{
-      _data = "내일";
-    }
-    return _data;
   }
 
   Widget opacityLine (){
@@ -1144,8 +1134,26 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Widget _calculationView(BuildContext context) {
+        if(widget.stopTriger){
+          setState(() {
+            widget._totalPrice = 0;
+          });
+          for(var i =0; i<widget.orderList.length; i++){
+            setState(() {
+              widget._totalPrice += int.parse(widget.orderList[i][4]);
+            });}
+        }
+        else{
+          setState(() {
+            widget._totalPrice -= int.parse(_rewardText==""?"0":_rewardText);
+            widget.stopTriger = true;
+          });
+        }
+
+
+
       return Padding(
-        padding: const EdgeInsets.only(top:25,left:15.0,right:15.0),
+        padding: const EdgeInsets.only(top:15,left:15.0,right:15.0),
         child: Container(
           child: Column(
             children: [
@@ -1162,20 +1170,20 @@ class _OrderPageState extends State<OrderPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('총 합계',style: TextStyle(fontSize:25,fontWeight: FontWeight.bold),),
-                    Text('₩ ${ totalPrice(0)}', style: TextStyle(fontSize:23, fontWeight: FontWeight.bold),)
+                    Text('₩ ${ numberWithComma(widget._totalPrice)}', style: TextStyle(fontSize:23, fontWeight: FontWeight.bold),)
                   ],
                 ),
               ),
               Opacity(
                   opacity: 0.15,
                   child: Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
+                      padding: const EdgeInsets.only(top: 12.0),
                       child: Container(
                         height: 1,
                         color: Colors.black38,
                       ))),
               Padding(
-                padding: const EdgeInsets.only(top:15.0),
+                padding: const EdgeInsets.only(top:7.0),
                 child: SizedBox(
                   height: 46,
                   width: MediaQuery.of(context).size.width*1,
@@ -1188,8 +1196,8 @@ class _OrderPageState extends State<OrderPage> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => null));
                     },
-                    child: const Text('결제 하기',
-                        style: TextStyle(color: Colors.white, fontSize: 13,fontWeight: FontWeight.bold)),
+                    child: const Text('결 제 하 기',
+                        style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold)),
                   ),
                 ),
               ),
@@ -1205,7 +1213,7 @@ class _OrderPageState extends State<OrderPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          opacityLine(),
+          i ==0? Container():opacityLine(),
           alert_addressListHeader(i,doc),
           alert_addressListBody(i,doc),
 
@@ -1310,20 +1318,6 @@ class _OrderPageState extends State<OrderPage> {
 
               Navigator.pop(context);
               _showAlert(doc);
-              // scaffoldKey.currentState
-              //     .showSnackBar(SnackBar(content:
-              // Padding(
-              //   padding: const EdgeInsets.only(top:8.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Icon(Icons.check_circle,color: Colors.blueAccent,),
-              //       SizedBox(width: 14,),
-              //       Text("기본 주소 변경 완료 ",
-              //         style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
-              //     ],
-              //   ),
-              // )));
             },
             child: Container(
               width: 110,
@@ -1474,10 +1468,32 @@ class _OrderPageState extends State<OrderPage> {
                             child: Text("적용",style: TextStyle(color: Colors.white),),
                             color: Colors.blueAccent,
                             onPressed: (){
-                              setState(() {
-                                widget._totalPrice -= int.parse(_rewardText);
-                                print(widget._totalPrice);
-                              });
+                              if(int.parse(_rewardController.text)>9){
+                                setState(() {
+                                  widget.stopTriger = false;
+                                  _rewardController.clear();
+                                  FocusScope.of(context).unfocus();
+                                  // widget._totalPrice -= int.parse(_rewardText);용
+                                  print(widget._totalPrice);
+                                });
+                              }else{
+                                _rewardController.clear();
+                                scaffoldKey.currentState
+                                    .showSnackBar(SnackBar(content:
+                                Padding(
+                                  padding: const EdgeInsets.only(top:8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.check_circle,color: Colors.blueAccent,),
+                                      SizedBox(width: 14,),
+                                      Text("적립금 10원 이상부터 사용할 수 있습니다",
+                                        style: TextStyle(fontWeight: FontWeight.bold,fontSize:16),),
+                                    ],
+                                  ),
+                                )));
+
+                                }
                             }),
                       ),
                       SizedBox(width: 20,)
@@ -1503,7 +1519,7 @@ class _OrderPageState extends State<OrderPage> {
                               borderSide: const BorderSide(color: Colors.grey, width: 1.0),
                             ),
                             focusedBorder:const OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.pinkAccent, width: 1.0),
+                              borderSide: const BorderSide(color: Colors.orange, width: 1.0),
                             ),
 
                             // hintText: 'Hint',
@@ -1523,18 +1539,129 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-   rewardOutput(var data){
-    return numberWithComma(int.parse(data['reward']));
+  Widget paymentMethod(){
+
+
+    return Container(
+      color: Colors.white,
+      child:
+      Padding(
+          padding: const EdgeInsets.only(top:0,bottom:0,left: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text("결제 수단 ",style: TextStyle(fontWeight: FontWeight.bold, fontSize:20),),
+                  Spacer(),
+                  Container(
+            child: DropdownButton(
+
+                value: widget.paymentValue,
+                items: [
+                  DropdownMenuItem(
+                    child: Text("신용카드",style: TextStyle(fontWeight: FontWeight.bold),),
+                    value: 1,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("실시간 계좌이체",style: TextStyle(fontWeight: FontWeight.bold),),
+                    value: 2,
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    widget.paymentValue = value;
+                    print( widget.paymentValue);
+                  });
+                }),
+                ),
+                  SizedBox(
+                    width: 20,
+                  )
+                ],
+              ),
+
+            ],
+          )
+      ),
+    );
   }
 
-  String numberWithComma(int param){
+  Widget privacy(){
+    return Container(
+      color: Colors.white,
+      child:
+      Padding(
+        padding: const EdgeInsets.only(top:0,bottom:10,left: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text("위 결제 정보를 확인하고 구매진행과 이용약관에 모두 동의합니다 ",style: TextStyle(fontWeight: FontWeight.bold, fontSize:12),),
+                Spacer(),
+                Checkbox(
+                  activeColor: Colors.blue,
+                  value: true,
+                  onChanged: (val) {
+                    setState(() {
+                    });
+                  },
+                ),
+                SizedBox(
+                  width: 10,
+                )
+            ],
+            ),
+            Row(
+              children: [
+                Text('전자금융거래 이용약관,개인정보 수집 및 동의,개인정보 제공 및 위탁 동의 ',style: TextStyle(fontSize: 10),),
+                Spacer(),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context){
+                          return PrivacyPage();
+                        }));
+
+                  },
+                  child: Text("보기",style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  )),
+                ),
+                SizedBox(width: 25,),
+              ],
+            ),
+            SizedBox(height: 5,),
+          ],
+            )
+        ),
+      );
+  }
+
+
+
+  numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
-
+  cal_data(){
+    var aa = "8/21(오늘)";
+    var _data;
+    if(DateTime.now().hour < 15){
+      _data = "${DateTime.now().month}/${DateTime.now().day} (오늘)";
+    }
+    else{
+      _data = "내일";
+    }
+    return _data;
+  }
+  rewardOutput(var data){
+    return numberWithComma(int.parse(data['reward']));
+  }
   totalPrice(int filter) {
 
     widget._totalPrice =0;
-    for( var i =0; i<widget.orderList.length; i++){
+    for(var i =0; i<widget.orderList.length; i++){
      setState(() {
        widget._totalPrice += int.parse(widget.orderList[i][4]);
      });}
@@ -1543,19 +1670,6 @@ class _OrderPageState extends State<OrderPage> {
       });
     return numberWithComma(widget._totalPrice);
 
-  }
-
-}
-class Customer {
-  String name;
-  int age;
-
-  Customer(this.name);
-
-
-  @override
-  String toString() {
-    return '{ "0": ${this.name}, "1": ${this.name}, "2": ${this.name} ,"3": ${this.name},"4": ${this.name},"5": ${this.name}}';
   }
 
 }

@@ -356,10 +356,10 @@ class _ProductDetailState extends State<ProductDetail> {
                                      productName: snapshot.data.data['productName'],
                                      price:  "12,900",
                                      press: () {
-      //                                    Navigator.push(context,
-      //                                        MaterialPageRoute(builder: (context){
-      //                                      return ProductDetail(widget.user,snapshot.data);
-      //                                    }));
+                                         Navigator.push(context,
+                                             MaterialPageRoute(builder: (context){
+                                           return ProductDetail(widget.user,snapshot.data);
+                                         }));
                                           },);
                               }
                               }
@@ -514,7 +514,6 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
-
   Widget _buildListView(BuildContext context, doc, int index) {
     Size size = MediaQuery.of(context).size;
     return Padding(
@@ -595,7 +594,6 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
-
   Widget _buildMainInfoBody(BuildContext context) {
     final htmlData = """${widget.document['productDecription']}""";
 
@@ -619,7 +617,6 @@ class _ProductDetailState extends State<ProductDetail> {
       ],
     );
   }
-
 
   Widget _buildTermsInfoBody(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -1163,14 +1160,15 @@ class _ProductDetailState extends State<ProductDetail> {
                             for( var i=0; i<widget.selectedList.length; i++){
                               if( widget.selectedList[i].length <= 3){
                                 widget.selectedList[i].add(widget.document.documentID);
+                                widget.selectedList[i].add(widget.document['price']);
                               }
                             }
                             print("구매하기 : ${widget.selectedList}");
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context){
                                   //return OrderPage(widget.user);
-                                  return OrderPage(widget.user);
-                                  //return OrderPage(widget.user, widget.selectedList);
+                                  //return OrderPage(widget.user);
+                                  return OrderPage(widget.user, widget.selectedList);
 
                                 }));
 
