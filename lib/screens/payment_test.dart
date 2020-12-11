@@ -14,7 +14,7 @@ class _PaymentTestState extends State<PaymentTest> {
   final _formKey = GlobalKey<FormState>();
   String pg = 'html5_inicis'; // PG사
   String payMethod = 'card';  // 결제수단
-  String cardQuota = '0';     // 할부개월수
+  String cardQuota = "0";    // 할부개월수
   String vbankDue;            // 가상계좌 입금기한
   String bizNum;              // 사업자번호
   bool digital = false;       // 실물컨텐츠 여부
@@ -223,6 +223,8 @@ class _PaymentTestState extends State<PaymentTest> {
                   buyerEmail = value;
                 },
               ),
+
+
               Container(
                 padding: EdgeInsets.fromLTRB(0, 30.0, 0, 0),
                 child: RaisedButton(

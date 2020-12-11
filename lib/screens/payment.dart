@@ -28,7 +28,9 @@ class Payment extends StatelessWidget {
           ),
         ),
       ),
-      userCode: Utils.getUserCodeByPg(data.pg),
+      userCode: 'imp05065178',
+      /* [필수입력] 결제 데이터 */
+      //userCode: Utils.getUserCodeByPg(data.pg),
       data: data,
       callback: (Map<String, String> result) {
         Navigator.pushReplacementNamed(
