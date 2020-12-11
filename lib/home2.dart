@@ -29,7 +29,7 @@ class _Home2State extends State<Home2> {
       routes: {
         '/': (context) => Home(),
         '/payment-test': (context) => PaymentTest(),
-        '/payment': (context) => Payment(),
+        //'/payment': (context) => Payment(),
         '/payment-result': (context) => PaymentResult(),
         '/certification-test': (context) => CertificationTest(),
         '/certification': (context) => Certification(),

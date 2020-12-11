@@ -20,8 +20,8 @@ class RootPage extends StatelessWidget {
           return  LoginPage();
         }
         else{
-           return Home2();
-          //return OrderPage(snapshot.data);
+           //return Home2();
+          return OrderPage(snapshot.data);
           //return Home(snapshot.data);
         }
       },

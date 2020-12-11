@@ -1,23 +1,37 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:coodyproj/models/iamport_payment.dart';
 import 'package:coodyproj/models/payment_data.dart';
-import 'package:coodyproj/models/index.dart';
 
 
 class Payment extends StatelessWidget {
+  final FirebaseUser user;
+
+  // String pg = 'html5_inicis'; // PG사
+  // String payMethod = 'card';  // 결제수단
+  // String cardQuota = "0";    // 할부개월수
+  // bool digital = false;       // 실물컨텐츠 여부
+  // bool escrow = false;        // 에스크로 여부
+  // String name="주문명 테스트";                // 주문명
+  // String amount="130";              // 결제금액
+  // String merchantUid ="주문번호 테스트";         // 주문번호
+  // String buyerName ="이보성";           // 구매자 이름
+  // String buyerTel ="01068276863";            // 구매자 전화번호
+  // String buyerEmail ="dlqh406@gmail.com";          // 구매자 이메일
+
   String pg = 'html5_inicis'; // PG사
-  String payMethod = 'card';  // 결제수단
+  String payMethod;  // 결제수단
   String cardQuota = "0";    // 할부개월수
-  String vbankDue;            // 가상계좌 입금기한
-  String bizNum;              // 사업자번호
   bool digital = false;       // 실물컨텐츠 여부
   bool escrow = false;        // 에스크로 여부
-  String name="주문명 테스트";                // 주문명
-  String amount="130";              // 결제금액
+  String name;                // 주문명
+  String amount;              // 결제금액
   String merchantUid ="주문번호 테스트";         // 주문번호
-  String buyerName ="이보성";           // 구매자 이름
-  String buyerTel ="01068276863";            // 구매자 전화번호
-  String buyerEmail ="dlqh406@gmail.com";          // 구매자 이
+  String buyerName;           // 구매자 이름
+  String buyerTel;            // 구매자 전화번호
+  String buyerEmail;          // 구매자 이메일
+  Payment(this.user, this.name,this.payMethod, this.amount, this.merchantUid ,
+      this.buyerTel,this.buyerName,this.buyerEmail);
 
   @override
   Widget build(BuildContext context) {
@@ -35,18 +49,15 @@ class Payment extends StatelessWidget {
     });
     data.appScheme = 'example';
     return IamportPayment(
-      appBar: new AppBar(
-        title: new Text('아임포트 결제'),
-      ),
       initialChild: Container(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/iamport-logo.png'),
               Container(
                 padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
-                child: Text('잠시만 기다려주세요...', style: TextStyle(fontSize: 20.0)),
+                child: Text(' ', style: TextStyle(fontSize: 20.0)),
+
               ),
             ],
           ),

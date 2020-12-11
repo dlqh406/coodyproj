@@ -1166,9 +1166,9 @@ class _ProductDetailState extends State<ProductDetail> {
                             print("구매하기 : ${widget.selectedList}");
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context){
-                                  //return OrderPage(widget.user);
-                                  //return OrderPage(widget.user);
-                                  return OrderPage(widget.user, widget.selectedList);
+
+                                  return OrderPage(widget.user);
+                                  //return OrderPage(widget.user, widget.selectedList);
 
                                 }));
 

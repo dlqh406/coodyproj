@@ -248,36 +248,6 @@ class _PaymentTestState extends State<PaymentTest> {
                         };
                       }
 
-                      // 가상계좌의 경우, 입금기한 추가
-                      // if (payMethod == 'vbank') {
-                      //   data.vbankDue = vbankDue;
-                      //
-                      //   // 다날 && 가상계좌의 경우, 사업자 등록번호 10자리 추가
-                      //   if (pg == 'danal_tpay') {
-                      //     data.bizNum = bizNum;
-                      //   }
-                      // }
-
-                      // 휴대폰 소액결제의 경우, 실물 컨텐츠 여부 추가
-                      // if (payMethod == 'phone') {
-                      //   data.digital = digital;
-                      //   if (pg == 'danal') {
-                      //     // 다날 && 휴대폰 소액결제의 경우, company 파라메터 추가
-                      //     data.company = '아임포트';
-                      //   }
-                      // }
-
-                      // 정기결제의 경우, customer_uid 추가
-                      // if (pg == 'kcp_billing') {
-                      //   data.customerUid = 'cuid_${DateTime.now().millisecondsSinceEpoch}';
-                      // }
-
-                      // [이니시스-빌링.나이스.다날] 제공기간 표기
-                      // data.period = {
-                      //   'from': '20200101',
-                      //   'to': '20201231',
-                      // };
-
                       Navigator.pushNamed(
                         context,
                         '/payment',

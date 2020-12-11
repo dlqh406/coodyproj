@@ -22,16 +22,28 @@ class IamportWebView extends StatelessWidget {
   final PreferredSizeWidget appBar;
   final Widget initialChild;
   IamportWebView(this.type, this.appBar, this.initialChild);
-
   @override
   Widget build(BuildContext context) {
     return new WebviewScaffold(
       url: new Uri.dataFromString(html, mimeType: 'text/html').toString(),
-      appBar: appBar ??
-          new AppBar(
-            title: new Text('아임포트 $type'),
-            backgroundColor: primaryColor,
-          ),
+      appBar: PreferredSize(preferredSize: Size.fromHeight(40.0),
+          child: AppBar(
+            centerTitle: true,
+            titleSpacing: 6.0,
+            backgroundColor: _getColorFromHex("#c1272c"),
+            elevation: 0,
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 00.0),
+              child: Container(
+                child: GestureDetector(
+                    child: Icon(Icons.arrow_back_ios,size: 18,color: Colors.white,),
+                    onTap: (){
+                      Navigator.pop(context);
+                    }),
+              ),
+            ),
+            title: Text("결제 하기",style: TextStyle(color: Colors.white),),
+          )),
       hidden: true,
       initialChild: initialChild ??
           Container(
@@ -39,7 +51,7 @@ class IamportWebView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/iamport-logo.png'),
+                 // Image.asset('assets/images/iamport-logo.png'),
                   Container(
                     padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
                     child:
@@ -53,5 +65,15 @@ class IamportWebView extends StatelessWidget {
           ? '^(?!https://|http://|about:blank|data:).+'
           : null,
     );
+  }
+
+  Color _getColorFromHex(String hexColor) {
+    hexColor = hexColor.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/privacy.dart';
+import 'package:coodyproj/screens/payment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,15 +12,16 @@ import 'package:intl/intl.dart';
 
 class OrderPage extends StatefulWidget {
   final FirebaseUser user;
-  var orderList;
+  //var orderList;
   var tem_zoneCode = "";
   var tem_address = "";
-  //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","12000"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"],["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"]];
+  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","12000"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"],["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"]];
   //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"]];
   var receiver,phoneNum,zoneCode,address,addressDetail,request = "";
   var triger = true;
   var addAddress  = false;
   var addAddress2  = true;
+  var firstName;
 
   var totalPrice_String = "";
   var rewardTotal = 0;
@@ -32,8 +34,8 @@ class OrderPage extends StatefulWidget {
   int paymentValue = 1;
 
 
-  OrderPage(this.user,this.orderList);
-  //OrderPage(this.user);
+  //OrderPage(this.user,this.orderList);
+  OrderPage(this.user);
   @override
   _OrderPageState createState() => _OrderPageState();
 }
@@ -942,6 +944,9 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Widget _buildListView(context, doc, index){
+    if( index ==1 ){
+          widget.firstName = doc['productName'];
+    }
 
     return Column(
       children: [
@@ -1206,8 +1211,8 @@ class _OrderPageState extends State<OrderPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('할인 합계',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold),),
-                        Text('- ₩ ${ numberWithComma(widget._totalDiscount)}', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
+                        Text('할인 합계',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold,color:Colors.redAccent),),
+                        Text('- ₩ ${ numberWithComma(widget._totalDiscount)}', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color:Colors.redAccent),)
                       ],
                     ),
                   ),
@@ -1217,8 +1222,8 @@ class _OrderPageState extends State<OrderPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('최종 합계',style: TextStyle(fontSize:19,fontWeight: FontWeight.bold,color: Colors.redAccent),),
-                          Text('₩ ${ numberWithComma(widget._totalPrice - widget._totalDiscount)}', style: TextStyle(fontSize:19, fontWeight: FontWeight.bold,color:Colors.redAccent),)
+                          Text('최종 합계',style: TextStyle(fontSize:19,fontWeight: FontWeight.w900,color: Colors.blueAccent),),
+                          Text('₩ ${final_price()}', style: TextStyle(fontSize:19, fontWeight: FontWeight.w900,color:Colors.blueAccent),)
                         ],
                       ),
                     ),
@@ -1242,10 +1247,13 @@ class _OrderPageState extends State<OrderPage> {
                           borderRadius: BorderRadius.circular(10),),
                         color: Colors.blueAccent,
                         onPressed: () {
+                          //Payment(this.user, this.name,this.payMethod, this.amount, this.merchantUid ,
+                              //this.buyerTel,this.buyerName,this.buyerEmail);
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => null));
+                              MaterialPageRoute(builder: (context) => Payment(widget.user, orderName(), 'card',widget._finalPirce.toString(), "TexTMERUID",
+                              "010-1000-2000","최총총","boseong.lee@coody.cool")));
                         },
-                        child: const Text('결 제 하 기',
+                        child: const Text('결제 하기',
                             style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold)),
                       ),
                     ),
@@ -1260,7 +1268,22 @@ class _OrderPageState extends State<OrderPage> {
         ),
       );
     }
-
+  final_price(){
+   setState(() {
+     widget._finalPirce= widget._totalPrice - widget._totalDiscount;
+   });
+   return numberWithComma(widget._totalPrice - widget._totalDiscount);
+ }
+  orderName(){
+    var merchantUid;
+    if(widget.orderList.length>=2){
+      merchantUid = "${widget.firstName} 외 ${widget.orderList.length-1}";
+    }
+    else{
+      merchantUid = widget.firstName;
+    }
+  return merchantUid;
+  }
   Widget alert_addressList(int i, Map<String, dynamic> doc) {
     return Container(
       child: Column(
@@ -1613,7 +1636,7 @@ class _OrderPageState extends State<OrderPage> {
                 value: widget.paymentValue,
                 items: [
                   DropdownMenuItem(
-                    child: Text("신용카드",style: TextStyle(fontWeight: FontWeight.bold),),
+                    child: Text("카드 결제",style: TextStyle(fontWeight: FontWeight.bold),),
                     value: 1,
                   ),
                   DropdownMenuItem(
