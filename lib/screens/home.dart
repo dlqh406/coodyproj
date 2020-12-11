@@ -82,7 +82,7 @@ class _HomeState extends State<Home> {
                       child: RaisedButton.icon(
                         icon: Icon(Icons.payment),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/payment-test');
+                          Navigator.pushNamed(context, '/payment');
                         },
                         label: Text('결제 테스트'),
                         color: Colors.white,
