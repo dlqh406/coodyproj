@@ -1,118 +1,154 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coodyproj/home.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PaymentResult extends StatelessWidget {
   static const Color successColor = Color(0xff52c41a);
   static const Color failureColor = Color(0xfff5222d);
 
-  bool getIsSuccessed(Map<String, String> result) {
-    if (result['imp_success'] == 'true') {
+  var result;
+  final FirebaseUser user;
+  PaymentResult(this.result,this.user);
+
+  bool getIsSuccessed(Map<String, String> _result) {
+    if (_result['imp_success'] == 'true') {
       return true;
     }
-    if (result['success'] == 'true') {
+    if (_result['success'] == 'true') {
       return true;
     }
-    return false;
+    else{
+      return false;
+    }
+  }
+  String merchantUid_S() {
+    return "S${DateTime.now().millisecondsSinceEpoch}";
+  }
+  String merchantUid_I() {
+    return "I${DateTime.now().millisecondsSinceEpoch}";
   }
 
   @override
   Widget build(BuildContext context) {
-    Map<String, String> result = ModalRoute.of(context).settings.arguments;
+    //Map<String, String> result = ModalRoute.of(context).settings.arguments;
     bool isSuccessed = getIsSuccessed(result);
+    // bool isSuccessed = true;
     String message;
-    IconData icon;
-    Color color;
+
     if (isSuccessed) {
       message = '결제에 성공하였습니다';
-      icon = Icons.check_circle;
-      color = successColor;
+      // 파이어베이스코드
+      // I 코드 단위로 저장해야함
+      //[["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","100","CyP3n6K9OnOW45uqkInPXQIUFHx2"]
+
+      for(var i=0; i<result['orderList'].length; i++ ){
+        var data = {
+          // orderList에서 개별적으로 저장
+          'orderColor' : result['orderList'][i][0],
+          'orderSize' : result['orderSize'][i][1],
+          'orderQuantity' : result['orderQuantity'][i][2],
+          'productCode': result['productCode'][i][3],
+          'totalPrice' : result['totalPrice'][i][4],  // I코드 단위로 개별 가격
+          'sellerCode' : result['sellerCode'][i][5],
+
+          // 완료
+          'P_code' : result['merchantUid'],
+          'zoneCode' : result['zoneCode'],
+          'address' :  result['address'],
+          'addressDetail' : result['addressDetail'],
+          'request' : result['request'],
+          'etc' : result['etc'],
+          'name': result['name'],
+          'orderDate' : DateTime.now(),
+          'phone':result['phone'],
+          'state' : 'standby',
+          'trackingNumber' : 0,
+          'userID' : user.uid,
+        };
+        Firestore.instance
+            .collection('order_data').document(result['merchantUid'])
+            .collection(merchantUid_S()).document(merchantUid_I()).updateData(data);
+
+      }
+
+      // 중요!!!!!!!!!
+      // result['reward'] 차감 코드 작성 : for문 밖에
+
+
     } else {
       message = '결제에 실패하였습니다';
-      icon = Icons.error;
-      color = failureColor;
     }
 
     return Scaffold(
-      appBar: new AppBar(
-        title: Text('아임포트 결제 결과'),
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: 200.0,
+          isSuccessed?Image.asset('assets/images/suc.png')
+              :Image.asset('assets/images/fal.png'),
+          SizedBox(
+            height: 15,
           ),
           Text(
             message,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 20.0,
+              fontSize: 35.0,
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          isSuccessed?Text("상세 주문 상태는 마이 쿠디에서 확인 해주세요 :) ",style: TextStyle(
+            fontSize: 15
+          ),):Container(),
+          SizedBox(
+            height: 15,
+          ),
           Container(
-            padding: EdgeInsets.fromLTRB(50.0, 30.0, 50.0, 50.0),
             child: Column(
               children: <Widget>[
-                Container(
-                  padding: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 4,
-                        child: Text('아임포트 번호', style: TextStyle(color: Colors.grey))
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: Text(result['imp_uid'] ?? '-'),
-                      ),
-                    ],
-                  ),
-                ),
                 isSuccessed ? Container(
                   padding: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(
-                        flex: 4,
-                        child: Text('주문 번호', style: TextStyle(color: Colors.grey))
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: Text(result['merchant_uid'] ?? '-'),
-                      ),
                     ],
                   ),
                 ) : Container(
-                  padding: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
-                  child: Row(
+                  padding: EdgeInsets.fromLTRB(0, 5.0, 0, 20.0),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(
-                        flex: 4,
-                        child: Text('에러 메시지', style: TextStyle(color: Colors.grey)),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: Text(result['error_msg'] ?? '-'),
-                      ),
+                      // 테스트 끝나면 아래 풀어
+                      Text('에러 메시지', style: TextStyle(color: Colors.redAccent,fontWeight: FontWeight.bold)),
+                      Text("result['error_msg'] ?? '-'")
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          RaisedButton.icon(
-            icon: Icon(Icons.arrow_back),
+          isSuccessed?RaisedButton(
             onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/payment-test');
+              print("suc");
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return Home(user);
+              },
+              ));
             },
-            label: Text('돌아가기', style: TextStyle(fontSize: 16.0)),
-            color: Colors.white,
-            textColor: color,
+            child: Text('확인', style: TextStyle(fontSize: 16.0)),
+            color: Colors.blueAccent,
+            textColor: Colors.white,
+          ):RaisedButton(
+            onPressed: () {
+              print("fal");
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: Text('확인', style: TextStyle(fontSize: 16.0)),
+            color: Colors.redAccent,
+            textColor: Colors.white,
           ),
         ],
       ),

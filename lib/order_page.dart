@@ -12,17 +12,17 @@ import 'package:intl/intl.dart';
 
 class OrderPage extends StatefulWidget {
   final FirebaseUser user;
-  //var orderList;
+
   var tem_zoneCode = "";
   var tem_address = "";
-  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","12000"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"],["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","12000"]];
-  //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry"]];
+  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","100","CyP3n6K9OnOW45uqkInPXQIUFHx2"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","50","CyP3n6K9OnOW45uqkInPXQIUFHx2"],["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","50","CyP3n6K9OnOW45uqkInPXQIUFHx2"]];
+  //var orderList;
   var receiver,phoneNum,zoneCode,address,addressDetail,request = "";
   var triger = true;
   var addAddress  = false;
   var addAddress2  = true;
   var firstName;
-
+  bool checkPrivacy = false;
   var totalPrice_String = "";
   var rewardTotal = 0;
 
@@ -57,12 +57,12 @@ class _OrderPageState extends State<OrderPage> {
     _rewardController.addListener(() {
 
       if(widget.rewardTotal < int.parse(_rewardController.text)){
-          print('over');
+
           _rewardController.clear();
           setState(() {
             widget._totalDiscount = 0;
           });
-
+          FocusScope.of(context).unfocus();
           scaffoldKey.currentState
               .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
           Padding(
@@ -110,7 +110,6 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    print( widget._totalPrice);
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: _getColorFromHex("#f2f2f2"),
@@ -192,11 +191,6 @@ class _OrderPageState extends State<OrderPage> {
                     ?RaisedButton(
                       color: Colors.blueAccent,
                       onPressed: (){
-                        // print(myController_Receiver.text);
-                        // print(myController_PhoneNum.text);
-                        // print(myController_Address.text);
-                        // print(myController_AddressDetail.text);
-
                         if(
                         myController_Receiver.text != "" &&
                         myController_PhoneNum.text != "" &&
@@ -678,7 +672,7 @@ class _OrderPageState extends State<OrderPage> {
                             builder: (context) => Kopo(),
                           ),
                         );
-                        print(model.toJson());
+
                         setState(() {
                           myController_Address.text =
                           '[${model.zonecode}] ${model.address} ${model.buildingName}${model.apartment == 'Y' ? '아파트' : ''}';
@@ -1152,36 +1146,9 @@ class _OrderPageState extends State<OrderPage> {
       return Color(int.parse("0x$hexColor"));
     }
   }
-  aa(){
-    print("@@@@@");
-    if(widget.stopTriger){
-      print("^^^^^^^^^");
-      setState(() {
-        widget._totalPrice = 0;
-      });
-      for(var i =0; i<widget.orderList.length; i++){
-        setState(() {
-          widget._totalPrice += int.parse(widget.orderList[i][4]);
-        });}
-    }
-    // else{
-    //   print("@@@@@ ${widget._totalPrice}");
-    //   setState(() {
-    //     widget._totalPrice -= int.parse(_rewardText==""?"0":_rewardText);
-    //     widget.stopTriger = true;
-    //   });
-    //
-    //   print("@totalPrice: ${widget._totalPrice}");
-    //   print("@_rewardText: ${_rewardText}");
-    // }
-    // //widget.stopTriger_int += 1;
-    // print("******* ${widget._totalPrice}");
-  }
-
 
   Widget _calculationView(BuildContext context) {
-    aa();
-
+      cal_totalPrice();
       return Container(
         child: Column(
           children: [
@@ -1247,11 +1214,37 @@ class _OrderPageState extends State<OrderPage> {
                           borderRadius: BorderRadius.circular(10),),
                         color: Colors.blueAccent,
                         onPressed: () {
-                          //Payment(this.user, this.name,this.payMethod, this.amount, this.merchantUid ,
-                              //this.buyerTel,this.buyerName,this.buyerEmail);
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Payment(widget.user, orderName(), 'card',widget._finalPirce.toString(), "TexTMERUID",
-                              "010-1000-2000","최총총","boseong.lee@coody.cool")));
+                          if( widget.checkPrivacy == true ){
+                            var method;
+                            if(widget.paymentValue ==1){
+                              method = "card";
+                            }else{
+                              method = "trans";
+                            }
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) =>
+                                    Payment(widget.user,widget.orderList,orderName(),widget._totalDiscount, method,widget._finalPirce.toString(), merchantUid(),
+                                        widget.zoneCode,widget.address,widget.addressDetail,widget.request,
+                                        widget.phoneNum, widget.receiver,widget.user.email)));
+                          }else{
+
+                            scaffoldKey.currentState
+                                .showSnackBar(SnackBar(duration: const Duration(seconds:2),content:
+                            Padding(
+                              padding: const EdgeInsets.only(top:8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.check_circle,color: Colors.blueAccent,),
+                                  SizedBox(width: 13,),
+                                  Text("결제 정보 확인과 이용약관에 동의해주세요 ",
+                                    style: TextStyle(fontWeight: FontWeight.bold,fontSize:16),),
+                                ],
+                              ),
+                            )));
+                          }
+
+
                         },
                         child: const Text('결제 하기',
                             style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold)),
@@ -1268,22 +1261,7 @@ class _OrderPageState extends State<OrderPage> {
         ),
       );
     }
-  final_price(){
-   setState(() {
-     widget._finalPirce= widget._totalPrice - widget._totalDiscount;
-   });
-   return numberWithComma(widget._totalPrice - widget._totalDiscount);
- }
-  orderName(){
-    var merchantUid;
-    if(widget.orderList.length>=2){
-      merchantUid = "${widget.firstName} 외 ${widget.orderList.length-1}";
-    }
-    else{
-      merchantUid = widget.firstName;
-    }
-  return merchantUid;
-  }
+
   Widget alert_addressList(int i, Map<String, dynamic> doc) {
     return Container(
       child: Column(
@@ -1431,20 +1409,7 @@ class _OrderPageState extends State<OrderPage> {
 
             Navigator.pop(context);
             _showAlert(doc);
-            // scaffoldKey.currentState
-            //     .showSnackBar(SnackBar(content:
-            // Padding(
-            //   padding: const EdgeInsets.only(top:8.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       Icon(Icons.check_circle,color: Colors.blueAccent,),
-            //       SizedBox(width: 14,),
-            //       Text("선택 항목 주소 삭제 완료 ",
-            //         style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
-            //     ],
-            //   ),
-            // )));
+
           },
           icon: Icon(Icons.cancel,color: Colors.grey,size: 15,) ,
         )
@@ -1545,15 +1510,43 @@ class _OrderPageState extends State<OrderPage> {
                             color: Colors.blueAccent,
                             onPressed: (){
                               if(int.parse(_rewardController.text)>9 || int.parse(_rewardController.text) == 0){
-                                    setState(() {
+                                widget._totalDiscount = int.parse(_rewardController.text);
+                                if(widget._totalPrice-widget._totalDiscount<150){
+                                  setState(() {
+                                    widget._totalDiscount =0;
+                                  });
+                                    _rewardController.clear();
+                                    FocusScope.of(context).unfocus();
+                                  scaffoldKey.currentState
+                                      .showSnackBar(SnackBar(duration: const Duration(seconds: 2),content:
+                                  Padding(
+                                    padding: const EdgeInsets.only(top:8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.check_circle,color: Colors.blueAccent,),
+                                        SizedBox(width: 14,),
+                                        Text("결제 최소 금액은 150원입니다",
+                                          style: TextStyle(fontWeight: FontWeight.bold,fontSize:16),),
+                                      ],
+                                    ),
+                                  )));
+                                }
+                                 else{
+                                  setState(() {
                                     widget._totalDiscount = int.parse(_rewardController.text);
                                     _rewardController.clear();
                                     FocusScope.of(context).unfocus();
-                                    });
+                                  });
+                                }
+
                               }
 
                               else{
                                 _rewardController.clear();
+                                setState(() {
+                                  widget._totalDiscount =0;
+                                });
                                 scaffoldKey.currentState
                                     .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
                                 Padding(
@@ -1647,7 +1640,6 @@ class _OrderPageState extends State<OrderPage> {
                 onChanged: (value) {
                   setState(() {
                     widget.paymentValue = value;
-                    print( widget.paymentValue);
                   });
                 }),
                 ),
@@ -1678,9 +1670,10 @@ class _OrderPageState extends State<OrderPage> {
                 Spacer(),
                 Checkbox(
                   activeColor: Colors.blue,
-                  value: true,
+                  value:  widget.checkPrivacy,
                   onChanged: (val) {
                     setState(() {
+                      widget.checkPrivacy =!widget.checkPrivacy;
                     });
                   },
                 ),
@@ -1715,8 +1708,39 @@ class _OrderPageState extends State<OrderPage> {
       );
   }
 
+  String merchantUid() {
 
+    return "P${DateTime.now().millisecondsSinceEpoch}";
 
+  }
+
+  cal_totalPrice(){
+    if(widget.stopTriger){
+      setState(() {
+        widget._totalPrice = 0;
+      });
+      for(var i =0; i<widget.orderList.length; i++){
+        setState(() {
+          widget._totalPrice += int.parse(widget.orderList[i][4]);
+        });}
+    }
+  }
+  final_price(){
+    setState(() {
+      widget._finalPirce= widget._totalPrice - widget._totalDiscount;
+    });
+    return numberWithComma(widget._totalPrice - widget._totalDiscount);
+  }
+  orderName(){
+    var merchantUid;
+    if(widget.orderList.length>=2){
+      merchantUid = "${widget.firstName} 외 ${widget.orderList.length-1}";
+    }
+    else{
+      merchantUid = widget.firstName;
+    }
+    return merchantUid;
+  }
   numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
@@ -1747,6 +1771,8 @@ class _OrderPageState extends State<OrderPage> {
     return numberWithComma(widget._totalPrice);
 
   }
+
+
 
 }
 

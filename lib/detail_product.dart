@@ -1161,6 +1161,7 @@ class _ProductDetailState extends State<ProductDetail> {
                               if( widget.selectedList[i].length <= 3){
                                 widget.selectedList[i].add(widget.document.documentID);
                                 widget.selectedList[i].add(widget.document['price']);
+                                widget.selectedList[i].add(widget.document['sellerCode']);
                               }
                             }
                             print("구매하기 : ${widget.selectedList}");
