@@ -1168,8 +1168,8 @@ class _ProductDetailState extends State<ProductDetail> {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context){
 
-                                  return OrderPage(widget.user);
-                                  //return OrderPage(widget.user, widget.selectedList);
+                                  //return OrderPage(widget.user);
+                                  return OrderPage(widget.user, widget.selectedList);
 
                                 }));
 
@@ -1582,8 +1582,8 @@ class ReleatedCard extends StatelessWidget {
                               children: [
                                 //$category $price
                                 Text('$category',style: TextStyle(fontSize: 11, color:Colors.blue, fontWeight: FontWeight.bold)),
-                                Text('￦ ${numberWithComma(int.parse(price==null?"12000":price))}',
-                                    style: TextStyle(fontWeight:FontWeight.bold,fontSize: 11,color: Colors.black)),
+                                Text('￦${numberWithComma(int.parse(price==null?"120000":price))}',
+                                    style: TextStyle(fontWeight:FontWeight.bold,fontSize: 12,color: Colors.black)),
                               ],
                             ),
                             Padding(

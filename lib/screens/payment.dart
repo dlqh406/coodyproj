@@ -16,7 +16,7 @@ class Payment extends StatelessWidget {
   bool escrow = false;        // 에스크로 여부
   String name;                // 주문명
   String amount;              // 결제금액
-  String merchantUid ="주문번호 테스트";         // 주문번호
+  String merchantUid ;         // 주문번호
   String buyerName;           // 구매자 이름
   String buyerTel;            // 구매자 전화번호
   String buyerEmail;          // 구매자 이메일
@@ -26,9 +26,11 @@ class Payment extends StatelessWidget {
   String address;
   String addressDetail;
   String request;
-  Payment(this.user,this.orderList, this.name, this.reward ,this.payMethod, this.amount, this.merchantUid,
+  String totalReward;
+  Payment(
+  this.user,this.orderList, this.name, this.reward ,this.payMethod, this.amount, this.merchantUid,
   this.zoneCode,this.address,this.addressDetail,this.request,
-      this.buyerTel,this.buyerName,this.buyerEmail);
+  this.buyerTel,this.buyerName,this.buyerEmail,this.totalReward);
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +46,25 @@ class Payment extends StatelessWidget {
       'buyerName': buyerName,
       'buyerTel': buyerTel,
       'buyerEmail': buyerEmail,
+    });
+    var payData ={
       'orderList' : orderList,
-      'reward' : reward,
+      'merchantUid': merchantUid,
       'zoneCode': zoneCode,
       'address' : address,
       'addressDetail': addressDetail,
-      'request':request
-    });
+      'request':request,
+      'name': name,
+
+      'buyerName': buyerName,
+      'buyerTel': buyerTel,
+      'buyerEmail': buyerEmail,
+
+      //사용한 적립금
+      'usedReward' : reward,
+      //사용하기 전 적립금
+      'beforeReward': totalReward,
+    };
     data.appScheme = 'example';
     return IamportPayment(
         initialChild: Container(
@@ -73,7 +87,7 @@ class Payment extends StatelessWidget {
         callback: (Map<String, String> result) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             //return PaymentResult();
-            return PaymentResult(result,user);
+            return PaymentResult(result,user,payData);
           },
          ));
         });

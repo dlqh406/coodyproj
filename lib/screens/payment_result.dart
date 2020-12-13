@@ -2,14 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/home.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:coodyproj/models/payment_data.dart';
+
 
 class PaymentResult extends StatelessWidget {
   static const Color successColor = Color(0xff52c41a);
   static const Color failureColor = Color(0xfff5222d);
-
+  bool stopTriger = true;
   var result;
+  var payData;
   final FirebaseUser user;
-  PaymentResult(this.result,this.user);
+  PaymentResult(this.result,this.user,this.payData);
 
   bool getIsSuccessed(Map<String, String> _result) {
     if (_result['imp_success'] == 'true') {
@@ -22,67 +25,60 @@ class PaymentResult extends StatelessWidget {
       return false;
     }
   }
-  String merchantUid_S() {
-    return "S${DateTime.now().millisecondsSinceEpoch}";
-  }
   String merchantUid_I() {
     return "I${DateTime.now().millisecondsSinceEpoch}";
   }
 
   @override
   Widget build(BuildContext context) {
-    //Map<String, String> result = ModalRoute.of(context).settings.arguments;
     bool isSuccessed = getIsSuccessed(result);
-    // bool isSuccessed = true;
     String message;
 
-    if (isSuccessed) {
+    if (isSuccessed && stopTriger) {
       message = '결제에 성공하였습니다';
-      // 파이어베이스코드
-      // I 코드 단위로 저장해야함
-      //[["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","100","CyP3n6K9OnOW45uqkInPXQIUFHx2"]
+      print("@@@@@@: ${payData['zoneCode']}");
 
-      // 중복 검사 -> index 뽑기 ->
-      // if(){
-      // merchantUid_S()
-      // for(){
-      // 여기에서 S코드를 공유
-      // } }->
-
-      for(var i=0; i<result['orderList'].length; i++ ){
+      for(var i=0; i<payData['orderList'].length; i++ ){
+        var _ICode = merchantUid_I();
         var data = {
           // orderList에서 개별적으로 저장
-          'orderColor' : result['orderList'][i][0],
-          'orderSize' : result['orderSize'][i][1],
-          'orderQuantity' : result['orderQuantity'][i][2],
-          'productCode': result['productCode'][i][3],
-          'totalPrice' : result['totalPrice'][i][4],  // I코드 단위로 개별 가격
-          'sellerCode' : result['sellerCode'][i][5],
+          'orderColor' : payData['orderList'][i][0],
+          'orderSize' : payData['orderList'][i][1],
+          'orderQuantity' : payData['orderList'][i][2],
+          'productCode': payData['orderList'][i][3],
+          'totalPrice' : payData['orderList'][i][4],  // I코드 단위로 개별 가격
+          'sellerCode' : payData['orderList'][i][5],
 
           // 완료
-          'P_code' : result['merchantUid'],
-          'zoneCode' : result['zoneCode'],
-          'address' :  result['address'],
-          'addressDetail' : result['addressDetail'],
-          'request' : result['request'],
-          'etc' : result['etc'],
-          'name': result['name'],
+          'P_code' : payData['merchantUid'],
+          'I_code' : _ICode,
+          'zoneCode' : payData['zoneCode'],
+          'address' :  payData['address'],
+          'addressDetail' : payData['addressDetail'],
+          'request' : payData['request'],
+          'orderName': payData['name'],
           'orderDate' : DateTime.now(),
-          'phone':result['phone'],
+          'buyerTel':payData['buyerTel'],
+          'buyerEmail': payData['buyerEmail'],
+          'buyerName' : payData['buyerName'],
+          'usedReward' : payData['usedReward'],
+          'beforeReward' : payData['totalReward'],
           'state' : 'standby',
           'trackingNumber' : 0,
           'userID' : user.uid,
         };
-        Firestore.instance
-            .collection('order_data').document(result['merchantUid'])
-            .collection(merchantUid_S()).document(merchantUid_I()).updateData(data);
-
+        //document(merchantUid_I()).
+        Firestore.instance.collection('order_data').add(data);
+      }
+      if (result['reward'] != 0) {
+       var currentReward = int.parse(payData['beforeReward']) - payData['usedReward'];
+       var data ={
+         'reward' : currentReward.toString()
+       };
+       Firestore.instance.collection('user_data').document(user.uid).updateData(data);
       }
 
-      // 중요!!!!!!!!!
-      // result['reward'] 차감 코드 작성 : for문 밖에
-
-
+      stopTriger = false;
     } else {
       message = '결제에 실패하였습니다';
     }
@@ -127,9 +123,8 @@ class PaymentResult extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      // 테스트 끝나면 아래 풀어
                       Text('에러 메시지', style: TextStyle(color: Colors.redAccent,fontWeight: FontWeight.bold)),
-                      Text("result['error_msg'] ?? '-'")
+                      Text("${result['error_msg'] ?? '-'}")
                     ],
                   ),
                 ),
@@ -143,6 +138,7 @@ class PaymentResult extends StatelessWidget {
                 return Home(user);
               },
               ));
+              print(payData['merchantUid']);
             },
             child: Text('확인', style: TextStyle(fontSize: 16.0)),
             color: Colors.blueAccent,

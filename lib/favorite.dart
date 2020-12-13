@@ -10,6 +10,7 @@ import 'dart:io' show Platform;
 import 'package:coodyproj/test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+
 class Favorite extends StatefulWidget {
 
   bool filter = false;
@@ -172,12 +173,12 @@ class _FavoriteState extends State<Favorite> {
               child: StaggeredGridView.countBuilder(
                   crossAxisCount: 3,
                   // 아래 여백
-                  mainAxisSpacing: 9.0,
+                  mainAxisSpacing: 7.0,
                   crossAxisSpacing: 6.0,
                   itemCount: widget.fF.length,
                   //1 1.8
                   //2 : 1.55
-                  staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2: 1.6),
+                  staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2: 1.7),
                   itemBuilder: (BuildContext context, int index) {
                     return _buildListItem(context,widget.fF[index]);
                   }
@@ -203,9 +204,6 @@ class _FavoriteState extends State<Favorite> {
                   }));
                 },
                   //https://www.flaticon.com/free-icon/delivery_876079?term=delivery&page=5&position=21&related_item_id=876079/
-                  // ClipRRect(
-                  // borderRadius: new BorderRadius.circular(10.0),
-
                   child:
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,10 +216,10 @@ class _FavoriteState extends State<Favorite> {
                                     fit: StackFit.expand,
                                     children: [
                                       FadeInImage.assetNetwork(
-                                            placeholder:'assets/images/loading.png',
+                                        //coody 로고 가 들어간 네모
+                                            placeholder: 'assets/splash/Rolling.gif,',
                                             image: document['thumbnail_img'],
                                             fit : BoxFit.cover),
-
                                       Positioned(
                                           top:1,
                                           right: 6,
@@ -242,20 +240,7 @@ class _FavoriteState extends State<Favorite> {
                           ),
                           Row(
                             children: [
-                              //
-                              Text("${document['category']}",style: TextStyle(fontSize: 12,color:Colors.blue,fontWeight: FontWeight.bold),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,softWrap: false),
-                              SizedBox(width: 5,),
-
-                            ],
-                          ),
-                          SizedBox(
-                            height: 2.3,
-                          ),
-                          Row(
-                            children: [
-                              Text("₩ ${numberWithComma(int.parse(document['price']==null?"12000":document['price']))}"
+                              Text("₩${numberWithComma(int.parse(document['price']==null?"12000":document['price']))}"
                                   ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold)),
                             ],
                           ),

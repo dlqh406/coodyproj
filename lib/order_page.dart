@@ -15,8 +15,8 @@ class OrderPage extends StatefulWidget {
 
   var tem_zoneCode = "";
   var tem_address = "";
-  var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","100","CyP3n6K9OnOW45uqkInPXQIUFHx2"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","50","CyP3n6K9OnOW45uqkInPXQIUFHx2"],["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","50","CyP3n6K9OnOW45uqkInPXQIUFHx2"]];
-  //var orderList;
+  //var orderList= [["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","100","CyP3n6K9OnOW45uqkInPXQIUFHx2"], ["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","50","CyP3n6K9OnOW45uqkInPXQIUFHx2"],["주황", "Large", "1", "8pd6ugCTiOq5OidSGFry","50","CyP3n6K9OnOW45uqkInPXQIUFHx2"]];
+  var orderList;
   var receiver,phoneNum,zoneCode,address,addressDetail,request = "";
   var triger = true;
   var addAddress  = false;
@@ -25,7 +25,7 @@ class OrderPage extends StatefulWidget {
   bool checkPrivacy = false;
   var totalPrice_String = "";
   var rewardTotal = 0;
-
+  var totalReward;
 
   int _totalPrice=0;
   int _totalDiscount = 0;
@@ -34,8 +34,8 @@ class OrderPage extends StatefulWidget {
   int paymentValue = 1;
 
 
-  //OrderPage(this.user,this.orderList);
-  OrderPage(this.user);
+  OrderPage(this.user,this.orderList);
+  //OrderPage(this.user);
   @override
   _OrderPageState createState() => _OrderPageState();
 }
@@ -977,7 +977,7 @@ class _OrderPageState extends State<OrderPage> {
                     Row(
                       children: [
                         Expanded(
-                            child: Text("색상 : ${widget.orderList[index][0]} / 컬러 : ${widget.orderList[index][1]} / 수량 : ${widget.orderList[index][2]}개",
+                            child: Text("색상 : ${widget.orderList[index][0]} / 사이 : ${widget.orderList[index][1]} / 수량 : ${widget.orderList[index][2]}개",
                               style: TextStyle(fontSize:14 ,color: Colors.black87,
                               ),maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -1225,7 +1225,7 @@ class _OrderPageState extends State<OrderPage> {
                                 MaterialPageRoute(builder: (context) =>
                                     Payment(widget.user,widget.orderList,orderName(),widget._totalDiscount, method,widget._finalPirce.toString(), merchantUid(),
                                         widget.zoneCode,widget.address,widget.addressDetail,widget.request,
-                                        widget.phoneNum, widget.receiver,widget.user.email)));
+                                        widget.phoneNum, widget.receiver,widget.user.email,widget.totalReward)));
                           }else{
 
                             scaffoldKey.currentState
@@ -1572,7 +1572,7 @@ class _OrderPageState extends State<OrderPage> {
                 Row(
                   children: [
                     Text("나의 적립금 : ",style: TextStyle(fontSize: 16),),
-                        Text("${rewardOutput(snapshot.data.data)} 원",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                        Text("${rewardOutput(snapshot.data.data)} p",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
                     Spacer(),
                     Container(
                       width: 130,
@@ -1756,6 +1756,7 @@ class _OrderPageState extends State<OrderPage> {
     return _data;
   }
   rewardOutput(var data){
+    widget.totalReward = data['reward'];
     return numberWithComma(int.parse(data['reward']));
   }
   totalPrice(int filter) {
