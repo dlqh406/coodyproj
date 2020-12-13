@@ -354,7 +354,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                      image:  snapshot.data.data['thumbnail_img'],
                                      category: snapshot.data.data['category'],
                                      productName: snapshot.data.data['productName'],
-                                     price:  "12,900",
+                                     price:  snapshot.data.data['price'],
                                      press: () {
                                          Navigator.push(context,
                                              MaterialPageRoute(builder: (context){
@@ -1547,7 +1547,7 @@ class ReleatedCard extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.only(left: 14),
-      width: size.width * 0.36,
+      width: size.width * 0.375,
       child: Column(
         children: <Widget>[
           SizedBox(
@@ -1580,8 +1580,10 @@ class ReleatedCard extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('$category',style: TextStyle(fontSize: 13, color:Colors.blue, fontWeight: FontWeight.bold)),
-                                Text('\￦$price', style: TextStyle(fontWeight:FontWeight.bold,fontSize: 12,color: Colors.black)),
+                                //$category $price
+                                Text('$category',style: TextStyle(fontSize: 11, color:Colors.blue, fontWeight: FontWeight.bold)),
+                                Text('￦ ${numberWithComma(int.parse(price==null?"12000":price))}',
+                                    style: TextStyle(fontWeight:FontWeight.bold,fontSize: 11,color: Colors.black)),
                               ],
                             ),
                             Padding(
@@ -1606,6 +1608,9 @@ class ReleatedCard extends StatelessWidget {
       ),
     );
   }
+
+
+  numberWithComma(int param){
+    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
+  }
 }
-
-

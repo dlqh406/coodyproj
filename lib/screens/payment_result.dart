@@ -42,6 +42,13 @@ class PaymentResult extends StatelessWidget {
       // I 코드 단위로 저장해야함
       //[["레드", "medium", "1", "8pd6ugCTiOq5OidSGFry","100","CyP3n6K9OnOW45uqkInPXQIUFHx2"]
 
+      // 중복 검사 -> index 뽑기 ->
+      // if(){
+      // merchantUid_S()
+      // for(){
+      // 여기에서 S코드를 공유
+      // } }->
+
       for(var i=0; i<result['orderList'].length; i++ ){
         var data = {
           // orderList에서 개별적으로 저장

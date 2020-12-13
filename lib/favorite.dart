@@ -9,7 +9,7 @@ import 'dart:io' show Platform;
 
 import 'package:coodyproj/test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:intl/intl.dart';
 class Favorite extends StatefulWidget {
 
   bool filter = false;
@@ -136,7 +136,7 @@ class _FavoriteState extends State<Favorite> {
               return Center(child:  CircularProgressIndicator());
             }
 // 그리드뷰 개발 끝나고 주석만 풀면됨
-            // if(stopTrigger == 1 ){
+             if(stopTrigger == 1 ){
                 if(widget.filter == false){
                   widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
                   widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
@@ -151,10 +151,10 @@ class _FavoriteState extends State<Favorite> {
               stopTrigger+=1;
               print("stopTrigger222: ${stopTrigger}");
               print("--------------------------------");
-            //}
+            }
 
-            //else if(widget.filter == true){
-            if(widget.filter == true){
+            else if(widget.filter == true){
+            //if(widget.filter == true){
               for(var i=0; i<widget.selectedCategoryList.length; i++){
                 if(i==0){
                   widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
@@ -171,10 +171,13 @@ class _FavoriteState extends State<Favorite> {
               padding: const EdgeInsets.only(top:4,left:4,right:4),
               child: StaggeredGridView.countBuilder(
                   crossAxisCount: 3,
-                  mainAxisSpacing: 6.0,
+                  // 아래 여백
+                  mainAxisSpacing: 9.0,
                   crossAxisSpacing: 6.0,
                   itemCount: widget.fF.length,
-                  staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?1.2 : 1.8),
+                  //1 1.8
+                  //2 : 1.55
+                  staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2: 1.6),
                   itemBuilder: (BuildContext context, int index) {
                     return _buildListItem(context,widget.fF[index]);
                   }
@@ -200,30 +203,71 @@ class _FavoriteState extends State<Favorite> {
                   }));
                 },
                   //https://www.flaticon.com/free-icon/delivery_876079?term=delivery&page=5&position=21&related_item_id=876079/
-                child: ClipRRect(
-                  borderRadius: new BorderRadius.circular(10.0),
-                  child: Container(
+                  // ClipRRect(
+                  // borderRadius: new BorderRadius.circular(10.0),
 
-                      child: Stack(
-                        fit: StackFit.expand,
+                  child:
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          FadeInImage.assetNetwork(
-                                placeholder:'assets/images/loading.png',
-                                image: document['thumbnail_img'],
-                                fit : BoxFit.cover),
-                          Positioned(
-                              top:1,
-                              right: 6,
-                              child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:25,):Container())
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: new BorderRadius.circular(8.0),
+                              child: Container(
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      FadeInImage.assetNetwork(
+                                            placeholder:'assets/images/loading.png',
+                                            image: document['thumbnail_img'],
+                                            fit : BoxFit.cover),
+
+                                      Positioned(
+                                          top:1,
+                                          right: 6,
+                                          child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:25,):Container())
+                                    ],
+                                  ),
+                                  ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text("${document['productName']}",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,softWrap: false),
+                          SizedBox(
+                            height: 2.3,
+                          ),
+                          Row(
+                            children: [
+                              //
+                              Text("${document['category']}",style: TextStyle(fontSize: 12,color:Colors.blue,fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,softWrap: false),
+                              SizedBox(width: 5,),
+
+                            ],
+                          ),
+                          SizedBox(
+                            height: 2.3,
+                          ),
+                          Row(
+                            children: [
+                              Text("₩ ${numberWithComma(int.parse(document['price']==null?"12000":document['price']))}"
+                                  ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold)),
+                            ],
+                          ),
                         ],
-                      ),
-                      ),
-                )
+                      )
                   ),
                 ),
               );
   }
-
+  numberWithComma(int param){
+    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
+  }
 
   Map<String, bool> top = {
     '니트&스웨터': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
@@ -624,7 +668,7 @@ class _FavoriteState extends State<Favorite> {
                               children: [
                                 Image.asset('assets/icons/yoga.png',width: 20,),
                                 SizedBox(width: 14),
-                                Text('이너웨', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Text('이너웨어', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
                                 widget.innerWear_downbtn?Icon(Icons.keyboard_arrow_up,color: Colors.white,):Icon(Icons.keyboard_arrow_down,color: Colors.white)
                               ],

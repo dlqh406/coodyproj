@@ -23,8 +23,8 @@ class RootPage extends StatelessWidget {
         else{
            //return Home2();
           //return PaymentResult();
-          return OrderPage(snapshot.data);
-          //return Home(snapshot.data);
+          //return OrderPage(snapshot.data);
+          return Home(snapshot.data);
         }
       },
     );
