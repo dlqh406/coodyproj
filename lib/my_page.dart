@@ -62,9 +62,10 @@ class _MyPageState extends State<MyPage> {
               height: 20,
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 13.0),
+                  padding: const EdgeInsets.only(left: 26.0),
                   child: SizedBox(
                     width: 60,
                     height: 60,
@@ -88,7 +89,7 @@ class _MyPageState extends State<MyPage> {
                           ],
                         ),
                         SizedBox(
-                          height: 6,
+                          height: 20,
                         ),
                         Row(
                           children: [
@@ -179,7 +180,7 @@ class _MyPageState extends State<MyPage> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 10,
+                      height: 7,
                     ),
                     Row(
                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,25 +198,6 @@ class _MyPageState extends State<MyPage> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    // Row(
-                    //   children: [
-                    //     Image.asset('assets/icons/discount.png',width: 20,),
-                    //     SizedBox(
-                    //       width: 7,
-                    //     ),
-                    //     Text('나의 쿠폰',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold)),
-                    //     Spacer(),
-                    //     Text('10 ',style:TextStyle(fontWeight: FontWeight.bold),),
-                    //     Text('장'),
-                    //     SizedBox(
-                    //       width: 20,
-                    //     )
-                    //   ],
-                    // )
-
                   ],
                 ),
               ),
@@ -265,13 +247,14 @@ class _MyPageState extends State<MyPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left:18.0),
-              child: Text("주문배송 현황",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+              child:
+                  Text("주문배송 현황",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.only(left:20),
+              padding: const EdgeInsets.only(left:20,right: 20),
               child: Container(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -296,7 +279,7 @@ class _MyPageState extends State<MyPage> {
                              return Column(
                                children: [
                                  for(var i=0; i<snapshot.data.documents.length; i++)
-                                   _buildListView(context,snapshot.data.documents[i],index),
+                                   _buildListView(context,snapshot.data.documents[i],i),
                                ],
                              );
                            }
@@ -331,6 +314,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   Widget _buildListView(context, doc, index){
+    print(index);
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection('uploaded_product').document(doc['productCode']).snapshots(),
       builder: (context, snapshot) {
@@ -358,7 +342,7 @@ class _MyPageState extends State<MyPage> {
                               padding: const EdgeInsets.only(top:14.0),
                               child: Container(
                                   width: 200,
-                                  child: Text("${doc['productName']}",
+                                  child: Text("${snapshot.data.data['productName']}",
                                     style:TextStyle(fontWeight: FontWeight.bold),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -373,7 +357,7 @@ class _MyPageState extends State<MyPage> {
                           children: [
                             Expanded(
                                 child: Text("색상 : ${doc["orderColor"]} / 사이즈 : ${doc['orderSize']} / 수량 : ${doc['orderQuantity']}개",
-                                    style: TextStyle(fontSize:14 ,color: Colors.black87,
+                                    style: TextStyle(fontSize:11 ,color: Colors.black87,
                                     ),maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: false)),
@@ -385,11 +369,7 @@ class _MyPageState extends State<MyPage> {
                           child: Container(
                             child: Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 1),
-                                  child: Image.asset('assets/icons/FD.png',width: 20,)
-                                ),
-                                Text("발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),)
+                                 state(doc['state']),
                               ],
                             ),
                           ),
@@ -552,5 +532,58 @@ class _MyPageState extends State<MyPage> {
   numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
+
+   Widget state( var doc) {
+     if(doc == "standby"){
+     return Row(
+       children: [
+         Padding(
+         padding: const EdgeInsets.only(left: 1,right: 7),
+         child: Image.asset('assets/icons/list.png',width: 20,)
+         ),
+     Text('주문 확인 중' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+       ],
+     );
+   }
+
+
+    else if(doc == "ongoing"){
+     return Row(
+       children: [
+         Padding(
+             padding: const EdgeInsets.only(left: 1,right: 7),
+             child: Image.asset('assets/icons/box.png',width: 20,)
+         ),
+         Text('배송 준비 중' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+       ],
+     );
+     }
+
+
+
+    else if(doc== "shipping"){
+     return Row(
+       children: [
+         Padding(
+             padding: const EdgeInsets.only(left: 1,right: 7),
+             child: Image.asset('assets/icons/truck.png',width: 25,)
+         ),
+         Text('배송 중' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+       ],
+     );
+     }
+
+     else if (doc == "completion"){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 19,color: Colors.green,)
+          ),
+          Text('배송 완료' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+     }
+   }
 }
 

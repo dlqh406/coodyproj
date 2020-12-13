@@ -62,10 +62,12 @@ class PaymentResult extends StatelessWidget {
           'buyerEmail': payData['buyerEmail'],
           'buyerName' : payData['buyerName'],
           'usedReward' : payData['usedReward'],
-          'beforeReward' : payData['totalReward'],
+          'beforeReward' : payData['beforeReward'],
           'state' : 'standby',
-          'trackingNumber' : 0,
+          'trackingNumber' : "0",
           'userID' : user.uid,
+          'shippingCompany': "0",
+
         };
         //document(merchantUid_I()).
         Firestore.instance.collection('order_data').add(data);

@@ -162,14 +162,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                         ),
                         onPressed:
                           () {
+                          // 고객센터
                             // launchURL() {
                             //   launch('http://pf.kakao.com/_JxoxexnK/chat');
                             // }
                             // launchURL();
-                          // Navigator.push(context,
-                          //     MaterialPageRoute(builder: (context) {
-                          //       return ContentsPage(widget.user);
-                          //     }));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return ContentsPage(widget.user);
+                              }));
                           //
                           // void RestApi_Get() async {
                           //   http.Response response = await http.get(

@@ -958,7 +958,7 @@ class _OrderPageState extends State<OrderPage> {
                 child: Column(
                   children: [
                    Row(
-                          children: [
+                       children: [
                             Padding(
                               padding: const EdgeInsets.only(top:14.0),
                               child: Container(
@@ -970,7 +970,6 @@ class _OrderPageState extends State<OrderPage> {
                                     softWrap: false,
                                   )),
                             ),
-
                           ],
                     ),
                     SizedBox(height: 6,),
