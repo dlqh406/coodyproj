@@ -157,8 +157,6 @@ class _OrderPageState extends State<OrderPage> {
           SizedBox(height: 15),
           privacy(),
           _calculationView(context),
-
-
         ],
       ),
     );
@@ -1708,9 +1706,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   String merchantUid() {
-
     return "P${DateTime.now().millisecondsSinceEpoch}";
-
   }
 
   cal_totalPrice(){

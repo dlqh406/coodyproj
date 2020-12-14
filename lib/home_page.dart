@@ -171,19 +171,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                               MaterialPageRoute(builder: (context) {
                                 return ContentsPage(widget.user);
                               }));
-                          //
-                          // void RestApi_Get() async {
-                          //   http.Response response = await http.get(
-                          //       Uri.encodeFull('https://apis.tracker.delivery/carriers/kr.cjlogistics/tracks/635972465074'),
-                          //       headers: {"Accept": "application/json"});
-                          //   Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
-                          //   //전체 API출력
-                          //   print(response.body);
-                          //   //상품준비중
-                          //   print(responseBodyMap["state"]['text']);
-                          //
-                          // }
-                          // RestApi_Get();
                         },
                       )
                     ],

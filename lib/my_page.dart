@@ -1,3 +1,4 @@
+import 'package:coodyproj/detail_orderList.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,12 +29,17 @@ class _MyPageState extends State<MyPage> {
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection('user_data').document(widget.user.uid).snapshots(),
       builder: (context, snapshot) {
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator(),);
+        }
         return ListView(
           children: [
             SizedBox(height: 15),
             _buildHeader(snapshot.data.data),
             SizedBox(height: 20),
             _buildOrderList(),
+            SizedBox(height: 20),
+            myInfo(),
           ],
         );
       }
@@ -222,8 +228,8 @@ class _MyPageState extends State<MyPage> {
       ),
     );
  }
-  Widget _buildOrderList() {
 
+  Widget _buildOrderList() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
@@ -248,49 +254,76 @@ class _MyPageState extends State<MyPage> {
             Padding(
               padding: const EdgeInsets.only(left:18.0),
               child:
-                  Text("주문배송 현황",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text("최근 주문 목록",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text("최근 주문 3건 까지만 목록에 보여집니다",
+                        style: TextStyle(color: Colors.grey, fontSize: 10),),
+                    ],
+                  ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left:20,right: 20),
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    StreamBuilder<QuerySnapshot>(
-                      stream: Firestore.instance.collection('order_data')
-                          .where('userID', isEqualTo: "${widget.user.uid}").snapshots(),
-                      builder: (context, snapshot) {
-                        if ( !snapshot.hasData){
-                          return Center(child: CircularProgressIndicator(),);
-                        }
-                        //return Text('${snapshot.data.documents[1]['I_code']}');
-                       return ListView.builder(
-                         shrinkWrap: true,
-                         itemCount: 1,
-                         physics: NeverScrollableScrollPhysics(),
-                           itemBuilder:(BuildContext context, int index){
-                             return Column(
-                               children: [
-                                 for(var i=0; i<snapshot.data.documents.length; i++)
-                                   _buildListView(context,snapshot.data.documents[i],i),
-                               ],
-                             );
-                           }
-                       );
+            StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance.collection('order_data')
+                  .where('userID', isEqualTo: "${widget.user.uid}").orderBy('orderDate',descending: true).snapshots(),
+              builder: (context, snapshot) {
+                if ( !snapshot.hasData){
+                  return Center(child: CircularProgressIndicator(),);
+                }
+               return Padding(
+                 padding: const EdgeInsets.only(left:20,right: 20,top:10),
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+                     SizedBox(
+                       height: 6,
+                     ),
+                     ListView.builder(
+                       shrinkWrap: true,
+                       itemCount: 1,
+                       physics: NeverScrollableScrollPhysics(),
+                         itemBuilder:(BuildContext context, int index){
+                         int dataLength = 0;
+                         if(snapshot.data.documents.length > 3){
+                          dataLength = 3;
+                         } else{
+                           dataLength = snapshot.data.documents.length;
+                         }
+                           return Column(
+                             children: [
+                               for(var i=0; i<dataLength; i++)
+                                 _buildListView(context,snapshot.data.documents[i],i),
+                             ],
+                           );
+                         }
+                     ),
+                     SizedBox(
+                       height: 6,
+                     ),
+                     SizedBox(
+                       width: MediaQuery.of(context).size.width*1,
+                       child: RaisedButton(
+                         color: Colors.blue,
+                         elevation: 0,
+                         shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.circular(10),),
+                         child: Text("주문 목록 전체 보기",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                         onPressed:(){
+                           Navigator.push(context,
+                               MaterialPageRoute(builder: (context) =>
+                                   DetailOrderList(widget.user,snapshot.data.documents)));
 
-                      }
-                    )
-
-                  ],
-                ),
-              ),
+                         },
+                       ),
+                     )
+                   ],
+                 ),
+               );
+              }
             ),
             SizedBox(
               height: 20,
@@ -299,18 +332,6 @@ class _MyPageState extends State<MyPage> {
         ),
       ),
     );
-  }
-  Widget opacityLine (){
-    return Opacity(
-        opacity: 0.15,
-        child: Padding(
-            padding: const EdgeInsets.only(
-                top: 1.0, bottom: 1.0),
-            child: Container(
-              height: 1,
-              color: Colors.black38,
-            )));
-
   }
 
   Widget _buildListView(context, doc, index){
@@ -349,7 +370,6 @@ class _MyPageState extends State<MyPage> {
                                     softWrap: false,
                                   )),
                             ),
-
                           ],
                         ),
                         SizedBox(height: 6,),
@@ -368,6 +388,7 @@ class _MyPageState extends State<MyPage> {
                           padding: const EdgeInsets.only(top:5.0,bottom: 10),
                           child: Container(
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                  state(doc['state']),
                               ],
@@ -389,7 +410,7 @@ class _MyPageState extends State<MyPage> {
 
   }
 
-  Widget _buildOrder2() {
+  Widget myInfo() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
@@ -415,12 +436,16 @@ class _MyPageState extends State<MyPage> {
             Padding(
               padding: const EdgeInsets.only(left:18.0),
               child:
-              Text("후기를 남겨주세요",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-
-
-            ),
-            SizedBox(
-              height: 20,
+              Row(
+                children: [
+                  Text("계정 정보",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Spacer(),
+                  Icon(Icons.arrow_forward_ios,size: 17,),
+                  SizedBox(
+                    width: 15,
+                  )
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left:20),
@@ -429,82 +454,6 @@ class _MyPageState extends State<MyPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
-                            SizedBox(height: 10,),
-                            Text('결제 완료',style: TextStyle(fontSize: 11),),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric( horizontal: 7),
-                          child: Icon(
-                            Icons.arrow_forward_ios, size: 15,color: Colors.grey,
-
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
-                            SizedBox(height: 10,),
-                            Text('배송준비중',style: TextStyle(fontSize: 11),),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric( horizontal: 7),
-                          child: Icon(
-                              Icons.arrow_forward_ios, size: 15,color: Colors.grey
-
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
-                            SizedBox(height: 10,),
-                            Text('배송중',style: TextStyle(fontSize: 11),),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric( horizontal: 7),
-                          child: Icon(
-                              Icons.arrow_forward_ios, size: 15,color: Colors.grey
-
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
-                            SizedBox(height: 10,),
-                            Text('배송완료',style: TextStyle(fontSize: 11),),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric( horizontal: 7),
-                          child: Icon(
-                              Icons.arrow_forward_ios, size: 15,color: Colors.grey
-
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text('0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
-                            SizedBox(height: 10,),
-                            Text('구매확정',style: TextStyle(fontSize: 11),),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-
-
                   ],
                 ),
               ),
@@ -512,29 +461,14 @@ class _MyPageState extends State<MyPage> {
             SizedBox(
               height: 20,
             )
-//            Padding(
-//              padding: const EdgeInsets.symmetric(horizontal: 10),
-//              child: Opacity(
-//                  opacity: 0.15,
-//                  child: Padding(
-//                      padding: const EdgeInsets.only(
-//                         top: 35, bottom: 10.0),
-//                      child: Container(
-//                        height: 1,
-//                        color: Colors.black38,
-//                      ))),
-//            ),
           ],
         ),
       ),
     );
   }
-  numberWithComma(int param){
-    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
-  }
 
-   Widget state( var doc) {
-     if(doc == "standby"){
+  Widget state(data) {
+     if(data == "standby"){
      return Row(
        children: [
          Padding(
@@ -546,22 +480,19 @@ class _MyPageState extends State<MyPage> {
      );
    }
 
-
-    else if(doc == "ongoing"){
+     else if(data == "ongoing"){
      return Row(
        children: [
          Padding(
              padding: const EdgeInsets.only(left: 1,right: 7),
              child: Image.asset('assets/icons/box.png',width: 20,)
          ),
-         Text('배송 준비 중' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         Text('발송 준비 중' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
        ],
      );
      }
 
-
-
-    else if(doc== "shipping"){
+     else if(data== "shipping"){
      return Row(
        children: [
          Padding(
@@ -573,7 +504,7 @@ class _MyPageState extends State<MyPage> {
      );
      }
 
-     else if (doc == "completion"){
+     else if (data == "completion"){
       return Row(
         children: [
           Padding(
@@ -585,5 +516,22 @@ class _MyPageState extends State<MyPage> {
       );
      }
    }
+
+  Widget opacityLine (){
+    return Opacity(
+        opacity: 0.15,
+        child: Padding(
+            padding: const EdgeInsets.only(
+                top: 1.0, bottom: 1.0),
+            child: Container(
+              height: 1,
+              color: Colors.black38,
+            )));
+
+  }
+
+  numberWithComma(int param){
+    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
+  }
 }
 
