@@ -12,7 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class Favorite extends StatefulWidget {
-
+  var bool_list_each_GridSell = [];
   bool filter = false;
   bool VisibiltyTriger=false;
   bool top_downbtn = false;
@@ -41,6 +41,7 @@ class Favorite extends StatefulWidget {
 }
 
 class _FavoriteState extends State<Favorite> {
+
   var stopTrigger = 1;
 
 
@@ -59,8 +60,9 @@ class _FavoriteState extends State<Favorite> {
                   child: Container(
                     child: GestureDetector(
                         child:
-                        Platform.isAndroid?Image.asset('assets/logo/4444.png')
-                        :Icon(Icons.arrow_back_ios,size: 24,),
+                        // Platform.isAndroid?
+                        Image.asset('assets/logo/4444.png'),
+                        // :Icon(Icons.arrow_back_ios,size: 24,),
 
                         onTap: (){
                           Navigator.pop(context);
@@ -137,7 +139,7 @@ class _FavoriteState extends State<Favorite> {
               return Center(child:  CircularProgressIndicator());
             }
 // 그리드뷰 개발 끝나고 주석만 풀면됨
-//              if(stopTrigger == 1 ){
+              if(stopTrigger == 1 ){
                 if(widget.filter == false){
                   widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
                   widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
@@ -152,10 +154,10 @@ class _FavoriteState extends State<Favorite> {
               stopTrigger+=1;
               print("stopTrigger222: ${stopTrigger}");
               print("--------------------------------");
-            // }
+            }
 
-            // else if(widget.filter == true){
-            if(widget.filter == true){
+            else if(widget.filter == true){
+            // if(widget.filter == true){
               for(var i=0; i<widget.selectedCategoryList.length; i++){
                 if(i==0){
                   widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
@@ -183,7 +185,13 @@ class _FavoriteState extends State<Favorite> {
 
                   staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2: 2.9),
                   itemBuilder: (BuildContext context, int index) {
-                    return _buildListItem(context,widget.fF[index]);
+                    for(var i=0; i<widget.fF.length; i++ ){
+
+                        widget.bool_list_each_GridSell.add(false);
+
+
+                    }
+                    return _buildListItem(context,widget.fF[index],index);
                   }
               ),
             );
@@ -194,13 +202,21 @@ class _FavoriteState extends State<Favorite> {
       ),
     );
   }
-  Widget _buildListItem(context, document) {
+  Widget _buildListItem(context,document,index) {
     return
       Hero(
           tag: document['thumbnail_img'],
           child: Material(
               color: Colors.transparent,
               child: InkWell(
+                onDoubleTap: (){
+                  print("doubleTap");
+                  // 찜 데이터
+                  setState(() {
+                    widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
+                  });
+
+                },
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder: (context){
                     return ProductDetail(widget.user, document);
@@ -223,10 +239,10 @@ class _FavoriteState extends State<Favorite> {
                                             placeholder: 'assets/images/loading.png',
                                             image: document['thumbnail_img'],
                                             fit : BoxFit.cover),
-                                      // Positioned(
-                                      //     top:1,
-                                      //     right: 6,
-                                      //     child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:25,):Container())
+                                      Positioned(
+                                          top:3.2,
+                                          right: 6,
+                                          child: widget.bool_list_each_GridSell[index]?Icon(Icons.favorite,size:25,color: Colors.red,):Container())
                                     ],
                                   ),
                                   ),

@@ -282,7 +282,7 @@ class _SheetContainerState extends State<SheetContainer>{
             padding: const EdgeInsets.only(top:22.0,bottom: 10.0),
             child: Center(
               child: Text(
-                widget.final_count==0?"고객님 취향의 옷을 골라주세요!!":"현재까지 ${widget.final_count}/10개 선택하셨습니다",
+                widget.final_count==0?"고객님 취향의 옷을 골라주세요 ":"현재까지 ${widget.final_count}/10개 선택하셨습니다",
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
