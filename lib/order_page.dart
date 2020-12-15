@@ -996,7 +996,8 @@ class _OrderPageState extends State<OrderPage> {
                             doc['ODD_can'] == true?Text("${cal_data()} 발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),)
                                 :Text("판매자 확인 후 발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                             Spacer(),
-                            Text("₩ ${ numberWithComma(int.parse(doc['price']))}",style: TextStyle(fontWeight: FontWeight.bold),),
+                            Text("₩ ${ numberWithComma(
+                                int.parse(doc['price'])*int.parse(widget.orderList[index][2]))}",style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(width: 30,)
                           ],
                         ),
@@ -1186,7 +1187,7 @@ class _OrderPageState extends State<OrderPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('최종 합계',style: TextStyle(fontSize:19,fontWeight: FontWeight.w900,color: Colors.blueAccent),),
+                          Text('최종 합계',style: TextStyle(fontSize:19,fontWeight: FontWeight.bold,color: Colors.blueAccent),),
                           Text('₩ ${final_price()}', style: TextStyle(fontSize:19, fontWeight: FontWeight.w900,color:Colors.blueAccent),)
                         ],
                       ),
@@ -1716,7 +1717,7 @@ class _OrderPageState extends State<OrderPage> {
       });
       for(var i =0; i<widget.orderList.length; i++){
         setState(() {
-          widget._totalPrice += int.parse(widget.orderList[i][4]);
+          widget._totalPrice += int.parse(widget.orderList[i][4]) * int.parse(widget.orderList[i][2]);
         });}
     }
   }

@@ -1,3 +1,4 @@
+import 'package:coodyproj/detail_order.dart';
 import 'package:coodyproj/detail_orderList.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -336,76 +337,84 @@ class _MyPageState extends State<MyPage> {
 
   Widget _buildListView(context, doc, index){
     print(index);
-    return StreamBuilder<DocumentSnapshot>(
-      stream: Firestore.instance.collection('uploaded_product').document(doc['productCode']).snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData){
-          return Center(child: CircularProgressIndicator(),);
-        }
-        return Column(
-          children: [
-            index==0?Container():opacityLine(),
-            Row(
-              children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0),
-                    child: FadeInImage.assetNetwork(
-                      placeholder:'assets/images/19.png',
-                      image: snapshot.data.data['thumbnail_img'],width: 75,height:75,fit: BoxFit.cover,)),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left:10.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top:14.0),
-                              child: Container(
-                                  width: 200,
-                                  child: Text("${snapshot.data.data['productName']}",
-                                    style:TextStyle(fontWeight: FontWeight.bold),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: false,
-                                  )),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 6,),
-                        Row(
-                          children: [
-                            Expanded(
-                                child: Text("색상 : ${doc["orderColor"]} / 사이즈 : ${doc['orderSize']} / 수량 : ${doc['orderQuantity']}개",
-                                    style: TextStyle(fontSize:11 ,color: Colors.black87,
-                                    ),maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: false)),
-                          ],
-                        ),
+    return InkWell(
+      onTap: (){
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>
+                DetailOrder(widget.user,doc)));
+      },
+      child: StreamBuilder<DocumentSnapshot>(
+        stream: Firestore.instance.collection('uploaded_product').document(doc['productCode']).snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData){
+            return Center(child: CircularProgressIndicator(),);
+          }
+          return Column(
+            children: [
+              index==0?Container():opacityLine(),
+              Row(
 
-                        Padding(
-                          padding: const EdgeInsets.only(top:5.0,bottom: 10),
-                          child: Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                 state(doc['state']),
-                              ],
-                            ),
+                children: [
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0),
+                      child: FadeInImage.assetNetwork(
+                        placeholder:'assets/images/19.png',
+                        image: snapshot.data.data['thumbnail_img'],width: 75,height:75,fit: BoxFit.cover,)),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:10.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top:14.0),
+                                child: Container(
+                                    width: 200,
+                                    child: Text("${snapshot.data.data['productName']}",
+                                      style:TextStyle(fontWeight: FontWeight.bold),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: false,
+                                    )),
+                              ),
+                            ],
                           ),
-                        )
-                      ],
+                          SizedBox(height: 6,),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: Text("색상 : ${doc["orderColor"]} / 사이즈 : ${doc['orderSize']} / 수량 : ${doc['orderQuantity']}개",
+                                      style: TextStyle(fontSize:11 ,color: Colors.black87,
+                                      ),maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: false)),
+                            ],
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(top:5.0,bottom: 10),
+                            child: Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                   state(doc['state']),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
 
-          ],
-        );
-      }
+            ],
+          );
+        }
+      ),
     );
 
   }

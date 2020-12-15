@@ -217,7 +217,7 @@ class _FavoriteState extends State<Favorite> {
                                     children: [
                                       FadeInImage.assetNetwork(
                                         //coody 로고 가 들어간 네모
-                                            placeholder: 'assets/splash/Rolling.gif,',
+                                            placeholder: 'assets/splash/Rolling.gif',
                                             image: document['thumbnail_img'],
                                             fit : BoxFit.cover),
                                       Positioned(

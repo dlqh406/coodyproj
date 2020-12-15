@@ -1,4 +1,5 @@
 import 'package:coodyproj/home.dart';
+import 'package:coodyproj/order_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,8 +12,12 @@ import 'detail_product.dart';
 class CartPage extends StatefulWidget {
   final FirebaseUser user;
   var _documentIDList =[];
+  var orderList =[];
+  var temOrderList=[];
+  var doclength=0;
   List<bool> checkboxList=[];
   List calculatePriceList=[];
+
 
   final ScrollController _controllerOne = ScrollController();
 
@@ -22,6 +27,8 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   var cartCount;
 
@@ -29,7 +36,9 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading:  IconButton(
@@ -38,15 +47,25 @@ class _CartPageState extends State<CartPage> {
               Navigator.pop(context);
             }
         ),
+        title: Text('장바구니'),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right:10.0),
-            child: new IconButton( icon: new Icon(Icons.home,size: 23,),
-              onPressed: () => {
-                Navigator.push(context, MaterialPageRoute(builder: (context){
-                  return Home(widget.user);
-                }))
-              },
+            padding: const EdgeInsets.all(12.0),
+            child: SizedBox(
+              width: 70,
+              child: RaisedButton(
+                color: Color(0xFF5D70F8),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7)
+                ),
+                onPressed: () {
+
+                  _deleteCart();
+                  Navigator.pushReplacement(context, MaterialPageRoute(
+                     builder: (BuildContext context) =>  CartPage(widget.user)));
+                },
+                child: Text("삭제",style: TextStyle(color: Colors.white),),
+              ),
             ),
           ),
         ],
@@ -64,47 +83,11 @@ class _CartPageState extends State<CartPage> {
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(
-          top: 15.0, right: 10.0, left: 10.0),
+          top: 0.0, right: 10.0, left: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
 
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text("장바구니",
-                      style: TextStyle(fontSize: 37, fontWeight: FontWeight.bold),),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right:8.0),
-                child: SizedBox(
-                  width: 60,
-                  height: 30,
-                  child: RaisedButton(
-                    color: Color(0xFF5D70F8),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7)
-                    ),
-                    onPressed: () {
-                      _deleteCart();
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(context, MaterialPageRoute(
-                          builder: (BuildContext context) =>  CartPage(widget.user)));
-                    },
-                    child: Text("삭제",style: TextStyle(color: Colors.white),),
-                  ),
-                ),
-              )
-
-            ],
-          ),
           StreamBuilder<QuerySnapshot>(
             stream: _cartStream(),
             builder: (context, snapshot) {
@@ -119,7 +102,7 @@ class _CartPageState extends State<CartPage> {
             }
           ),
           Container(
-            height: size.height*0.52,
+            height: size.height*0.56,
             child: StreamBuilder<QuerySnapshot>(
                 stream: _cartStream(),
                 builder: (context, snapshot) {
@@ -128,6 +111,7 @@ class _CartPageState extends State<CartPage> {
                       child: CircularProgressIndicator(),
                     );
                   }
+                    widget.doclength =  snapshot.data.documents.length;
                   return snapshot.data.documents.length!=0
                       ?CupertinoScrollbar(
                     controller: widget._controllerOne,
@@ -155,8 +139,12 @@ class _CartPageState extends State<CartPage> {
         widget.checkboxList.add(true);
       }
     }
+    //temOrderList(doc);
+
+
     return Column(
       children: [
+        index == 0?Container():line(),
         Row(
           children: [
             StreamBuilder(
@@ -196,6 +184,7 @@ class _CartPageState extends State<CartPage> {
                             child: CircularProgressIndicator(),
                           );
                         }
+                        temOrderList(doc,snapshot.data);
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -224,6 +213,7 @@ class _CartPageState extends State<CartPage> {
                         );
                       },
                     ),
+
                     Text("옵션: ${doc['selectedColor']} / ${doc['selectedSize']}", style: TextStyle(fontSize:14 ,color: Colors.black87),),
                     Padding(
                       padding: const EdgeInsets.only(top:5.0,bottom: 10),
@@ -262,18 +252,12 @@ class _CartPageState extends State<CartPage> {
             ),
           ],
         ),
-        Opacity(
-            opacity: 0.15,
-            child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 8.0, bottom: 8.0),
-                child: Container(
-                  height: 1,
-                  color: Colors.black38,
-                ))),
+
       ],
     );
   }
+
+
   void _deleteCart(){
 
       Firestore.instance.collection('user_data').document("${widget.user.uid}")
@@ -296,6 +280,7 @@ class _CartPageState extends State<CartPage> {
         .document("${widget.user.uid}").collection('cart')
         .orderBy('date', descending: true).snapshots();
   }
+
   Widget _calculationView(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top:25,left:15.0,right:15.0),
@@ -338,11 +323,65 @@ class _CartPageState extends State<CartPage> {
                     borderRadius: BorderRadius.circular(10),),
                   color: Colors.blueAccent,
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => null));
+                    setState(() {
+                      widget.orderList = [];
+                    });
+                    var trueCount =0;
+                    for(var i=0; i<widget.checkboxList.length; i++){
+                      if( widget.checkboxList[i] == true){
+                        trueCount +=1;
+                      }
+                    }
+
+                    if(widget.doclength==0){
+                      scaffoldKey.currentState
+                          .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
+                      Padding(
+                        padding: const EdgeInsets.only(top:8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.check_circle,color: Colors.blueAccent,),
+                            SizedBox(width: 14,),
+                            Text("장바구니가 비어 있습니다",
+                              style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
+                          ],
+                        ),
+                      )));
+                    }
+                    else if(trueCount == 0){
+
+                      scaffoldKey.currentState
+                          .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
+                      Padding(
+                        padding: const EdgeInsets.only(top:8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.check_circle,color: Colors.blueAccent,),
+                            SizedBox(width: 14,),
+                            Text("구매할 상품을 체크해주세요",
+                              style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
+                          ],
+                        ),
+                      )));
+                    }
+                    else{
+                      for(var i=0; i<widget.temOrderList.length; i++){
+                        if( widget.checkboxList[i] ==true){
+                          widget.orderList.add(widget.temOrderList[i]);
+                        }
+                      }
+                      print(widget.orderList);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>
+                          OrderPage(widget.user, widget.orderList)
+                          ));
+                    }
+
                   },
                   child: const Text('바로 구매하기',
-                      style: TextStyle(color: Colors.white, fontSize: 13,fontWeight: FontWeight.bold)),
+                      style: TextStyle(color: Colors.white, fontSize: 18,fontWeight: FontWeight.bold)),
                 ),
               ),
             ),
@@ -352,6 +391,7 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
   String numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
@@ -365,7 +405,7 @@ class _CartPageState extends State<CartPage> {
               .document(result.data["product"]).get().then((value) {
              setState(() {
                if( widget.calculatePriceList.length!=widget.checkboxList.length){
-                 widget.calculatePriceList.add(int.parse(value.data['price']));
+                 widget.calculatePriceList.add(int.parse(value.data['price']) * int.parse(result.data['selectedQuantity']));
                }
              });
           });
@@ -378,5 +418,24 @@ class _CartPageState extends State<CartPage> {
       }
     }
     return numberWithComma(_totalPrice);
+  }
+
+  Widget line(){
+    return Opacity(
+        opacity: 0.15,
+        child: Padding(
+            padding: const EdgeInsets.only(
+                top: 8.0, bottom: 8.0),
+            child: Container(
+              height: 1,
+              color: Colors.black38,
+            )));
+  }
+
+  void temOrderList(doc,docs) {
+    if(widget.temOrderList.length < widget.doclength){
+      widget.temOrderList.add([doc['selectedColor'],doc['selectedSize'],doc['selectedQuantity'], docs.documentID,docs['price'],docs['sellerCode']]);
+    }
+
   }
 }

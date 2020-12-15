@@ -256,8 +256,12 @@ class _DetailTrackingState extends State<DetailTracking> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('${_timeStampToString(widget.trackingData['to']['time'])}',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 25)),
-                    SizedBox(width: 10,),
+                    widget.trackingData['state']['text']=='배달완료'?Row(
+                      children: [
+                        Text('${_timeStampToString(widget.trackingData['to']['time'])}',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 25)),
+                        SizedBox(width: 10,),
+                      ],
+                    ):Container(),
                     Text("${widget.trackingData['state']['text']}",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 25)),
                   ],
                 ),

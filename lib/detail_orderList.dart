@@ -1,3 +1,4 @@
+import 'package:coodyproj/detail_order.dart';
 import 'package:coodyproj/detail_tracking.dart';
 import 'package:coodyproj/home.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,7 @@ class DetailOrderList extends StatefulWidget {
 }
 
 class _DetailOrderListState extends State<DetailOrderList> {
+  final myController = TextEditingController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -106,8 +108,20 @@ class _DetailOrderListState extends State<DetailOrderList> {
                     children: [
                       Text('${_timeStampToString(widget.data[i]['orderDate'])}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                       Spacer(),
-                      Text('주문 상세 ',style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),),
-                      Icon(Icons.arrow_forward_ios,size: 13,color: Colors.blue),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) =>
+                                  DetailOrder(widget.user,widget.data[i])));
+                        },
+                        child: Row(
+                          children: [
+                            Text('주문 상세 ',style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),),
+                            Icon(Icons.arrow_forward_ios,size: 13,color: Colors.blue),
+                          ],
+                        ),
+                      ),
+
 
                     ],
                   ),
@@ -323,12 +337,177 @@ class _DetailOrderListState extends State<DetailOrderList> {
                   onPressed:(){
                   },
                 ),
+              ),
+
+              GestureDetector(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width*1,
+                  child: RaisedButton(
+                    color: Colors.lightBlue,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("판매자에게 1:1 문의 남기기",style: TextStyle(fontSize: 15,color: Colors.white,fontWeight: FontWeight.bold),),
+                        SizedBox(width:5,),
+                        Image.asset(
+                          'assets/icons/paper-plane.png', width: 20,
+                          height: 30,color: Colors.white,),
+                      ],
+                    ),
+                    onPressed:(){
+                      print("aa");
+                      _showAlert(index);
+                    },
+                  ),
+                ),
               )
             ],
           );
         }
     );
 
+  }
+
+  Widget _showAlert(int index) {
+
+    AlertDialog dialog = new AlertDialog(
+      content: new Container(
+        width: 260.0,
+        height: 230.0,
+        decoration: new BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: const Color(0xFFFFFF),
+          borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
+        ),
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            // dialog top
+            new Expanded(
+              child: new Row(
+                children: <Widget>[
+                  new Container(
+                    // padding: new EdgeInsets.all(10.0),
+                    decoration: new BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: new Text(
+                      '1:1 문의',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontFamily: 'helvetica_neue_light',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Spacer(),
+                  GestureDetector(
+                      onTap: (){
+                        myController.clear();
+                        Navigator.pop(context, true);
+                      },
+                      child: Icon(Icons.clear))
+                ],
+              ),
+            ),
+
+            // dialog centre
+            new Expanded(
+              child: new Container(
+                  height: 100,
+                  child: new TextField(
+                    controller: myController,
+                    decoration: new InputDecoration(
+                      border: InputBorder.none,
+                      filled: false,
+                      contentPadding: new EdgeInsets.only(
+                          left: 10.0, top: 10.0, bottom: 10.0, right: 10.0),
+                      hintText: '질문을 남겨주시면 셀러가 확인 후 답을 드립니다',
+                      hintStyle: new TextStyle(
+                        color: Colors.grey.shade500,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                  )),
+              flex: 2,
+            ),
+
+            // dialog bottom
+            new Expanded(
+              child: GestureDetector(
+                onTap: () async {
+                  print(myController.text);
+                  print(widget.data[index]['sellerCode']);
+                  final _addData = {
+                    'answer': "",
+                    'P_Code' : widget.data[index]['P_code'],
+                    'I_Code' : widget.data[index]['I_code'],
+                    'name' : widget.user.displayName,
+                    'productCode' : widget.data[index]['productCode'],
+                    'question' : myController.text,
+                    'state' : "ongoing",
+                    'date' : DateTime.now()
+                  };
+                  Firestore.instance
+                      .collection('seller_data')
+                      .document(widget.data[index]['sellerCode'])
+                      .collection('inquiry')
+                      .add(_addData);
+
+
+                  //
+                  // final Email email = Email(
+                  //   body: "hi ",
+                  //   subject: 'Email subject',
+                  //   recipients: ['boseong.lee@coody.cool'],
+                  //   isHTML: false,
+                  // );
+                  // String platformResponse;
+                  // try {
+                  //   await FlutterEmailSender.send(email);
+                  //   platformResponse = 'success';
+                  // } catch (error) {
+                  //   platformResponse = error.toString();
+                  // }
+                  // print(platformResponse);
+                  // if (!mounted) return;
+                  // _scaffoldKey.currentState.showSnackBar(SnackBar(
+                  //   content: Text(platformResponse),
+                  // ));
+
+                  myController.clear();
+                  Navigator.pop(context, true);
+                },
+                child: new Container(
+                  padding: new EdgeInsets.all(16.0),
+                  decoration: new BoxDecoration(
+                    color:Colors.blue,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top:5.0),
+                    child: new Text(
+                      '질문 등록',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 17.0,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    showDialog(context: context, child: dialog);
   }
   Widget opacityLine (){
     return Opacity(

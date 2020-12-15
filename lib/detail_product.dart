@@ -1371,6 +1371,7 @@ class _ProductDetailState extends State<ProductDetail> {
             // dialog centre
             new Expanded(
               child: new Container(
+                height: 100,
                   child: new TextField(
                     controller: myController,
                     decoration: new InputDecoration(
@@ -1382,7 +1383,6 @@ class _ProductDetailState extends State<ProductDetail> {
                       hintStyle: new TextStyle(
                         color: Colors.grey.shade500,
                         fontSize: 12.0,
-
                       ),
                     ),
                   )),
@@ -1397,6 +1397,8 @@ class _ProductDetailState extends State<ProductDetail> {
                   print(widget.document['sellerCode']);
                   final _addData = {
                     'answer': "",
+                    'P_Code' : "",
+                    'I_Code' : "",
                     'name' : widget.user.displayName,
                     'productCode' : widget.document.documentID,
                     'question' : myController.text,
