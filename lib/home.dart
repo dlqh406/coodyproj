@@ -137,7 +137,8 @@ class Home extends StatefulWidget {
                 padding: const EdgeInsets.only(left: 10.0),
                 child: Container(
                   child: GestureDetector(
-                      child: Image.asset('assets/logo/darkblue.png',color: currentIndex ==0? Colors.white:Colors.black,),
+                      child: SizedBox(
+                          child: Image.asset('assets/logo/4444.png')),
                       onTap: (
                           ) {
                         changePage(1);

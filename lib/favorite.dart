@@ -59,7 +59,7 @@ class _FavoriteState extends State<Favorite> {
                   child: Container(
                     child: GestureDetector(
                         child:
-                        Platform.isAndroid?Image.asset('assets/logo/darkblue.png')
+                        Platform.isAndroid?Image.asset('assets/logo/4444.png')
                         :Icon(Icons.arrow_back_ios,size: 24,),
 
                         onTap: (){
@@ -137,7 +137,7 @@ class _FavoriteState extends State<Favorite> {
               return Center(child:  CircularProgressIndicator());
             }
 // 그리드뷰 개발 끝나고 주석만 풀면됨
-             if(stopTrigger == 1 ){
+//              if(stopTrigger == 1 ){
                 if(widget.filter == false){
                   widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
                   widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
@@ -152,10 +152,10 @@ class _FavoriteState extends State<Favorite> {
               stopTrigger+=1;
               print("stopTrigger222: ${stopTrigger}");
               print("--------------------------------");
-            }
+            // }
 
-            else if(widget.filter == true){
-            //if(widget.filter == true){
+            // else if(widget.filter == true){
+            if(widget.filter == true){
               for(var i=0; i<widget.selectedCategoryList.length; i++){
                 if(i==0){
                   widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
@@ -173,12 +173,15 @@ class _FavoriteState extends State<Favorite> {
               child: StaggeredGridView.countBuilder(
                   crossAxisCount: 3,
                   // 아래 여백
-                  mainAxisSpacing: 7.0,
+                  mainAxisSpacing: 8.0,
                   crossAxisSpacing: 6.0,
                   itemCount: widget.fF.length,
                   //1 1.8
-                  //2 : 1.55
-                  staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2: 1.7),
+                  //2 : 1.7
+                  //2:2.6  2.2:
+                  //2.2: 2.9
+
+                  staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2: 2.9),
                   itemBuilder: (BuildContext context, int index) {
                     return _buildListItem(context,widget.fF[index]);
                   }
@@ -215,15 +218,15 @@ class _FavoriteState extends State<Favorite> {
                                   child: Stack(
                                     fit: StackFit.expand,
                                     children: [
+                                      Center(child: CircularProgressIndicator()),
                                       FadeInImage.assetNetwork(
-                                        //coody 로고 가 들어간 네모
-                                            placeholder: 'assets/splash/Rolling.gif',
+                                            placeholder: 'assets/images/loading.png',
                                             image: document['thumbnail_img'],
                                             fit : BoxFit.cover),
-                                      Positioned(
-                                          top:1,
-                                          right: 6,
-                                          child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:25,):Container())
+                                      // Positioned(
+                                      //     top:1,
+                                      //     right: 6,
+                                      //     child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:25,):Container())
                                     ],
                                   ),
                                   ),
@@ -239,9 +242,21 @@ class _FavoriteState extends State<Favorite> {
                             height: 2.3,
                           ),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment:MainAxisAlignment.center,
                             children: [
                               Text("₩${numberWithComma(int.parse(document['price']==null?"12000":document['price']))}"
                                   ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold)),
+                              Spacer(),
+                              // SizedBox(
+                              //   width: 4,
+                              // ),
+                              document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Image.asset('assets/star/star11.png', width: 14,),
+                              Text("4.5",style: TextStyle(fontSize: 14),)
                             ],
                           ),
                         ],
