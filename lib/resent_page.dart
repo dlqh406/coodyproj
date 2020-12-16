@@ -1,9 +1,9 @@
+import 'package:coodyproj/home.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'detail_product.dart';
-import 'dart:io' show Platform;
+import 'package:intl/intl.dart';
 
 class RecentPage extends StatefulWidget {
   bool more_Btn = true;
@@ -22,6 +22,38 @@ class _RecentPageState extends State<RecentPage> {
     Widget build(BuildContext context) {
       return Container(
         child: Scaffold(
+          appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
+              child:
+              AppBar(
+                titleSpacing: 6.0,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: Padding(
+                  padding: const EdgeInsets.only(left: 00.0),
+                  child: Container(
+                    child: GestureDetector(
+                        child: Icon(Icons.arrow_back_ios,size: 18,),
+
+                        onTap: (){
+                          Navigator.pop(context);
+
+                        }),
+                  ),
+                ),
+                actions: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right:10.0),
+                    child: new IconButton( icon: new Icon(Icons.home,size: 23,),
+                      onPressed: () => {
+                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                          return Home(widget.user);
+                        }))
+                      },
+                    ),
+                  ),
+                ],
+
+              )),
           body: _bodyBuilder(),
         ),
       );
@@ -39,7 +71,7 @@ class _RecentPageState extends State<RecentPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top:35,left:20.0,bottom: 30),
+            padding: const EdgeInsets.only(top:5,left:20.0,bottom: 10),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -50,7 +82,6 @@ class _RecentPageState extends State<RecentPage> {
                   padding: const EdgeInsets.only(left: 8.0,bottom:3),
                   child: Text('최대 30개',style: TextStyle(color: Colors.black),),
                 ),
-
               ],
             ),
           ),
@@ -157,13 +188,13 @@ class _RecentPageState extends State<RecentPage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("캐주얼 노멀 하이퀄 니트",style: TextStyle(fontSize: 15),
+                                      Text('${doc['productName']}',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis),
                                       Text(doc['category'],style: TextStyle(fontWeight: FontWeight.w700,color: Colors.blue)),
                                       Padding(
                                         padding: const EdgeInsets.only(top:3.0),
-                                        child: Text("₩12,900",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                        child: Text("₩ ${ numberWithComma(int.parse(doc['price']==null?"0":doc['price']))}",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
                                       ),
                                     ],
                                   ),
@@ -205,7 +236,9 @@ class _RecentPageState extends State<RecentPage> {
       );
 
     }
-
+    String numberWithComma(int param){
+      return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
+    }
   Widget _clearBtn() {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),

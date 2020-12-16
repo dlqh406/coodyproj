@@ -138,7 +138,7 @@ class Home extends StatefulWidget {
                 child: Container(
                   child: GestureDetector(
                       child: SizedBox(
-                          child: Image.asset('assets/logo/4444.png')),
+                          child: Image.asset('assets/logo/P21.png')),
                       onTap: (
                           ) {
                         changePage(1);

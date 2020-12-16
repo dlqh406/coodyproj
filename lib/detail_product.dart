@@ -1520,7 +1520,7 @@ class _ProductDetailState extends State<ProductDetail> {
             Text('배송 기간 : 7일이내 '),
             SizedBox(height: 10,),
             Text('주소 : 서울특별시 서초구 강남대로 107길 21, 대능빌딩 2 '),SizedBox(height: 10,),
-            Text('대표번호 : 02-82-6869   개인정보보호책임자 이보성'),SizedBox(height: 10,),
+            Text('대표번호 : 02-862-6869   개인정보보호책임자 이보성'),SizedBox(height: 10,),
             Text('홈페이지 : www.coody.cool'),SizedBox(height: 10,),
 
           ],

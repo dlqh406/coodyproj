@@ -1,20 +1,14 @@
 import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/contents_page.dart';
 import 'package:coodyproj/detail_contents.dart';
-import 'package:coodyproj/resent_page.dart';
 import 'package:coodyproj/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'favorite_analysis_page.dart';
 import 'loading_page.dart';
 import 'favorite.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:async';
+
 
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
@@ -62,8 +56,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     super.initState();
 
   }
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  FacebookLogin facebookLogin = FacebookLogin();
 
 
     var images=[];
@@ -162,11 +154,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                         ),
                         onPressed:
                           () {
-                          // 고객센터
-                            // launchURL() {
-                            //   launch('http://pf.kakao.com/_JxoxexnK/chat');
-                            // }
-                            // launchURL();
+                            //고객센터
+
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                                 return ContentsPage(widget.user);

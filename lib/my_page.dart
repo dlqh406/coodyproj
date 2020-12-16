@@ -1,11 +1,14 @@
 import 'package:coodyproj/detail_order.dart';
 import 'package:coodyproj/detail_orderList.dart';
+import 'package:coodyproj/heart_page.dart';
+import 'package:coodyproj/myinfo_page.dart';
+import 'package:coodyproj/resent_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'detail_product.dart';
 import 'dart:io' show Platform;import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class MyPage extends StatefulWidget {
   bool more_Btn = true;
@@ -31,16 +34,24 @@ class _MyPageState extends State<MyPage> {
       stream: Firestore.instance.collection('user_data').document(widget.user.uid).snapshots(),
       builder: (context, snapshot) {
         if(!snapshot.hasData){
-          return Center(child: CircularProgressIndicator(),);
+          return Container();
         }
         return ListView(
           children: [
             SizedBox(height: 15),
             _buildHeader(snapshot.data.data),
-            SizedBox(height: 20),
+            SizedBox(height: 15),
             _buildOrderList(),
-            SizedBox(height: 20),
+            SizedBox(height: 15),
+            customerCenter(),
+            SizedBox(height: 15),
+            like(),
+            SizedBox(height: 15),
+            recent(),
+            SizedBox(height: 15),
             myInfo(),
+            SizedBox(height: 80),
+
           ],
         );
       }
@@ -212,18 +223,6 @@ class _MyPageState extends State<MyPage> {
               SizedBox(
                 height: 20,
               )
-//            Padding(
-//              padding: const EdgeInsets.symmetric(horizontal: 10),
-//              child: Opacity(
-//                  opacity: 0.15,
-//                  child: Padding(
-//                      padding: const EdgeInsets.only(
-//                         top: 35, bottom: 10.0),
-//                      child: Container(
-//                        height: 1,
-//                        color: Colors.black38,
-//                      ))),
-//            ),
           ],
         ),
       ),
@@ -268,12 +267,13 @@ class _MyPageState extends State<MyPage> {
                   ),
             ),
             StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('order_data')
-                  .where('userID', isEqualTo: "${widget.user.uid}").orderBy('orderDate',descending: true).snapshots(),
+              stream: Firestore.instance.collection('order_data').orderBy('orderDate',descending: true).snapshots(),
               builder: (context, snapshot) {
-                if ( !snapshot.hasData){
-                  return Center(child: CircularProgressIndicator(),);
+                print(widget.user.uid);
+                if (!snapshot.hasData){
+                  return Container();
                 }
+                var list = snapshot.data.documents.where((doc)=> doc['userID'] == "${widget.user.uid}").toList();
                return Padding(
                  padding: const EdgeInsets.only(left:20,right: 20,top:10),
                  child: Column(
@@ -288,18 +288,20 @@ class _MyPageState extends State<MyPage> {
                        itemCount: 1,
                        physics: NeverScrollableScrollPhysics(),
                          itemBuilder:(BuildContext context, int index){
+
+
                          int dataLength = 0;
-                         if(snapshot.data.documents.length > 3){
-                          dataLength = 3;
+                         if(list.length > 3){
+                           dataLength = 3;
                          } else{
-                           dataLength = snapshot.data.documents.length;
+                           dataLength = list.length;
                          }
-                           return Column(
-                             children: [
-                               for(var i=0; i<dataLength; i++)
-                                 _buildListView(context,snapshot.data.documents[i],i),
-                             ],
-                           );
+                         return Column(
+                           children: [
+                             for(var i=0; i<dataLength; i++)
+                               _buildListView(context,list[i],i),
+                           ],
+                         );
                          }
                      ),
                      SizedBox(
@@ -316,7 +318,7 @@ class _MyPageState extends State<MyPage> {
                          onPressed:(){
                            Navigator.push(context,
                                MaterialPageRoute(builder: (context) =>
-                                   DetailOrderList(widget.user,snapshot.data.documents)));
+                                   DetailOrderList(widget.user,list)));
 
                          },
                        ),
@@ -328,7 +330,7 @@ class _MyPageState extends State<MyPage> {
             ),
             SizedBox(
               height: 20,
-            )
+            ),
           ],
         ),
       ),
@@ -419,58 +421,286 @@ class _MyPageState extends State<MyPage> {
 
   }
 
-  Widget myInfo() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(10,23),
-              blurRadius: 40,
-              color: Colors.black12,
-            ),
-          ],
-        ),
-        child:
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left:18.0),
-              child:
-              Row(
-                children: [
-                  Text("계정 정보",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  Spacer(),
-                  Icon(Icons.arrow_forward_ios,size: 17,),
-                  SizedBox(
-                    width: 15,
-                  )
-                ],
+  Widget customerCenter() {
+    return InkWell(
+      onTap: (){
+        launchURL() {
+          launch('http://pf.kakao.com/_JxoxexnK/chat');
+        }
+        launchURL();
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(10,23),
+                blurRadius: 40,
+                color: Colors.black12,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left:20),
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+            ],
+          ),
+          child:
+          Column(
+
+            children: [
+              SizedBox(
+                height: 0,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left:18.0),
+                child:
+                Row(
                   children: [
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Image.asset('assets/images/live.png',width: 50,),
+                    Padding(
+                      padding: const EdgeInsets.only(top:12.0,left:10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('라이브 1:1 채팅 고객센터',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                          Text('운영시간 09:00~18:00 (월~금,공휴일 휴무)',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.only(top:10.0),
+                      child: Icon(Icons.arrow_forward_ios,size: 17,),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    )
                   ],
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.only(left:20),
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget like() {
+    return InkWell(
+      onTap: (){
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context){
+              return HeartPage(widget.user);
+            }));
+
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(10,23),
+                blurRadius: 40,
+                color: Colors.black12,
+              ),
+            ],
+          ),
+          child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 17,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left:18.0),
+                child:
+                Row(
+                  children: [
+                    Icon(Icons.favorite,color:Colors.red),
+                    SizedBox(width: 7),
+                    Text("누른 상품",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    Spacer(),
+                    Icon(Icons.arrow_forward_ios,size: 17,),
+                    SizedBox(
+                      width: 15,
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left:20),
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 17,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget recent() {
+    return InkWell(
+      onTap: (){
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context){
+          return RecentPage(widget.user);
+            }));
+
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(10,23),
+                blurRadius: 40,
+                color: Colors.black12,
+              ),
+            ],
+          ),
+          child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left:18.0),
+                child:
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text("최근 본 상품",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    SizedBox(width: 8,),
+                    Text('(최대 30개)',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold, fontSize: 12)),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom:2.0),
+                      child: Icon(Icons.arrow_forward_ios,size: 17,),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left:20),
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget myInfo() {
+    return InkWell(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>
+                MyinfoPage(widget.user)));
+
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(10,23),
+                blurRadius: 40,
+                color: Colors.black12,
+              ),
+            ],
+          ),
+          child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left:18.0),
+                child:
+                Row(
+                  children: [
+                    Text("계정 정보",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    Spacer(),
+                    Icon(Icons.arrow_forward_ios,size: 17,),
+                    SizedBox(
+                      width: 15,
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left:20),
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              )
+            ],
+          ),
         ),
       ),
     );

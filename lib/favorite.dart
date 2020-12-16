@@ -61,7 +61,7 @@ class _FavoriteState extends State<Favorite> {
                     child: GestureDetector(
                         child:
                         // Platform.isAndroid?
-                        Image.asset('assets/logo/4444.png'),
+                        Image.asset('assets/logo/P21.png'),
                         // :Icon(Icons.arrow_back_ios,size: 24,),
 
                         onTap: (){
@@ -210,11 +210,19 @@ class _FavoriteState extends State<Favorite> {
               color: Colors.transparent,
               child: InkWell(
                 onDoubleTap: (){
-                  print("doubleTap");
                   // 찜 데이터
                   setState(() {
                     widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
                   });
+                  final data = {
+                    'docID' : document.documentID,
+                    'date' : DateTime.now()};
+                  // 댓글 추가
+                  Firestore.instance
+                      .collection('user_data')
+                      .document(widget.user.uid)
+                      .collection('like')
+                      .add(data);
 
                 },
                 onTap: (){
@@ -240,7 +248,7 @@ class _FavoriteState extends State<Favorite> {
                                             image: document['thumbnail_img'],
                                             fit : BoxFit.cover),
                                       Positioned(
-                                          top:3.2,
+                                          top:4,
                                           right: 6,
                                           child: widget.bool_list_each_GridSell[index]?Icon(Icons.favorite,size:25,color: Colors.red,):Container())
                                     ],
