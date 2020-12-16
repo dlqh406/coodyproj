@@ -133,14 +133,13 @@ class _ReviewPageState extends State<ReviewPage> {
         //   height:50,
         // ),
         Container(
-          width: 500,
-          height: 400,
+
           child: Column(
             children: [
               imageList.isEmpty
                   ? Container()
                   : Container(
-                height: 400,
+                height: 100,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -148,7 +147,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     itemBuilder: (BuildContext context, int index) {
                       Asset asset = imageList[index];
                       return AssetThumb(
-                          asset: asset, width: 300, height: 300);
+                          asset: asset, width: 200, height: 200);
                     }),
               ),
               OutlineButton(
