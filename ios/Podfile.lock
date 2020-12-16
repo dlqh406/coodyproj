@@ -223,6 +223,11 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.7):
     - BoringSSL-GRPC/Interface (= 0.0.7)
   - BoringSSL-GRPC/Interface (0.0.7)
+  - BSGridCollectionViewLayout (1.2.5)
+  - BSImagePicker (2.10.3):
+    - BSGridCollectionViewLayout (= 1.2.5)
+    - BSImageView (= 1.0.3)
+  - BSImageView (1.0.3)
   - cloud_firestore (0.0.1):
     - Firebase/Core
     - Firebase/Firestore (~> 6.0)
@@ -378,11 +383,16 @@ PODS:
   - iamport_flutter (0.0.1):
     - Flutter
   - leveldb-library (1.22)
+  - multi_image_picker (4.7.14):
+    - BSImagePicker (~> 2.10.3)
+    - Flutter
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
     - nanopb/encode (= 1.30905.0)
   - nanopb/decode (1.30905.0)
   - nanopb/encode (1.30905.0)
+  - permission_handler (3.3.0):
+    - Flutter
   - PromisesObjC (1.2.10)
   - screen (0.0.1):
     - Flutter
@@ -409,6 +419,8 @@ DEPENDENCIES:
   - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - iamport_flutter (from `.symlinks/plugins/iamport_flutter/ios`)
+  - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - screen (from `.symlinks/plugins/screen/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
@@ -422,6 +434,9 @@ SPEC REPOS:
     - abseil
     - AppAuth
     - BoringSSL-GRPC
+    - BSGridCollectionViewLayout
+    - BSImagePicker
+    - BSImageView
     - FBSDKCoreKit
     - FBSDKLoginKit
     - Firebase
@@ -464,6 +479,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in/ios"
   iamport_flutter:
     :path: ".symlinks/plugins/iamport_flutter/ios"
+  multi_image_picker:
+    :path: ".symlinks/plugins/multi_image_picker/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
   screen:
     :path: ".symlinks/plugins/screen/ios"
   shared_preferences:
@@ -483,6 +502,9 @@ SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
+  BSGridCollectionViewLayout: 333dcb457a5a3bdd9212607ab5756553dcfe06cb
+  BSImagePicker: 07404254f2fcdaf5a2eb403c0f8c337267ce8738
+  BSImageView: a149459433a2687157d034c78e059d30ac7f2544
   cloud_firestore: 2a4f8f802fb0b701cf809b283b6bec7477ebaa6f
   FBSDKCoreKit: 1d5acf7c9d7a2f92bb1a242dc60cae5b7adb91df
   FBSDKLoginKit: f1ea8026a58b52d30c9f2e6a58ca7d813619fb83
@@ -512,7 +534,9 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
   iamport_flutter: d443d80a5c77d7cb80357657b89965346807c56a
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
+  multi_image_picker: c068931d08240565e0615fb01437d16984909183
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
+  permission_handler: 67637977b227d62d46bfbf524f335f8568de5a73
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   screen: abd91ca7bf3426e1cc3646d27e9b2358d6bf07b0
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'detail_product.dart';
 import 'package:intl/intl.dart';
 import 'package:kopo/kopo.dart';
@@ -101,6 +102,8 @@ class _MyinfoPageState extends State<MyinfoPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+
     setState(() {
       myController_Request.text = "문 앞에 놓아 주세요";
     });
@@ -108,6 +111,7 @@ class _MyinfoPageState extends State<MyinfoPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       child: Scaffold(
         key: scaffoldKey,
@@ -163,7 +167,10 @@ class _MyinfoPageState extends State<MyinfoPage> {
         SizedBox(
           height:50,
         ),
-        logout()
+        logout(),
+        SizedBox(
+          height:50,
+        ),
       ],
     );
   }
@@ -322,6 +329,7 @@ class _MyinfoPageState extends State<MyinfoPage> {
       ),
     );
   }
+
   Widget myInfo2() {
     return InkWell(
       onTap: () {
