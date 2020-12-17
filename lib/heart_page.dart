@@ -98,7 +98,7 @@ class _HeartPageState extends State<HeartPage> {
               .orderBy('date',descending: true).snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData){
-              return Center(child:Text("최근본 상품이 없습니다",style: TextStyle(color: Colors.grey),));
+              return Center(child:Text("하트를 누른 상품이 없습니다",style: TextStyle(color: Colors.grey),));
             }
             var Doc_length;
             for(var i= snapshot.data.documents.length-1; i>0; i--){

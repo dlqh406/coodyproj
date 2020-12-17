@@ -266,7 +266,6 @@ class _MyinfoPageState extends State<MyinfoPage> {
   Widget logout() {
     return InkWell(
       onTap: () {
-        print("aa");
         FirebaseAuth.instance.signOut();
         _googleSignIn.signOut();
         facebookLogin.logOut();
@@ -1544,7 +1543,6 @@ class _MyinfoPageState extends State<MyinfoPage> {
       ),
     );
   }
-
 
   String merchantUid() {
     return "P${DateTime.now().millisecondsSinceEpoch}";

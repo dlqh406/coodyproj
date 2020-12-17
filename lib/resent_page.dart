@@ -91,10 +91,10 @@ class _RecentPageState extends State<RecentPage> {
     Widget _gridBuilder() {
       return Container(
         child: StreamBuilder<QuerySnapshot>(
-            stream: Firestore.instance.collection('user_data')
-                .document(widget.user.uid).collection('recent')
+            stream: Firestore.instance.collection('user_data').document(widget.user.uid).collection('recent')
                 .orderBy('date',descending: true).snapshots(),
             builder: (context, snapshot) {
+
               if(!snapshot.hasData){
                 return Center(child:Text("최근본 상품이 없습니다",style: TextStyle(color: Colors.grey),));
               }

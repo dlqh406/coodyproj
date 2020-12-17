@@ -208,30 +208,36 @@ class _DetailOrderListState extends State<DetailOrderList> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width*0.25,
-                    child: RaisedButton(
-                      color: Colors.transparent,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8),),
-                      child: Text("교환 신청",style: TextStyle(color: Colors.black,),),
-                      onPressed:(){
-                      },
+                  Visibility(
+                    visible: doc['state'] == "reviewEnd" ?false:true,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width*0.25,
+                      child: RaisedButton(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),),
+                        child: Text("교환 신청",style: TextStyle(color: Colors.black,),),
+                        onPressed:(){
+                        },
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width*0.25,
-                    child: RaisedButton(
-                      color: Colors.transparent,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8),),
-                      child: Text("반품 신청",style: TextStyle(color: Colors.black),),
-                      onPressed:(){
-                      },
+                  Visibility(
+                    visible: doc['state'] == "reviewEnd" ?false:true,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width*0.25,
+                      child: RaisedButton(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),),
+                        child: Text("반품 신청",style: TextStyle(color: Colors.black),),
+                        onPressed:(){
+                        },
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -271,39 +277,25 @@ class _DetailOrderListState extends State<DetailOrderList> {
                   ),
                 ],
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width*1,
-                child: RaisedButton(
-                  color: Colors.orangeAccent,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),),
-                  child: Text("상품 후기 작성",style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),),
-                  onPressed:(){
 
-                    Navigator.push(context, MaterialPageRoute(builder: (context){
-                      return ReviewPage(widget.user,doc);
-                    }));
-                  },
-                ),
-              ),
 
               GestureDetector(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width*1,
                   child: RaisedButton(
-                    color: Colors.lightBlue,
+                    color: Colors.transparent,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(10),),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("판매자에게 1:1 문의 남기기",style: TextStyle(fontSize: 15,color: Colors.white,fontWeight: FontWeight.bold),),
+                        Text("판매자에게 1:1 문의 남기기",style: TextStyle(fontSize: 15,color: Colors.black,),),
                         SizedBox(width:5,),
                         Image.asset(
                           'assets/icons/paper-plane.png', width: 20,
-                          height: 30,color: Colors.white,),
+                          height: 30,),
                       ],
                     ),
                     onPressed:(){
@@ -314,7 +306,33 @@ class _DetailOrderListState extends State<DetailOrderList> {
                     },
                   ),
                 ),
-              )
+              ),
+              Visibility(
+                visible: doc['state'] == "reviewEnd" ?false:true,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width*1,
+                  child: RaisedButton(
+                    color: Colors.lightBlueAccent,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("상품 후기 작성",style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),),
+                        SizedBox(width: 5,),
+                        Icon(Icons.brightness_1,color: Colors.red,size:7),
+                      ],
+                    ),
+                    onPressed:(){
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return ReviewPage(widget.user,doc,doc['productCode']);
+                      }));
+                    },
+                  ),
+                ),
+              ),
             ],
           );
         }
@@ -367,6 +385,17 @@ class _DetailOrderListState extends State<DetailOrderList> {
               child:Icon(Icons.check_circle,size: 30,color: Colors.green,)
           ),
           Text('배송 완료' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'reviewEnd'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text('후기 작성완료(구매 확정)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
         ],
       );
     }

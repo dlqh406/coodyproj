@@ -138,9 +138,10 @@ class Home extends StatefulWidget {
                 child: Container(
                   child: GestureDetector(
                       child: SizedBox(
-                          child: Image.asset('assets/logo/P21.png')),
+                          child: currentIndex==0?Image.asset('assets/logo/WP21.png'):Image.asset('assets/logo/P21.png')),
                       onTap: (
                           ) {
+                        print(currentIndex);
                         changePage(1);
                       }),
                 ),

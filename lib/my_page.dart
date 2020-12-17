@@ -29,6 +29,7 @@ class _MyPageState extends State<MyPage> {
       body: _bodyBuilder(),
     );
   }
+
   Widget _bodyBuilder() {
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance.collection('user_data').document(widget.user.uid).snapshots(),
@@ -57,6 +58,7 @@ class _MyPageState extends State<MyPage> {
       }
     );
   }
+
   Widget _buildHeader(Map<String, dynamic> doc) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -129,7 +131,7 @@ class _MyPageState extends State<MyPage> {
                               ),
                             ),
                             SizedBox(width: 5),
-                            Text("포토후기 작성하면 1% 구매 적립",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.redAccent),),
+                            Text("포토리뷰 작성 시 1% 구매 적립",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.redAccent),),
                           ],
                         ),
                         SizedBox(height: 6,),
@@ -269,11 +271,10 @@ class _MyPageState extends State<MyPage> {
             StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance.collection('order_data').orderBy('orderDate',descending: true).snapshots(),
               builder: (context, snapshot) {
-                print(widget.user.uid);
                 if (!snapshot.hasData){
                   return Container();
                 }
-                var list = snapshot.data.documents.where((doc)=> doc['userID'] == "${widget.user.uid}").toList();
+               var list = snapshot.data.documents.where((doc)=> doc['userID'] == "${widget.user.uid}").toList();
                return Padding(
                  padding: const EdgeInsets.only(left:20,right: 20,top:10),
                  child: Column(
@@ -338,7 +339,6 @@ class _MyPageState extends State<MyPage> {
   }
 
   Widget _buildListView(context, doc, index){
-    print(index);
     return InkWell(
       onTap: (){
         Navigator.push(context,
@@ -754,7 +754,19 @@ class _MyPageState extends State<MyPage> {
         ],
       );
      }
-   }
+
+     else if(data == 'reviewEnd'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+               Text('후기 작성완료(구매확정)' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+             ],
+           );
+         }
+       }
 
   Widget opacityLine (){
     return Opacity(
