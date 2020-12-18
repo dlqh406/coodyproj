@@ -301,8 +301,6 @@ class _DetailOrderListState extends State<DetailOrderList> {
                     onPressed:(){
                       print("aa");
                       _showAlert(index);
-
-
                     },
                   ),
                 ),
@@ -322,6 +320,7 @@ class _DetailOrderListState extends State<DetailOrderList> {
                       children: [
                         Text("상품 후기 작성",style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),),
                         SizedBox(width: 5,),
+                        Text('후기 작성으로 300원 적립가능'),
                         Icon(Icons.brightness_1,color: Colors.red,size:7),
                       ],
                     ),
@@ -486,34 +485,12 @@ class _DetailOrderListState extends State<DetailOrderList> {
                         'productCode' : widget.data[index]['productCode'],
                         'question' : myController.text,
                         'state' : "ongoing",
-                        'date' : DateTime.now()
+                        'date' : DateTime.now(),
+                        'userID': widget.user.uid
                       };
                       Firestore.instance
-                          .collection('seller_data')
-                          .document(widget.data[index]['sellerCode'])
-                          .collection('inquiry')
+                          .collection('inquiry_data')
                           .add(_addData);
-
-
-                      //
-                      // final Email email = Email(
-                      //   body: "hi ",
-                      //   subject: 'Email subject',
-                      //   recipients: ['boseong.lee@coody.cool'],
-                      //   isHTML: false,
-                      // );
-                      // String platformResponse;
-                      // try {
-                      //   await FlutterEmailSender.send(email);
-                      //   platformResponse = 'success';
-                      // } catch (error) {
-                      //   platformResponse = error.toString();
-                      // }
-                      // print(platformResponse);
-                      // if (!mounted) return;
-                      // _scaffoldKey.currentState.showSnackBar(SnackBar(
-                      //   content: Text(platformResponse),
-                      // ));
 
                       myController.clear();
                       Navigator.pop(context, true);

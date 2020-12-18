@@ -58,40 +58,6 @@ class _MyinfoPageState extends State<MyinfoPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String _rewardText = "";
 
-  _OrderPageState() {
-    _rewardController.addListener(() {
-
-      if(widget.rewardTotal < int.parse(_rewardController.text)){
-
-        _rewardController.clear();
-        setState(() {
-          widget._totalDiscount = 0;
-        });
-        FocusScope.of(context).unfocus();
-        scaffoldKey.currentState
-            .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
-        Padding(
-          padding: const EdgeInsets.only(top:8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.check_circle,color: Colors.blueAccent,),
-              SizedBox(width: 14,),
-              Text("입력한 값이 적립금보다 많아요",
-                style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
-            ],
-          ),
-        )));
-      }
-      else{
-        setState(() {
-          _rewardText = _rewardController.text;
-        });
-      }
-    }
-    );
-  }
-
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -1436,63 +1402,50 @@ class _MyinfoPageState extends State<MyinfoPage> {
   }
 
   Widget alert_addressListBody(int i, var doc) {
-    return  InkWell(
-      // onTap: (){
-      //   // setState(() {
-      //   //   widget.receiver = doc['deliveryInfoList'][i]["0"];
-      //   //   widget.phoneNum = doc['deliveryInfoList'][i]["1"];
-      //   //   widget.zoneCode = doc['deliveryInfoList'][i]["2"];
-      //   //   widget.address = doc['deliveryInfoList'][i]["3"];
-      //   //   widget.addressDetail = doc['deliveryInfoList'][i]["4"];
-      //   //   widget.request = doc['deliveryInfoList'][i]["5"];
-      //   //   Navigator.pop(context);
-      //   // });
-      // },
-      child: Container(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text("수령인 : ",style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold),),
-                Text("${doc['deliveryInfoList'][i]["0"]}",style: TextStyle(fontSize: 11),),
-                SizedBox(width: 20,),
-                Text('연락처 : ',style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold)),
-                Text("${doc['deliveryInfoList'][i]["1"]}",style: TextStyle(fontSize: 11)),
+    return  Container(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text("수령인 : ",style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold),),
+              Text("${doc['deliveryInfoList'][i]["0"]}",style: TextStyle(fontSize: 11),),
+              SizedBox(width: 20,),
+              Text('연락처 : ',style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold)),
+              Text("${doc['deliveryInfoList'][i]["1"]}",style: TextStyle(fontSize: 11)),
 
-              ],),
-            SizedBox(
-              height:7,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("주소 : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 11)),
-                Expanded(
-                  child: Text("[${doc['deliveryInfoList'][i]["2"]}] ${doc['deliveryInfoList'][i]["3"]} ${doc['deliveryInfoList'][i]["4"]} ",
-                      style: TextStyle(fontSize: 11),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,softWrap: false),
-                ),
-              ],
-            ),
-            SizedBox(
-              height:7,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("배송 요청 사항 : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 11)),
-                Expanded(
-                  child: Text("${doc['deliveryInfoList'][i]["5"]}",
-                      style: TextStyle(fontSize: 11),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,softWrap: false),
-                ),
-              ],
-            ),
-            SizedBox(height: 10,),
-          ],
-        ),
+            ],),
+          SizedBox(
+            height:7,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("주소 : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 11)),
+              Expanded(
+                child: Text("[${doc['deliveryInfoList'][i]["2"]}] ${doc['deliveryInfoList'][i]["3"]} ${doc['deliveryInfoList'][i]["4"]} ",
+                    style: TextStyle(fontSize: 11),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,softWrap: false),
+              ),
+            ],
+          ),
+          SizedBox(
+            height:7,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("배송 요청 사항 : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 11)),
+              Expanded(
+                child: Text("${doc['deliveryInfoList'][i]["5"]}",
+                    style: TextStyle(fontSize: 11),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,softWrap: false),
+              ),
+            ],
+          ),
+          SizedBox(height: 10,),
+        ],
       ),
     );
   }

@@ -60,7 +60,6 @@ class _ProductDetailState extends State<ProductDetail> {
 
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1403,40 +1402,19 @@ class _ProductDetailState extends State<ProductDetail> {
                         'productCode' : widget.document.documentID,
                         'question' : myController.text,
                         'state' : "ongoing",
-                        'date' : DateTime.now()
+                        'date' : DateTime.now(),
+                        'userID': widget.user.uid,
+                        'sellerCode' :widget.document['sellerCode'],
                       };
                       Firestore.instance
-                          .collection('seller_data')
-                          .document(widget.document['sellerCode'])
-                          .collection('inquiry')
+                          .collection('inquiry_data')
                           .add(_addData);
-
-                      //
-                      // final Email email = Email(
-                      //   body: "hi ",
-                      //   subject: 'Email subject',
-                      //   recipients: ['boseong.lee@coody.cool'],
-                      //   isHTML: false,
-                      // );
-                      // String platformResponse;
-                      // try {
-                      //   await FlutterEmailSender.send(email);
-                      //   platformResponse = 'success';
-                      // } catch (error) {
-                      //   platformResponse = error.toString();
-                      // }
-                      // print(platformResponse);
-                      // if (!mounted) return;
-                      // _scaffoldKey.currentState.showSnackBar(SnackBar(
-                      //   content: Text(platformResponse),
-                      // ));
-
                       myController.clear();
                       Navigator.pop(context, true);
 
 
                       _scaffoldKey.currentState
-                          .showSnackBar(SnackBar(duration: const Duration(seconds: 2),content:
+                          .showSnackBar(SnackBar(duration: const Duration(seconds: 3),content:
                       Padding(
                         padding: const EdgeInsets.only(top:8.0),
                         child: Row(
@@ -1444,8 +1422,8 @@ class _ProductDetailState extends State<ProductDetail> {
                           children: [
                             Icon(Icons.check_circle,color: Colors.blueAccent,),
                             SizedBox(width: 11,),
-                            Text("판매자에게 정상적으로 1:1문의 등록되었습니다.",
-                              style: TextStyle(fontWeight: FontWeight.bold,fontSize:16),),
+                            Text("1:1 문의 답변은 \n 마이쿠디 > 나의 쪽지함에서 확인 가능합니다.  ",
+                              style: TextStyle(fontWeight: FontWeight.bold,fontSize:15),),
                           ],
                         ),
                       )));

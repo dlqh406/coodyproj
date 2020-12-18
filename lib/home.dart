@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/my_page.dart';
 import 'package:coodyproj/search_page.dart';
@@ -200,24 +201,44 @@ class Home extends StatefulWidget {
       );
   }
     Widget get bottomNavigationBar {
-      return ClipRRect(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(40),
-          topLeft: Radius.circular(40),
-        ),
-        child: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('검색')),
-            BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('쿠디 홈')),
-            BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('마이 쿠디')),
-          ],
-          elevation: 0,
-          currentIndex: currentIndex,
-          unselectedItemColor: Colors.grey,
-          selectedItemColor: Colors.blueAccent,
-          showUnselectedLabels: true,
-          onTap:changePage,
-        ),
+      return StreamBuilder(
+        stream: Firestore.instance.collection('inquiry_data').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData){
+            return Center(child: CircularProgressIndicator(),);
+          }
+          var _list = snapshot.data.documents.where((doc) => doc['userID'] == widget.user.uid && doc['state'] == 'completion').toList();
+          return ClipRRect(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(40),
+              topLeft: Radius.circular(40),
+            ),
+            child: BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('검색')),
+                BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('쿠디 홈')),
+                BottomNavigationBarItem(
+                      icon: Stack(
+                      children: [
+                      Icon(Icons.person),
+                        _list.length==0?Padding(
+                            padding: const EdgeInsets.only(left:20.0),
+                            child: Icon(Icons.brightness_1,size: 6,color:Colors.transparent,)):Padding(
+                          padding: const EdgeInsets.only(left:20.0),
+                          child: Icon(Icons.brightness_1,size: 6,color: Colors.deepOrange,),
+                        )
+                    ]),
+                    title: Text('마이 쿠디')
+                )],
+              elevation: 0,
+              currentIndex: currentIndex,
+              unselectedItemColor: Colors.grey,
+              selectedItemColor: Colors.blueAccent,
+              showUnselectedLabels: true,
+              onTap:changePage,
+            ),
+          );
+        }
       );
     }
     void changePage(int index) {

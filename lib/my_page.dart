@@ -1,19 +1,20 @@
 import 'package:coodyproj/detail_order.dart';
 import 'package:coodyproj/detail_orderList.dart';
 import 'package:coodyproj/heart_page.dart';
-import 'package:coodyproj/myinfo_page.dart';
+import 'package:coodyproj/letter_page.dart';
+import 'package:coodyproj/myInfo_page.dart';
 import 'package:coodyproj/resent_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io' show Platform;import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:blinking_point/blinking_point.dart';
 
 
 class MyPage extends StatefulWidget {
   bool more_Btn = true;
   bool cancel_Btn = false;
-
   final FirebaseUser user;
   MyPage(this.user);
 
@@ -218,6 +219,48 @@ class _MyPageState extends State<MyPage> {
                         )
                       ],
                     ),
+                    SizedBox(
+                      height: 7,
+                    ),
+                     InkWell(
+                          onTap: () async{
+                             Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return  LetterPage(widget.user);}));
+                          },
+                          child: Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Image.asset('assets/icons/paper-plane.png',width: 20,),
+                              SizedBox(
+                                width: 7,
+                              ),
+                              StreamBuilder(
+                                  stream: Firestore.instance.collection('inquiry_data').snapshots(),
+                                  builder: (context, snapshot) {
+                                    if(!snapshot.hasData){
+                                      return Center(child: CircularProgressIndicator(),);
+                                    }
+                                    var _list = snapshot.data.documents.where((doc) => doc['userID'] == widget.user.uid && doc['state'] == 'completion').toList();
+
+
+                                    return Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('나의 쪽지함',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                                      SizedBox(width: 5,),
+                                      _list.length==0?Container():Icon(Icons.brightness_1,size:6,color: Colors.red)
+                                    ],
+                                  );
+                                }
+                              ),
+                              Spacer(),
+                              Icon(Icons.arrow_forward_ios,size: 15,),
+                              SizedBox(
+                                width: 20,
+                              )
+                            ],
+                          ),
+                        ),
                   ],
                 ),
               ),
