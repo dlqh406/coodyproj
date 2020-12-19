@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/cart.dart';
 import 'package:coodyproj/detail_review.dart';
+import 'package:coodyproj/detail_review_doc.dart';
 import 'package:coodyproj/home.dart';
 import 'package:coodyproj/order_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -419,218 +420,238 @@ class _ProductDetailState extends State<ProductDetail> {
     Size size = MediaQuery.of(context).size;
     var reviewCount = length;
 
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('uploaded_product').document(widget.document.documentID).
-      collection('review').orderBy('date', descending: true).snapshots(),
-      builder: (context, snapshot) {
-        if(!snapshot.hasData){
-          return Center(child: CircularProgressIndicator(),);
-        }
-        double _total =0.0;
-        for(var i=0; i<snapshot.data.documents.length; i++ ){
-          _total += double.parse(snapshot.data.documents[i]['rating']);
-        }
-        var _lengthDouble = snapshot.data.documents.length.toDouble();
-        var averageRating = _total / _lengthDouble;
+    return Container(
 
-        return Padding(
-          padding: const EdgeInsets.only(
-              top: 30.0, right: 10.0, left: 10.0, bottom: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text("실사용 리뷰",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 17.0, bottom: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection('uploaded_product').document(widget.document.documentID).
+        collection('review').orderBy('date', descending: true).snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData){
+            return Center(child: CircularProgressIndicator(),);
+          }
+          double _total =0.0;
+          for(var i=0; i<snapshot.data.documents.length; i++ ){
+            _total += double.parse(snapshot.data.documents[i]['rating']);
+          }
+          var _lengthDouble = snapshot.data.documents.length.toDouble();
+          var averageRating = _total / _lengthDouble;
+
+          return Padding(
+            padding: const EdgeInsets.only(
+                top: 30.0, right: 10.0, left: 10.0, bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 8.0, left: 20),
-                      child: reviewCount > 0
-                          ? Text("$averageRating", style: TextStyle(fontSize: 38))
-                          : Text("아직 후기가 없습니다",
-                          style: TextStyle(fontSize: 13, color: Colors.grey)),
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("실사용 리뷰",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                     ),
-                    if(reviewCount > 0)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('총 $reviewCount개 리뷰'),
-                            RatingBarIndicator(
-                              rating: averageRating,
-                              itemBuilder: (context, index) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              itemCount: 5,
-                              itemSize: 20.0,
-                              direction: Axis.horizontal,
-                            ),
-                          ],
-                        ),
-                      )
                   ],
                 ),
-              ),
-              Visibility(
-                visible: reviewCount > 0 ? true : false,
-                child: Container(
-                  height: 280,
-                  child: CupertinoScrollbar(
-                          controller: widget._controllerOne,
-                          isAlwaysShown: true,
-                          child: ListView(
-                            controller: widget._controllerOne,
+                Padding(
+                  padding: const EdgeInsets.only(top: 17.0, bottom: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0, left: 20),
+                        child: reviewCount > 0
+                            ? Text("$averageRating", style: TextStyle(fontSize: 38))
+                            : Text("아직 후기가 없습니다",
+                            style: TextStyle(fontSize: 13, color: Colors.grey)),
+                      ),
+                      if(reviewCount > 0)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              for(var i=0; i< snapshot.data.documents.length; i++)
-                              _buildListView(snapshot.data.documents[i],i)
+                              Text('총 $reviewCount개 리뷰'),
+                              RatingBarIndicator(
+                                rating: averageRating,
+                                itemBuilder: (context, index) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                itemCount: 5,
+                                itemSize: 20.0,
+                                direction: Axis.horizontal,
+                              ),
                             ],
-                      )
-                  )
+                          ),
+                        )
+                    ],
+                  ),
                 ),
-              ),
-              Visibility(
-                visible: reviewCount > 0 ? true : false,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
-                  child: SizedBox(
-                    width: size.width * 1,
-                    child: RaisedButton(
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),),
-                      color: Colors.blueAccent,
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => DetailReview(widget.user,widget.document,length)));
-                      },
-                      child: const Text('후기 전체 보기',
-                          style: TextStyle(color: Colors.white, fontSize: 16,fontWeight: FontWeight.bold)),
+                Visibility(
+                  visible: reviewCount > 0 ? true : false,
+                  child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.withOpacity(0.1))
+                      ),
+                    height: 280,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top:10.0),
+                      child: CupertinoScrollbar(
+                              controller: widget._controllerOne,
+                              isAlwaysShown: true,
+                              child: ListView(
+                                controller: widget._controllerOne,
+                                children: [
+                                  for(var i=0; i< snapshot.data.documents.length; i++)
+                                  _buildListView(snapshot.data.documents[i],i)
+                                ],
+                          )
+                      ),
+                    )
+                  ),
+                ),
+                Visibility(
+                  visible: reviewCount > 0 ? true : false,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
+                    child: SizedBox(
+                      width: size.width * 1,
+                      child: RaisedButton(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),),
+                        color: Colors.blueAccent,
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => DetailReview(widget.user,widget.document,length)));
+                        },
+                        child: const Text('후기 전체 보기',
+                            style: TextStyle(color: Colors.white, fontSize: 16,fontWeight: FontWeight.bold)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      }
+              ],
+            ),
+          );
+        }
+      ),
     );
   }
 
   Widget _buildListView(doc,index) {
     Size size = MediaQuery.of(context).size;
-       return Padding(
-          padding: const EdgeInsets.only(left:18.0,right:18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(doc['writer'], style: TextStyle(
-                      fontWeight: FontWeight.bold),),
-                  Spacer(),
-                  Visibility(
-                    visible: doc['height'] == 'non-public'?false:true,
-                    child: Row(
-                      children: [
-                        Text('[${doc['height']} ', style: TextStyle(
-                        ),),
-                        Text('${doc['weight']} ', style: TextStyle(
-                            ),),
-                        Text('${doc['sizing']}]', style: TextStyle(
-                            fontWeight: FontWeight.bold),),
-                      ],
-                    ),
-                  ),
+       return InkWell(
+         onTap: (){
+           Navigator.push(context,
+               MaterialPageRoute(builder: (context){
+                 //return OrderPage(widget.user);
+                 return DetailReviewDoc(doc);
 
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Row(
+               }));
+
+         },
+         child: Padding(
+            padding: const EdgeInsets.only(left:18.0,right:18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    RatingBarIndicator(
-                      rating: double.parse(doc['rating']),
-                      itemBuilder: (context, index) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
+                    Text(doc['writer'], style: TextStyle(
+                        fontWeight: FontWeight.bold),),
+                    Spacer(),
+                    Visibility(
+                      visible: doc['height'] == 'non-public'?false:true,
+                      child: Row(
+                        children: [
+                          Text('[${doc['height']} ', style: TextStyle(
+                          ),),
+                          Text('${doc['weight']} ', style: TextStyle(
+                              ),),
+                          Text('${doc['sizing']}]', style: TextStyle(
+                              fontWeight: FontWeight.bold),),
+                        ],
                       ),
-                      itemCount: 5,
-                      itemSize: 17.0,
-                      direction: Axis.horizontal,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 5.0),
-                      child: Text(
-                        _timeStampToString(doc['date']),
-                        style: TextStyle(fontSize: 12),),
                     ),
 
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    doc['imgList'].length == 0
-                        ? Visibility(visible: false, child: Text(""),)
-                        : Padding(
-                          padding: const EdgeInsets.only(
-                          right: 6),
-                          child: Container(
-                              width: 95,
-                              height: 95,
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Image.network(
-                                    doc['imgList'][0], fit: BoxFit.cover,),
-                                  Container(
-                                    width: 10,
-                                    height: 10,
-                                    child: Text(' +${doc['imgList'].length-1} ',style: TextStyle(backgroundColor: Colors.grey.withOpacity(0.5)),),
-                                  )
-                                ],
-                              )),
-                          ),
-                    Expanded(
-                      child: SizedBox(
-                          child: Text(doc['review'],
-                            maxLines: doc['imgList'].length==0?3:6,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: false,
-                          )),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Row(
+                    children: [
+                      RatingBarIndicator(
+                        rating: double.parse(doc['rating']),
+                        itemBuilder: (context, index) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        itemCount: 5,
+                        itemSize: 17.0,
+                        direction: Axis.horizontal,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 5.0),
+                        child: Text(
+                          _timeStampToString(doc['date']),
+                          style: TextStyle(fontSize: 12),),
+                      ),
+
+                    ],
+                  ),
                 ),
-              ),
-              Opacity(
-                  opacity: 0.15,
-                  child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 15.0, bottom: 15.0),
-                      child: Container(
-                        height: 1,
-                        color: Colors.black38,
-                      ))),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      doc['imgList'].length == 0
+                          ? Visibility(visible: false, child: Text(""),)
+                          : Padding(
+                            padding: const EdgeInsets.only(
+                            right: 6),
+                            child: Container(
+                                width: 95,
+                                height: 95,
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.network(
+                                      doc['imgList'][0], fit: BoxFit.cover,),
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      child: Text(' +${doc['imgList'].length-1} ',style: TextStyle(backgroundColor: Colors.grey.withOpacity(0.5)),),
+                                    )
+                                  ],
+                                )),
+                            ),
+                      Expanded(
+                        child: SizedBox(
+                            child: Text(doc['review'],
+                              maxLines: doc['imgList'].length==0?3:6,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: false,
+                            )),
+                      ),
+                    ],
+                  ),
+                ),
+                Opacity(
+                    opacity: 0.15,
+                    child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 15.0, bottom: 15.0),
+                        child: Container(
+                          height: 1,
+                          color: Colors.black38,
+                        ))),
+              ],
+            ),
           ),
-        );
+       );
   }
 
   Widget _buildMainInfoBody(BuildContext context) {

@@ -40,10 +40,11 @@ class Favorite extends StatefulWidget {
   _FavoriteState createState() => _FavoriteState();
 }
 
-class _FavoriteState extends State<Favorite> {
+class _FavoriteState extends State<Favorite> with AutomaticKeepAliveClientMixin {
 
   var stopTrigger = 1;
-
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
@@ -138,8 +139,10 @@ class _FavoriteState extends State<Favorite> {
             if(!snapshot.hasData){
               return Center(child:  CircularProgressIndicator());
             }
+
+            print("111111111");
 // 그리드뷰 개발 끝나고 주석만 풀면됨
-//               if(stopTrigger == 1 ){
+               if(stopTrigger == 1 ){
                 if(widget.filter == false){
                   widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
                   widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
@@ -154,10 +157,10 @@ class _FavoriteState extends State<Favorite> {
               stopTrigger+=1;
               print("stopTrigger222: ${stopTrigger}");
               print("--------------------------------");
-            // }
+            }
 
-            // else if(widget.filter == true){
-            if(widget.filter == true){
+            else if(widget.filter == true){
+            //if(widget.filter == true){
               for(var i=0; i<widget.selectedCategoryList.length; i++){
                 if(i==0){
                   widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
@@ -182,7 +185,6 @@ class _FavoriteState extends State<Favorite> {
                   //2 : 1.7
                   //2:2.6  2.2:
                   //2.2: 2.9
-
                   staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2: 2.9),
                   itemBuilder: (BuildContext context, int index) {
                     for(var i=0; i<widget.fF.length; i++ ){
@@ -223,7 +225,6 @@ class _FavoriteState extends State<Favorite> {
                       .document(widget.user.uid)
                       .collection('like')
                       .add(data);
-
                 },
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder: (context){

@@ -45,7 +45,7 @@ class _ContentsPageState extends State<ContentsPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
     ));
 
     return MaterialApp(
@@ -53,16 +53,14 @@ class _ContentsPageState extends State<ContentsPage> {
       theme: ThemeData(
         fontFamily: 'Kopup',
       ),
-      home:
-
-      Container(
+      home: Container(
         decoration: BoxDecoration(
           gradient:  LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [
-              _getColorFromHex("79f1a4"),
-              _getColorFromHex("0396ff"),
+              _getColorFromHex("00c0ff"),
+              _getColorFromHex("0d4dff"),
             ],
           ),
         ),
@@ -71,22 +69,15 @@ class _ContentsPageState extends State<ContentsPage> {
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading:  IconButton(
+                  color: Colors.grey,
                   icon: Icon(Icons.arrow_back_ios,size: 19,color: Colors.white,),
                   onPressed: (){
                     Navigator.pop(context);
                   }
               ),
               actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right:10.0),
-                  child: new IconButton( icon: new Icon(Icons.home,size: 23,),
-                      onPressed: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context){
-                      return Home(widget.user);
-                      }))
-                      },
-                ),
-                )],
+
+              ],
             ),
             backgroundColor: Colors.transparent,
             body: ListView(
@@ -118,7 +109,7 @@ class _ContentsPageState extends State<ContentsPage> {
                     fontSize: 45,
                     fontFamily: 'Montserrat',
                     letterSpacing: -1.3,
-                    color: Colors.redAccent,
+                    color: Colors.white,
                   ),),
               ],
             ),
@@ -226,7 +217,7 @@ class _ContentsPageState extends State<ContentsPage> {
                   child: FadeInImage.assetNetwork(
                     placeholder:'assets/images/loading.png',
                     image: doc['wide_thumbnail_img'],
-                    fit: BoxFit.cover,width:400,height: 200,),
+                    fit: BoxFit.cover,width:400,height:200,),
                 ),
               ),
               Row(
