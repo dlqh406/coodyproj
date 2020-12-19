@@ -11,10 +11,15 @@ import 'detail_product.dart';
 
 class CartPage extends StatefulWidget {
   final FirebaseUser user;
+  bool discountbtn = false;
+  var discount =0;
+  var discount2 =0;
+  var discount3 =0;
   var _documentIDList =[];
   var orderList =[];
   var temOrderList=[];
   var doclength=0;
+  var totalBtn = true;
   List<bool> checkboxList=[];
   List calculatePriceList=[];
 
@@ -50,28 +55,20 @@ class _CartPageState extends State<CartPage> {
         title: Text('장바구니'),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: SizedBox(
-              width: 70,
-              child: RaisedButton(
-                color: Color(0xFF5D70F8),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7)
-                ),
-                onPressed: () {
-
-                  _deleteCart();
-                  Navigator.pushReplacement(context, MaterialPageRoute(
-                     builder: (BuildContext context) =>  CartPage(widget.user)));
-                },
-                child: Text("삭제",style: TextStyle(color: Colors.white),),
-              ),
+            padding: const EdgeInsets.only(right:10.0),
+            child: new IconButton( icon: new Icon(Icons.home,size: 23,),
+              onPressed: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return Home(widget.user);
+                }))
+              },
             ),
           ),
         ],
       ),
           body: Column(
             children: [
+              // _totalBtn(),
               _buildCart(context),
               _calculationView(context),
             ],
@@ -87,7 +84,68 @@ class _CartPageState extends State<CartPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              Checkbox(
+                activeColor: Colors.blue,
+                value: widget.totalBtn,
+                onChanged: (val){
+                  setState(() {
+                    for( var i=0; i<widget.checkboxList.length; i++){
+                      setState(() {
+                        widget.checkboxList[i] = ! widget.checkboxList[i];
+                      });
+                    }
+                  });
+                },
+              ),
+              Text('전체 선택',style: TextStyle(fontWeight: FontWeight.bold),),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: SizedBox(
+                  width: 65,
+                  height: 30,
+                  child: RaisedButton(
+                    color: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7)
+                    ),
+                    onPressed: () {
+                      var _count =0;
+                      for( var i=0; i<widget.checkboxList.length; i++){
+                        if ( widget.checkboxList[i] = false){
+                          _count +=1;
+                        }
+                      }
+                      if( _count == 0 ){
+                        scaffoldKey.currentState
+                            .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
+                        Padding(
+                          padding: const EdgeInsets.only(top:8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.check_circle,color: Colors.blueAccent,),
+                              SizedBox(width: 14,),
+                              Text("삭제할 상품이 없습니다.",
+                                style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
+                            ],
+                          ),
+                        )));
+                      }else{
+                        _deleteCart();
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (BuildContext context) =>  CartPage(widget.user)));
+                      }
 
+                    },
+                    child: Text("삭제",style: TextStyle(color: Colors.white),),
+                  ),
+                ),
+              ),
+            ],
+          ),
           StreamBuilder<QuerySnapshot>(
             stream: _cartStream(),
             builder: (context, snapshot) {
@@ -96,13 +154,14 @@ class _CartPageState extends State<CartPage> {
               }
               else{
                 return Padding(
-                  padding: const EdgeInsets.only(top: 17.0, bottom: 10.0),
+                  padding: const EdgeInsets.only(top: 0.0, bottom: 5.0),
                 );
               }
             }
           ),
+
           Container(
-            height: size.height*0.56,
+            height: size.height*0.5,
             child: StreamBuilder<QuerySnapshot>(
                 stream: _cartStream(),
                 builder: (context, snapshot) {
@@ -257,7 +316,6 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-
   void _deleteCart(){
 
       Firestore.instance.collection('user_data').document("${widget.user.uid}")
@@ -283,16 +341,97 @@ class _CartPageState extends State<CartPage> {
 
   Widget _calculationView(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top:25,left:15.0,right:15.0),
+      padding: const EdgeInsets.only(top:18,left:15.0,right:15.0),
       child: Container(
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('배송비',style: TextStyle(fontSize:19,fontWeight: FontWeight.bold),),
+                Text('배송비',style: TextStyle(fontSize:17,fontWeight: FontWeight.bold),),
                 Text('무료배송', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
               ],
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            StreamBuilder(
+              stream: Firestore.instance.collection("user_data").document(widget.user.uid).snapshots(),
+              builder: (context, snapshot) {
+                if(!snapshot.hasData){
+                  return Center(child: CircularProgressIndicator(),);
+                }
+                widget.discount2 = int.parse(snapshot.data.data['reward']);
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset('assets/icons/coin2.png',width: 19,),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text('나의 적립금',style: TextStyle(fontSize:16,fontWeight: FontWeight.bold),),
+                    widget.discountbtn==false?
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: InkWell(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 3.4),
+                              child: Text("적용",
+                                  style: TextStyle(color: Colors.white,
+                                      fontWeight: FontWeight.bold,fontSize: 13)),
+                            ),
+                          ),
+                        ),
+                        onTap: (){
+                          setState(() {
+                            widget.discountbtn =!widget.discountbtn;
+                            widget.discount = int.parse(snapshot.data.data['reward']);
+                            widget.discount3 =  int.parse(snapshot.data.data['reward']);
+                          });
+                        },
+                      ),
+                    )
+                    :Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: InkWell(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 3.4),
+                              child: Text("적용 해제",
+                                  style: TextStyle(color: Colors.white,
+                                      fontWeight: FontWeight.bold,fontSize: 13)),
+                            ),
+                          ),
+                        ),
+                        onTap: (){
+                          setState(() {
+                            widget.discountbtn =!widget.discountbtn;
+                            widget.discount = 0;
+                            widget.discount3 =  0;
+                          });
+                        },
+                      ),
+                    ),
+
+
+                    Spacer(),
+                    Text('${numberWithComma(widget.discount2-widget.discount3) } p', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
+                  ],
+                );
+              }
             ),
             Padding(
               padding: const EdgeInsets.only(top:8.0),
@@ -304,16 +443,65 @@ class _CartPageState extends State<CartPage> {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(top:15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 0.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.redAccent,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.0, vertical: 3.4),
+                                      child: Text("EVENT",
+                                          style: TextStyle(color: Colors.white,
+                                              fontWeight: FontWeight.bold,fontSize: 10)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 5,),
+                              Text('최대 적립 가능',style: TextStyle(fontSize:18,fontWeight: FontWeight.bold,color:Colors.redAccent),),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left:2.0,top:3),
+                            child: Text('구매적립 1% + 포토 리뷰 1%',style: TextStyle(fontSize:10,fontWeight: FontWeight.bold,color:Colors.grey),),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 3,),
+
+                    ],
+                  ),
+                  Text('${_calculatePrice2()} p', style: TextStyle(fontSize:18, fontWeight: FontWeight.bold,color:Colors.redAccent),)
+                ],
+              ),
+            ),
             Opacity(
                 opacity: 0.15,
                 child: Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
+                    padding: const EdgeInsets.only(top: 10.0),
                     child: Container(
                       height: 1,
                       color: Colors.black38,
                     ))),
             Padding(
-              padding: const EdgeInsets.only(top:15.0),
+              padding: const EdgeInsets.only(top:5.0),
               child: SizedBox(
                 height: 46,
                 width: MediaQuery.of(context).size.width*1,
@@ -417,9 +605,33 @@ class _CartPageState extends State<CartPage> {
         }
       }
     }
-    return numberWithComma(_totalPrice);
+    return numberWithComma(_totalPrice - widget.discount);
   }
+  String _calculatePrice2(){
+    int _totalPrice = 0;
+    Firestore.instance.collection('user_data').document("${widget.user.uid}")
+        .collection('cart').orderBy('date', descending: true).getDocuments().then((querySnapshot){
+      querySnapshot.documents.forEach((result){
+        Firestore.instance.collection('uploaded_product')
+            .document(result.data["product"]).get().then((value) {
+          setState(() {
+            if( widget.calculatePriceList.length!=widget.checkboxList.length){
+              widget.calculatePriceList.add(int.parse(value.data['price']) * int.parse(result.data['selectedQuantity']));
+            }
+          });
+        });
+      });});
+    if(widget.calculatePriceList.length==widget.checkboxList.length){
+      for(var i=0; i< widget.checkboxList.length; i++){
+        if(widget.checkboxList[i] == true){
+          _totalPrice += widget.calculatePriceList[i];
+        }
+      }
+    }
 
+   var aa =  _totalPrice.toDouble()*0.02;
+    return numberWithComma(aa.ceil());
+  }
   Widget line(){
     return Opacity(
         opacity: 0.15,
@@ -438,4 +650,8 @@ class _CartPageState extends State<CartPage> {
     }
 
   }
+
+  // Widget _totalBtn() {
+  //   return
+  // }
 }

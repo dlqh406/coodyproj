@@ -238,7 +238,9 @@ class _DetailLetterPageState extends State<DetailLetterPage> {
               child:
               Row(
                 children: [
-                  widget.data['state']!='board'?Text("나의 질문",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)):Text("공지 사항",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  widget.data['state']!='board'
+                      ? Text("나의 질문", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+                      : Text("공지 사항",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 ],
               ),
             ),

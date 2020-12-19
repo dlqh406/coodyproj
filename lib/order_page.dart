@@ -1499,6 +1499,10 @@ class _OrderPageState extends State<OrderPage> {
                   padding: const EdgeInsets.only(bottom: 7),
                   child: Row(
                     children: [
+                      Image.asset('assets/icons/coin2.png',width: 19,),
+                      SizedBox(
+                        width: 8,
+                      ),
                       Text("적립금 ",style: TextStyle(fontWeight: FontWeight.bold, fontSize:20),),
                       Spacer(),
                       Container(

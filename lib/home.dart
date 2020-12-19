@@ -106,8 +106,8 @@ class Home extends StatefulWidget {
               onCancelButtonPressed: (){
                 SystemNavigator.pop();
               },
-              buttonOkText:Text("조금 더 둘러 볼께요!",style: TextStyle(color: Colors.white),) ,
-              buttonCancelText: Text("앱 종료 (단호)",style: TextStyle(color: Colors.white),),
+              buttonOkText:Text("조금 더 둘러 볼께요",style: TextStyle(color: Colors.white),) ,
+              buttonCancelText: Text("앱 종료",style: TextStyle(color: Colors.white),),
 
 
             ));
