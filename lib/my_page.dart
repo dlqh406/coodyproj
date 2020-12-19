@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io' show Platform;import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:blinking_point/blinking_point.dart';
 
 
 class MyPage extends StatefulWidget {

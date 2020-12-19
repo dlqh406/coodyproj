@@ -901,8 +901,8 @@ class _ReviewPageState extends State<ReviewPage> {
                 'imgList' :imgList,
                 'review' : textEditingConteroller.text,
                 'writer' : widget.nickName,
-                'height' :  widget.checkPrivacy?"미 공개":replace(heightController.text),
-                'weight' : widget.checkPrivacy?"미 공개":replace(weightController.text),
+                'height' :  widget.checkPrivacy?"non-public":replace(heightController.text),
+                'weight' : widget.checkPrivacy?"non-public":replace(weightController.text),
                 'sizing' : _sizing(widget.sizing)
               };
               // 댓글 추가

@@ -1758,7 +1758,8 @@ class _OrderPageState extends State<OrderPage> {
   }
   rewardOutput(var data){
     widget.totalReward = data['reward'];
-    return numberWithComma(int.parse(data['reward']));
+    print( widget._totalDiscount);
+    return numberWithComma(int.parse(data['reward']) - widget._totalDiscount);
   }
   totalPrice(int filter) {
 

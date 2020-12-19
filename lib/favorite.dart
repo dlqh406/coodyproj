@@ -139,7 +139,7 @@ class _FavoriteState extends State<Favorite> {
               return Center(child:  CircularProgressIndicator());
             }
 // 그리드뷰 개발 끝나고 주석만 풀면됨
-              if(stopTrigger == 1 ){
+//               if(stopTrigger == 1 ){
                 if(widget.filter == false){
                   widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
                   widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
@@ -154,10 +154,10 @@ class _FavoriteState extends State<Favorite> {
               stopTrigger+=1;
               print("stopTrigger222: ${stopTrigger}");
               print("--------------------------------");
-            }
+            // }
 
-            else if(widget.filter == true){
-            // if(widget.filter == true){
+            // else if(widget.filter == true){
+            if(widget.filter == true){
               for(var i=0; i<widget.selectedCategoryList.length; i++){
                 if(i==0){
                   widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
@@ -242,7 +242,7 @@ class _FavoriteState extends State<Favorite> {
                                   child: Stack(
                                     fit: StackFit.expand,
                                     children: [
-                                      Center(child: CircularProgressIndicator()),
+                                      Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white70))),
                                       FadeInImage.assetNetwork(
                                             placeholder: 'assets/images/loading.png',
                                             image: document['thumbnail_img'],
