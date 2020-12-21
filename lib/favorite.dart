@@ -205,90 +205,114 @@ class _FavoriteState extends State<Favorite> with AutomaticKeepAliveClientMixin 
     );
   }
   Widget _buildListItem(context,document,index) {
-    return
-      Hero(
-          tag: document['thumbnail_img'],
-          child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onDoubleTap: (){
-                  // 찜 데이터
-                  setState(() {
-                    widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
-                  });
-                  final data = {
-                    'docID' : document.documentID,
-                    'date' : DateTime.now()};
-                  // 댓글 추가
-                  Firestore.instance
-                      .collection('user_data')
-                      .document(widget.user.uid)
-                      .collection('like')
-                      .add(data);
-                },
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                    return ProductDetail(widget.user, document);
-                  }));
-                },
-                  //https://www.flaticon.com/free-icon/delivery_876079?term=delivery&page=5&position=21&related_item_id=876079/
-                  child:
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: new BorderRadius.circular(8.0),
-                              child: Container(
-                                  child: Stack(
-                                    fit: StackFit.expand,
-                                    children: [
-                                      Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white70))),
-                                      FadeInImage.assetNetwork(
-                                            placeholder: 'assets/images/loading.png',
-                                            image: document['thumbnail_img'],
-                                            fit : BoxFit.cover),
-                                      Positioned(
-                                          top:4,
-                                          right: 6,
-                                          child: widget.bool_list_each_GridSell[index]?Icon(Icons.favorite,size:25,color: Colors.red,):Container())
-                                    ],
-                                  ),
-                                  ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text("${document['productName']}",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,softWrap: false),
-                          SizedBox(
-                            height: 2.3,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment:MainAxisAlignment.center,
+
+    
+    return StreamBuilder(
+        stream: Firestore.instance.collection('uploaded_product').document(document.documentID).collection('review').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData){
+            return Center(child:CircularProgressIndicator());
+          }
+          double _total =0.0;
+          var averageRating =0.0;
+          for(var i=0; i<snapshot.data.documents.length; i++ ){
+            _total += double.parse(snapshot.data.documents[i]['rating']);
+          }
+          var _lengthDouble = snapshot.data.documents.length.toDouble();
+          averageRating = _total / _lengthDouble;
+          return Hero(
+              tag: document['thumbnail_img'],
+              child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onDoubleTap: (){
+                      // 찜 데이터
+                      setState(() {
+                        widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
+                      });
+                      final data = {
+                        'docID' : document.documentID,
+                        'date' : DateTime.now()};
+                      // 댓글 추가
+                      Firestore.instance
+                          .collection('user_data')
+                          .document(widget.user.uid)
+                          .collection('like')
+                          .add(data);
+                    },
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return ProductDetail(widget.user, document);
+                      }));
+                    },
+                      //https://www.flaticon.com/free-icon/delivery_876079?term=delivery&page=5&position=21&related_item_id=876079/
+                      child:
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("₩${numberWithComma(int.parse(document['price']==null?"12000":document['price']))}"
-                                  ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold)),
-                              Spacer(),
-                              // SizedBox(
-                              //   width: 4,
-                              // ),
-                              document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
-                              SizedBox(
-                                width: 6,
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: new BorderRadius.circular(8.0),
+                                  child: Container(
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white70))),
+                                          FadeInImage.assetNetwork(
+                                                placeholder: 'assets/images/loading.png',
+                                                image: document['thumbnail_img'],
+                                                fit : BoxFit.cover),
+                                          Positioned(
+                                              top:4,
+                                              right: 6,
+                                              child: widget.bool_list_each_GridSell[index]?Icon(Icons.favorite,size:25,color: Colors.red,):Container())
+                                        ],
+                                      ),
+                                      ),
+                                ),
                               ),
-                              Image.asset('assets/star/star11.png', width: 14,),
-                              Text("4.5",style: TextStyle(fontSize: 14),)
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text("${document['productName']}",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,softWrap: false),
+                              SizedBox(
+                                height: 2.3,
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:MainAxisAlignment.center,
+                                children: [
+                                  Text("₩${numberWithComma(int.parse(document['price']==null?"12000":document['price']))}"
+                                      ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold)),
+                                  Spacer(),
+                                  // SizedBox(
+                                  //   width: 4,
+                                  // ),
+                                  document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
+                                  SizedBox(
+                                    width: 6,
+                                  ),
+                                  Visibility(
+                                    visible: averageRating.isNaN?false:true,
+                                    child: Row(
+                                      children: [
+                                        Image.asset('assets/star/star11.png', width: 14,),
+                                        Text("$averageRating",style: TextStyle(fontSize: 14),)
+                                      ],
+                                    ),
+                                  ),
+                                  
+                                ],
+                              ),
                             ],
-                          ),
-                        ],
-                      )
-                  ),
-                ),
-              );
+                          )
+                      ),
+                    ),
+                  );
+        }
+      );
   }
   numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');

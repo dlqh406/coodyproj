@@ -320,7 +320,6 @@ class _DetailOrderListState extends State<DetailOrderList> {
                       children: [
                         Text("상품 후기 작성",style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),),
                         SizedBox(width: 5,),
-                        Text('후기 작성으로 300원 적립가능'),
                         Icon(Icons.brightness_1,color: Colors.red,size:7),
                       ],
                     ),

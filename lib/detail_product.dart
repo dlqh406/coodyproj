@@ -623,7 +623,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                     Container(
                                       width: 10,
                                       height: 10,
-                                      child: Text(' +${doc['imgList'].length-1} ',style: TextStyle(backgroundColor: Colors.grey.withOpacity(0.5)),),
+                                      child: doc['imgList'].length==1?Container():Text(' +${doc['imgList'].length-1} ',style: TextStyle(backgroundColor: Colors.grey.withOpacity(0.5)),),
                                     )
                                   ],
                                 )),

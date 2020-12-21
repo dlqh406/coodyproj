@@ -289,20 +289,20 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 ),
               ),
               // our product image
-              // Positioned(
-              //   top: 0,
-              //   right: 0,
-              //   child: Container(
-              //     height: 160,
-              //     // image is square but we add extra 20 + 20 padding thats why width is 200
-              //     width: 250,
-              //     child: Padding(
-              //       padding: const EdgeInsets.only(left: 100.0),
-              //       child: Image.asset(
-              //         "assets/logo/AI2.png", fit: BoxFit.cover,),
-              //     ),
-              //   ),
-              // ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  height: 160,
+                  // image is square but we add extra 20 + 20 padding thats why width is 200
+                  width: 250,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 100.0),
+                    child: Image.asset(
+                      "assets/logo/AI2.png", fit: BoxFit.cover,),
+                  ),
+                ),
+              ),
 
               // Product title and price
               Positioned(
@@ -311,7 +311,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 child: SizedBox(
                   height: 136,
                   // our image take 200 width, thats why we set out total width - 200
-                  width: size.width - 150,
+                  width: size.width - 100,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -324,12 +324,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                             horizontal: kDefaultPadding),
                         child: Row(
                           children: [
-                            Text("AI", style: TextStyle(
+                            Text("A.I", style: TextStyle(
                                 fontFamily: "Montserrat",
-                                fontSize: 20,
+                                fontSize: 26,
                                 color: Colors.redAccent,
                                 fontWeight: FontWeight.bold),),
-                            Text(" 맞춤 스타일 추천", style: TextStyle(fontSize: 15,
+                            Text(" 맞춤 스타일 추천", style: TextStyle(fontSize: 20,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),),
                           ],
@@ -399,8 +399,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     colors: [
-                      //_getColorFromHex("#f55555"),
-                      Colors.pinkAccent,
+                      _getColorFromHex("#f55555"),
                       _getColorFromHex("#fccf31"),
                     ],
                   ),
@@ -501,7 +500,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   end: Alignment.bottomLeft,
                   colors: [
                     _getColorFromHex("#f55555"),
-                    _getColorFromHex("#ce9ddc"),
+                    Colors.pinkAccent,
+                    //_getColorFromHex("#ce9ddc"),
                   ],
                 ),
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:coodyproj/home.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
 class ReviewPage extends StatefulWidget {
   bool more_Btn = true;
   bool cancel_Btn = false;
@@ -486,7 +487,12 @@ class _ReviewPageState extends State<ReviewPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("고객님의 스타일링 이미지를 공유해주세요!",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                        Row(
+                          children: [
+                            Text("고객님의 스타일링을 공유해주세요!",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                            Text('(최대 10장)',style: TextStyle(fontSize: 10),)
+                          ],
+                        ),
 
                         SizedBox(
                           height: 4,
@@ -511,7 +517,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               ),
                             ),
                             SizedBox(width: 5),
-                            Text("포토리 작성 시 1% 구매 적립",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.redAccent),),
+                            Text("포토리뷰 작성 시 1% 구매 적립",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.redAccent),),
                           ],
                         ),
                       ],
@@ -877,11 +883,16 @@ class _ReviewPageState extends State<ReviewPage> {
                     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
                     StorageReference reference = FirebaseStorage.instance.ref().child('reviewImg').child(fileName);
 
-                    StorageUploadTask uploadTask = reference.putData((await imageFile.getByteData()).buffer.asUint8List(), StorageMetadata(contentType: 'image/png'));
+                    StorageUploadTask uploadTask =
+                        reference.putData((await imageFile.getByteData())
+                        .buffer.asUint8List(),
+                        StorageMetadata(contentType: 'image/png'));
+
                     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
                     final downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
                     return downloadUrl;
                   }
+
 
                   for(var i=0; i<imageList.length; i++){
                     await postImage(imageList[i]).then((value) => imgList.add(value.toString()));
@@ -974,7 +985,10 @@ class _ReviewPageState extends State<ReviewPage> {
   getImage() async {
     List<Asset> resultList = List<Asset>();
     resultList =
-    await MultiImagePicker.pickImages(maxImages: 10, enableCamera: true);
+    await MultiImagePicker.pickImages(
+
+      maxImages: 10,
+      enableCamera: true, );
     setState(() {
       imageList = resultList;
     });
