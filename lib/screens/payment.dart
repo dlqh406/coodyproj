@@ -55,11 +55,9 @@ class Payment extends StatelessWidget {
       'addressDetail': addressDetail,
       'request':request,
       'name': name,
-
       'buyerName': buyerName,
       'buyerTel': buyerTel,
       'buyerEmail': buyerEmail,
-
       //사용한 적립금
       'usedReward' : reward.toString(),
       //사용하기 전 적립금

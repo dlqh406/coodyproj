@@ -289,20 +289,20 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 ),
               ),
               // our product image
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  height: 100,
-                  // image is square but we add extra 20 + 20 padding thats why width is 200
-                  width: 300,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 100.0),
-                    child: Image.asset(
-                      "assets/images/giphy2.gif", fit: BoxFit.cover,),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 0,
+              //   right: 0,
+              //   child: Container(
+              //     height: 160,
+              //     // image is square but we add extra 20 + 20 padding thats why width is 200
+              //     width: 250,
+              //     child: Padding(
+              //       padding: const EdgeInsets.only(left: 100.0),
+              //       child: Image.asset(
+              //         "assets/logo/AI2.png", fit: BoxFit.cover,),
+              //     ),
+              //   ),
+              // ),
 
               // Product title and price
               Positioned(
@@ -408,17 +408,17 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 ),
               ),
               // our product image
-              Positioned(
-                top: 1,
-                right: 35,
-                child: Container(
-                  height: 110,
-                  // image is square but we add extra 20 + 20 padding thats why width is 200
-                  width: 130,
-                  child: Image.asset(
-                    "assets/images/12.gif", fit: BoxFit.cover,),
-                ),
-              ),
+              // Positioned(
+              //   top: 1,
+              //   right: 35,
+              //   child: Container(
+              //     height: 110,
+              //     // image is square but we add extra 20 + 20 padding thats why width is 200
+              //     width: 130,
+              //     child: Image.asset(
+              //       "assets/images/12.gif", fit: BoxFit.cover,),
+              //   ),
+              // ),
               // Product title and price
               Positioned(
                 bottom: 0,
@@ -508,17 +508,17 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               ),
             ),
             // our product image
-            Positioned(
-              top: 1,
-              right: 25,
-              child: Container(
-                height: 110,
-                // image is square but we add extra 20 + 20 padding thats why width is 200
-                width: 130,
-                child: Image.asset(
-                  "assets/images/cake.gif",fit: BoxFit.cover,),
-              ),
-            ),
+            // Positioned(
+            //   top: 1,
+            //   right: 25,
+            //   child: Container(
+            //     height: 110,
+            //     // image is square but we add extra 20 + 20 padding thats why width is 200
+            //     width: 130,
+            //     child: Image.asset(
+            //       "assets/images/cake.gif",fit: BoxFit.cover,),
+            //   ),
+            // ),
             // Product title and price
             Positioned(
               bottom: 0,
@@ -654,6 +654,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     }
 
   }
+
 class ContentsCard extends StatelessWidget {
   const ContentsCard({
     Key key,

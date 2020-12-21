@@ -975,7 +975,7 @@ class _OrderPageState extends State<OrderPage> {
                     Row(
                       children: [
                         Expanded(
-                            child: Text("색상 : ${widget.orderList[index][0]} / 사이 : ${widget.orderList[index][1]} / 수량 : ${widget.orderList[index][2]}개",
+                            child: Text("색상 : ${widget.orderList[index][0]} / 사이즈 : ${widget.orderList[index][1]} / 수량 : ${widget.orderList[index][2]}개",
                               style: TextStyle(fontSize:14 ,color: Colors.black87,
                               ),maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -1746,7 +1746,6 @@ class _OrderPageState extends State<OrderPage> {
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
   cal_data(){
-    var aa = "8/21(오늘)";
     var _data;
     if(DateTime.now().hour < 15){
       _data = "${DateTime.now().month}/${DateTime.now().day} (오늘)";
