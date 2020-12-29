@@ -431,7 +431,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           SizedBox(height: 6,),
                           Row(
                             children: [
-                              Text('₩ ${numberWithComma(int.parse(snapshot.data.data['price']))}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                              Text('₩ ${numberWithComma(int.parse(doc['totalPrice']))}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
                             ],
                           )
                         ],
@@ -772,7 +772,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         ),
                         Text('적립금 지급 기준 : ',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
                         SizedBox(height: 5,),
-                        Text('상품 착용 이미지 및 상품을 활용한 스타일링 이미지를 \n한 개 이상 업로드한 리뷰',style: TextStyle(fontSize: 13),),
+                        Text('상품 이미지 및 상품을 활용한 스타일링 이미지를 \n한 개 이상 업로드한 리뷰',style: TextStyle(fontSize: 13),),
 
                         SizedBox(
                           height: 10,
@@ -782,16 +782,14 @@ class _ReviewPageState extends State<ReviewPage> {
                         Text('1) 구매 상품과 관련없는 사진을 업로드 한 경우',style: TextStyle(fontSize: 13),),
                         SizedBox(height: 5,),
                         Text('2) 구매 상품인것으로 식별하기 힘든 경우',style: TextStyle(fontSize: 13),),
-                        SizedBox(height: 5,),
-                        Text('3) 착용 사진이 아닐 경우',style: TextStyle(fontSize: 13),),
                         SizedBox(
                           height: 10,
                         ),
-                        Text('작성된 리뷰는 해당 상품 리뷰란에 바로 노출되며, \n적립금 지급은 영업일 2일 내로 처리됩니다.',style: TextStyle(fontSize: 15,),),
+                        Text('작성된 리뷰는 해당 상품 리뷰란에 바로 노출되며, \n후기 작성시 적립금은 바로 지급됩니다',style: TextStyle(fontSize: 15,)),
                         SizedBox(
                           height: 8,
                         ),
-                        Text('위 적립금 지급 기준에 부합하지 않은 \n후기일 경우 적립금 지급이 거절될 수 있습니다',style: TextStyle(fontSize: 15),),
+                        Text('위 적립금 지급 기준에 부합하지 않은 \n후기일 경우 적립금 지급이 취소될 수 있습니다',style: TextStyle(fontSize: 15),),
                       ],
                     ),
                     Spacer(),
@@ -914,7 +912,8 @@ class _ReviewPageState extends State<ReviewPage> {
                 'writer' : widget.nickName,
                 'height' :  widget.checkPrivacy?"non-public":replace(heightController.text),
                 'weight' : widget.checkPrivacy?"non-public":replace(weightController.text),
-                'sizing' : _sizing(widget.sizing)
+                'sizing' : _sizing(widget.sizing),
+                'state' : "wrote"
               };
               // 댓글 추가
               final data2 = {
@@ -925,6 +924,8 @@ class _ReviewPageState extends State<ReviewPage> {
                   .document(widget.data.documentID)
                   .updateData(data2);
 
+            // 적립금 바로 지급
+              
 
               Firestore.instance
                   .collection('uploaded_product')

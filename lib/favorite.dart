@@ -10,6 +10,7 @@ import 'dart:io' show Platform;
 import 'package:coodyproj/test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:vibration/vibration.dart';
 
 class Favorite extends StatefulWidget {
   var bool_list_each_GridSell = [];
@@ -205,7 +206,6 @@ class _FavoriteState extends State<Favorite> with AutomaticKeepAliveClientMixin 
     );
   }
   Widget _buildListItem(context,document,index) {
-
     
     return StreamBuilder(
         stream: Firestore.instance.collection('uploaded_product').document(document.documentID).collection('review').snapshots(),
@@ -220,12 +220,14 @@ class _FavoriteState extends State<Favorite> with AutomaticKeepAliveClientMixin 
           }
           var _lengthDouble = snapshot.data.documents.length.toDouble();
           averageRating = _total / _lengthDouble;
+
           return Hero(
               tag: document['thumbnail_img'],
               child: Material(
                   color: Colors.transparent,
                   child: InkWell(
                     onDoubleTap: (){
+                      Vibration.vibrate(duration: 100, amplitude: 58);
                       // 찜 데이터
                       setState(() {
                         widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];

@@ -39,6 +39,7 @@ class PaymentResult extends StatelessWidget {
       print("@@@@@@: ${payData['zoneCode']}");
 
       for(var i=0; i<payData['orderList'].length; i++ ){
+
         var _ICode = merchantUid_I();
         var data = {
           // orderList에서 개별적으로 저장
@@ -46,10 +47,9 @@ class PaymentResult extends StatelessWidget {
           'orderSize' : payData['orderList'][i][1],
           'orderQuantity' : payData['orderList'][i][2],
           'productCode': payData['orderList'][i][3],
-          'totalPrice' : payData['orderList'][i][4],  // I코드 단위로 개별 가격
+          'totalPrice' : payData['orderList'][i][4],
           'sellerCode' : payData['orderList'][i][5],
-
-          // 완료
+          'orderProductName' : payData['orderList'][i][6],
           'P_code' : payData['merchantUid'],
           'I_code' : _ICode,
           'zoneCode' : payData['zoneCode'],
@@ -69,11 +69,10 @@ class PaymentResult extends StatelessWidget {
           'shippingCompany': "0",
 
         };
-        //document(merchantUid_I()).
         Firestore.instance.collection('order_data').add(data);
       }
       if (result['reward'] != 0) {
-       var currentReward = int.parse(payData['beforeReward']) - payData['usedReward'];
+       var currentReward = int.parse(payData['beforeReward']) - int.parse(payData['usedReward']);
        var data ={
          'reward' : currentReward.toString()
        };

@@ -6,10 +6,11 @@ import 'dart:io' show Platform;
 
 class DetailContents extends StatefulWidget {
   bool _heart = false;
-  final title, date, detail_img;
+  var title;
+  var detail_img;
   var docID;
 
-  DetailContents(this.title,this.date,this.detail_img);
+  DetailContents(this.title,this.detail_img);
 
   @override
   _DetailContentsState createState() => _DetailContentsState();
@@ -33,7 +34,7 @@ class _DetailContentsState extends State<DetailContents> {
             if(!snapshot.hasData){
               return Center(child: CircularProgressIndicator(),);
              }
-              var aa = snapshot.data.documents.where((element) => element['date'] == widget.date).toList();
+              var aa = snapshot.data.documents.where((element) => element['detail_img'] == widget.detail_img).toList();
               var bb = aa[0].documentID;
               var cc = aa[0]['like'];
               if ( cc==null){

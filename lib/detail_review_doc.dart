@@ -75,6 +75,8 @@ class _DetailReviewDocState extends State<DetailReviewDoc>  {
                     ),),
                     Text('${doc['sizing']}]', style: TextStyle(
                         fontWeight: FontWeight.bold),),
+                    Text(']', style: TextStyle(
+                    ),),
                   ],
                 ),
               ),

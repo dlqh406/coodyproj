@@ -38,6 +38,7 @@ dependencies:
   permission_handler: ^3.1.0
   firebase_storage: ^3.1.6
   path_provider: ^1.6.24
+  vibration: ^1.7.3
 
 dev_dependencies:
   flutter_test:

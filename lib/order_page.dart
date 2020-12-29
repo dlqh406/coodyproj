@@ -937,7 +937,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Widget _buildListView(context, doc, index){
-    if( index ==1 ){
+    if(index == 0 ){
           widget.firstName = doc['productName'];
     }
 
@@ -1213,6 +1213,7 @@ class _OrderPageState extends State<OrderPage> {
                           borderRadius: BorderRadius.circular(10),),
                         color: Colors.blueAccent,
                         onPressed: () {
+                          print( widget.orderList);
                           if( widget.checkPrivacy == true ){
                             var method;
                             if(widget.paymentValue ==1){
@@ -1740,6 +1741,7 @@ class _OrderPageState extends State<OrderPage> {
     else{
       merchantUid = widget.firstName;
     }
+    print("@@@@@@@@@@@@@@@ : ${merchantUid}");
     return merchantUid;
   }
   numberWithComma(int param){

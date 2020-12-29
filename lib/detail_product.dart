@@ -571,6 +571,8 @@ class _ProductDetailState extends State<ProductDetail> {
                               ),),
                           Text('${doc['sizing']}]', style: TextStyle(
                               fontWeight: FontWeight.bold),),
+                          Text(']', style: TextStyle(
+                              ),),
                         ],
                       ),
                     ),
@@ -1220,11 +1222,13 @@ class _ProductDetailState extends State<ProductDetail> {
                                 widget.selectedList[i].add(widget.document.documentID);
                                 widget.selectedList[i].add(widget.document['price']);
                                 widget.selectedList[i].add(widget.document['sellerCode']);
+                                widget.selectedList[i].add(widget.document['productName']);
                               }
                             }
                             print("구매하기 : ${widget.selectedList}");
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context){
+                                  print( widget.selectedList );
 
                                   //return OrderPage(widget.user);
                                   return OrderPage(widget.user, widget.selectedList);

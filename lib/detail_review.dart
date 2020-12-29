@@ -175,6 +175,8 @@ class _DetailReviewState extends State<DetailReview>  {
                   ),),
                   Text('${doc['sizing']}]', style: TextStyle(
                       fontWeight: FontWeight.bold),),
+                  Text(']', style: TextStyle(
+                  ),),
                 ],
               ),
             ),
@@ -264,6 +266,7 @@ class _DetailReviewState extends State<DetailReview>  {
     ),
   );
   }
+
   String _timeStampToString(date) {
     Timestamp t = date;
     DateTime d = t.toDate();

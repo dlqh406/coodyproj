@@ -366,7 +366,7 @@ class _DetailOrderState extends State<DetailOrder> {
                               SizedBox(height: 6,),
                               Row(
                                 children: [
-                                  Text('₩ ${numberWithComma(int.parse(snapshot.data.data['price']))}',style: TextStyle(fontSize: 16),),
+                                  Text('₩ ${numberWithComma(int.parse(doc['totalPrice']))}',style: TextStyle(fontSize: 16),),
                                 ],
                               )
                             ],

@@ -172,7 +172,7 @@ class _LetterPageState extends State<LetterPage> {
                                     children: [
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Row(
                                             children: [

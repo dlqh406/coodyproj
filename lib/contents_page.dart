@@ -162,8 +162,11 @@ class _ContentsPageState extends State<ContentsPage> {
 
     return InkWell(
       onTap: (){
+        print(doc['title']);
+        print(doc['date']);
+        print(doc['detail_img']);
         Navigator.push(context, MaterialPageRoute(builder: (context){
-          return DetailContents(doc['title'],doc['date'],doc['detail_img']);
+          return DetailContents(doc['title'],doc['detail_img']);
         }));
       },
       child: Padding(

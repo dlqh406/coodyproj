@@ -646,7 +646,8 @@ class _CartPageState extends State<CartPage> {
 
   void temOrderList(doc,docs) {
     if(widget.temOrderList.length < widget.doclength){
-      widget.temOrderList.add([doc['selectedColor'],doc['selectedSize'],doc['selectedQuantity'], docs.documentID,docs['price'],docs['sellerCode']]);
+      widget.temOrderList.add([doc['selectedColor'],doc['selectedSize'],
+        doc['selectedQuantity'], docs.documentID,docs['price'],docs['sellerCode'],docs['productName']]);
     }
 
   }

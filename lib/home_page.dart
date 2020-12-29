@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             images.add(result.data['thumbnail_img']);
             title.add(result.data['shortTitle']);
             detail_img.add(result.data['detail_img']);
-            date.add(_timeStampToString(result.data['date']));
+            date.add(result.data['date']);
             currentPage = images.length - 1.0;
           });
         })
@@ -438,9 +438,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("액티비티", style: TextStyle(fontSize: 16,
+                              Text("7월의 컬러는 보라색", style: TextStyle(fontSize: 20,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold),),
+                                  fontWeight: FontWeight.bold,),),
                               SizedBox(height: 10,),
                               Text("#운동할때 입기 좋은", style: TextStyle(fontSize: 14,
                                   color: Colors.white,
@@ -539,7 +539,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("특별한 날", style: TextStyle(fontSize: 16,
+                            Text("역 시즌 할인 중 ", style: TextStyle(fontSize: 16,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),),
                             SizedBox(height: 10,),
@@ -664,8 +664,7 @@ class ContentsCard extends StatelessWidget {
     this.date,
     this.detail_img
   }) : super(key: key);
-
-  final String image, title, date, detail_img;
+  final String image, title,date, detail_img;
   final Function press;
 
   @override
@@ -673,9 +672,12 @@ class ContentsCard extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return InkWell(
       onTap: (){
+        print(title);
+        print(date);
+        print(detail_img);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) =>
-                DetailContents(title, date, detail_img)));
+                DetailContents(title, detail_img)));
       },
       child: Container(
 
