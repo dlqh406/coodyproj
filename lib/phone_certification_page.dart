@@ -17,9 +17,11 @@ class _PhoneCertificationPageState extends State<PhoneCertificationPage> {
   final myControllerName = TextEditingController();
   final myControllerBirth = TextEditingController();
   final myControllerPhone = TextEditingController();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
           child:
           AppBar(
@@ -179,44 +181,84 @@ class _PhoneCertificationPageState extends State<PhoneCertificationPage> {
                         borderRadius: BorderRadius.circular(10),),
                       color: Colors.blueAccent,
                       onPressed: () {
+                        if(myControllerName.text=="" || myControllerPhone.text ==""|| myControllerBirth.text ==""){
 
-                        var date = new DateTime.now().toString();
-                        var dateParse = DateTime.parse(date);
-                        var formattedDate = dateParse.year.toString();
-                        var userBirth =  myControllerBirth.text;
-                        var currentY = formattedDate;
-                        var equalY = int.parse(currentY) - int.parse(userBirth[0]+userBirth[1]+userBirth[2]+userBirth[3]);
-                        var currentM = dateParse.month.toString();
-                        var currentD = dateParse.day.toString();
-                        var userMM= userBirth[4]+userBirth[5];
-                        var userDD= userBirth[6]+userBirth[7];
-                        if(int.parse(currentM)-int.parse(userMM) >0 == false){
-                          if(int.parse(currentD)-int.parse(userDD) >0  == false){
-                            equalY=equalY-1;
-                        }}
 
-                        print(equalY);
-                        if( equalY >= 14){
-                          var carrier;
-                          if(widget.paymentValue ==1){
-                            carrier = "SKT";
-                          }
-                          else if(widget.paymentValue ==2){
-                            carrier = "KTF";
-                          }
-                          else if( widget.paymentValue ==3){
-                            carrier = "LGT";
-                          }
-                          else{
-                            carrier = "MVNO";
-                          }
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) =>
-                                  Certification(widget.user,carrier,myControllerName.text,myControllerPhone.text,myControllerBirth.text,)));
+                          scaffoldKey.currentState
+                              .showSnackBar(SnackBar(duration: const Duration(seconds: 1),content:
+                          Padding(
+                            padding: const EdgeInsets.only(top:8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.check_circle,color: Colors.blueAccent,),
+                                SizedBox(width: 14,),
+                                Text("모든 정보를 입력해주세요.",
+                                  style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
+                              ],
+                            ),
+                          )));
                         }
                         else{
-                          alert();
-                        }
+                          if(myControllerBirth.text.length == 8 ){
+                            var date = new DateTime.now().toString();
+                            var dateParse = DateTime.parse(date);
+                            var formattedDate = dateParse.year.toString();
+                            var userBirth =  myControllerBirth.text;
+                            var currentY = formattedDate;
+                            var equalY = int.parse(currentY) - int.parse(userBirth[0]+userBirth[1]+userBirth[2]+userBirth[3]);
+                            var currentM = dateParse.month.toString();
+                            var currentD = dateParse.day.toString();
+                            var userMM= userBirth[4]+userBirth[5];
+                            var userDD= userBirth[6]+userBirth[7];
+                            if(int.parse(currentM)-int.parse(userMM) >0 == false){
+                              if(int.parse(currentD)-int.parse(userDD) >0  == false){
+                                equalY=equalY-1;
+                              }}
+                            print(equalY);
+
+                            if( equalY >= 14){
+                              var carrier;
+                              if(widget.paymentValue ==1){
+                                carrier = "SKT";
+                              }
+                              else if(widget.paymentValue ==2){
+                                carrier = "KTF";
+                              }
+                              else if( widget.paymentValue ==3){
+                                carrier = "LGT";
+                              }
+                              else{
+                                carrier = "MVNO";
+                              }
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) =>
+                                      Certification(widget.user,carrier,myControllerName.text,myControllerPhone.text,myControllerBirth.text,)));
+                            }
+                            else{
+                              alert();
+                            }
+
+                          }else{
+                            scaffoldKey.currentState
+                                .showSnackBar(SnackBar(duration: const Duration(seconds: 3),content:
+                            Padding(
+                              padding: const EdgeInsets.only(top:8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.check_circle,color: Colors.blueAccent,size: 40,),
+                                  SizedBox(width: 14,),
+                                  Text("생년 월일을 8자리로 입력해주세요 \n예시)19941031",
+                                    style: TextStyle(fontWeight: FontWeight.bold,fontSize:17),),
+                                ],
+                              ),
+                            )));
+                          }
+                          }
+
+
+
 
 
                       }))
