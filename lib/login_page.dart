@@ -38,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   _handleG_SignIn().then((user) {
                     print(user);
-                    print('111');
                   });
                 },
               ),
@@ -95,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                 fontSize: 22.0, fontWeight: FontWeight.w700),
           ),
           description: Text(
-            '이미 가입이 되어있는 이메일입니다 \n 다른 SNS계정으로 시도해보세요',
+            '이미 가입이 되어있는 계정입니다 \n 다른 SNS계정으 시도해보세요',
             textAlign: TextAlign.center,
           ),
           buttonOkColor: Colors.blue,

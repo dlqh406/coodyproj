@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coodyproj/cart.dart';
+import 'package:coodyproj/favorite_analysis_page.dart';
 import 'package:coodyproj/my_page.dart';
+import 'package:coodyproj/phone_certification_page.dart';
 import 'package:coodyproj/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,19 +21,16 @@ class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
-
-
   class _HomeState extends State<Home> {
     var currentIndex;
     List<Widget> pageList;
-
 
     final PageController _pageController = PageController(
         initialPage: 1 , keepPage: true,
     );
 
-    @override
-    void initState() {
+  @override
+  void initState() {
       super.initState();
         currentIndex = 1;
         pageList =[
@@ -41,31 +40,40 @@ class Home extends StatefulWidget {
         ];
     }
 
-
   @override
   Widget build(BuildContext context) {
 
     return WillPopScope(
       onWillPop: _onBackPressed,
-      child: Scaffold(
-
-            appBar: appBarBuild(),
-            body: Stack(
-              children: [
-                PageView(
-                  controller: _pageController,
-                  children: pageList,
-                  physics: NeverScrollableScrollPhysics()
+      child: StreamBuilder<DocumentSnapshot>(
+        stream:  Firestore.instance.collection("user_data_test").document(
+            widget.user.uid).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if(snapshot.data.data == null){
+              return PhoneCertificationPage(widget.user);
+            }
+          }
+          return Scaffold(
+                appBar: appBarBuild(),
+                body: Stack(
+                  children: [
+                    PageView(
+                      controller: _pageController,
+                      children: pageList,
+                      physics: NeverScrollableScrollPhysics()
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: bottomNavigationBar,
+                    ),
+                  ],
                 ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: bottomNavigationBar,
-                ),
-              ],
-            ),
-          ),
+              );
+        }
+      ),
     );
 
 
@@ -113,8 +121,6 @@ class Home extends StatefulWidget {
             ));
         }
       }
-
-
 
    Widget appBarBuild() {
     return
@@ -200,7 +206,7 @@ class Home extends StatefulWidget {
           )
       );
   }
-    Widget get bottomNavigationBar {
+   Widget get bottomNavigationBar {
       return StreamBuilder(
         stream: Firestore.instance.collection('inquiry_data').snapshots(),
         builder: (context, snapshot) {

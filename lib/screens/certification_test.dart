@@ -1,3 +1,4 @@
+import 'package:coodyproj/screens/certification.dart';
 import 'package:flutter/material.dart';
 import 'package:iamport_flutter/model/certification_data.dart';
 import 'package:coodyproj/models/carrier.dart';
@@ -127,12 +128,14 @@ class _CertificationTestState extends State<CertificationTest> {
                       if (minAge.length != null && minAge.length > 0) {
                         data.minAge = int.parse(minAge);
                       }
-
-                      Navigator.pushNamed(
-                        context,
-                        '/certification',
-                        arguments: data
-                      );
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) =>
+                      //         Certification()));
+                      // Navigator.pushNamed(
+                      //   context,
+                      //   '/certification',
+                      //   arguments: data
+                      // );
                     }
                   },
                   child: Text('본인인증 하기', style: TextStyle(fontSize: 20)),

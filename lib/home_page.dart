@@ -8,7 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'favorite_analysis_page.dart';
 import 'loading_page.dart';
 import 'favorite.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
@@ -68,30 +69,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     @override
     Widget build(BuildContext context) {
     return Scaffold(
-        body:homeBuild(),
+        body:bodyBuild(),
     );
   }
-    Widget homeBuild(){
-      return  StreamBuilder<DocumentSnapshot>(
-          stream: Firestore.instance.collection("user_data").document(
-              widget.user.uid).snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data.data == null) {
-                return FavoriteAnalysisPage(widget.user);
-              }
-              else {
-                return Scaffold(
-                  body: bodyBuild(),
-                );
-              }
-            }
-            else {
-              return LoadingPage();
-            }
-          }
-      );
-    }
+    // Widget homeBuild(){
+    //   return Scaffold(
+    //     body: ,
+    //   );
+    // }
     Widget bodyBuild() {
       return ListView(
         children: [
@@ -234,6 +219,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                       color: Colors.black,
                     ),
                     onPressed: () {
+                      void RestApi_Get() async {
+                        http.Response response = await http.post(
+                            Uri.encodeFull("https://apis.aligo.in/send/key=ciitjlh4hgpv9i0miit3ooprd3kx474c/user_id=tjd406/sender=01068276863/receiver=01068276863 /destination=01068276863|홍길동,01111111112|아무개/msg=%고객명%님! 안녕하세요. API TEST SEND /title=API TEST 입니다/rdate=20210101/rtime=2329/testmode_yn=Y"),
+                            headers: {"Accept": "application/json"});
+                        Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
+                        print(responseBodyMap["state"]['text']);
+                      }
+                      RestApi_Get();
 
                     },
                   )
@@ -406,19 +399,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
                 ),
               ),
-              // our product image
-              // Positioned(
-              //   top: 1,
-              //   right: 35,
-              //   child: Container(
-              //     height: 110,
-              //     // image is square but we add extra 20 + 20 padding thats why width is 200
-              //     width: 130,
-              //     child: Image.asset(
-              //       "assets/images/12.gif", fit: BoxFit.cover,),
-              //   ),
-              // ),
-              // Product title and price
               Positioned(
                 bottom: 0,
                 left: 0,

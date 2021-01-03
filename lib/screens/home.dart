@@ -1,11 +1,13 @@
+import 'package:coodyproj/screens/certification.dart';
+import 'package:coodyproj/screens/certification_test.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
+class Home11 extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _Home11State createState() => _Home11State();
 }
 
-class _HomeState extends State<Home> {
+class _Home11State extends State<Home11> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -98,9 +100,12 @@ class _HomeState extends State<Home> {
                       child: RaisedButton.icon(
                         icon: Icon(Icons.people),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/certification-test');
-                        },
-                        label: Text('본인인증 테스트'),
+                          // Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) =>
+                          //         Certification()));
+                          // Navigator.pushNamed(context, '/certification-test');
+                          },
+                        label: Text('본인인증22 테스트'),
                         color: Colors.white,
                       ),
                     ),

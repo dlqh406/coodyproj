@@ -436,7 +436,7 @@ class _DetailTrackingState extends State<DetailTracking> {
     );
 
   }
- Widget progresses_step(index) {
+  Widget progresses_step(index) {
     return Column(
       children: [
         Row(

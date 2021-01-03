@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
 class CertificationResult extends StatelessWidget {
+  var result;
   static const Color successColor = Color(0xff52c41a);
   static const Color failureColor = Color(0xfff5222d);
+  CertificationResult(this.result);
 
   @override
   Widget build(BuildContext context) {
-    Map<String, String> result = ModalRoute.of(context).settings.arguments;
     String message;
     IconData icon;
     Color color;
     bool isErrorMessageRendering;
     if (result['success'] == 'true') {
+      print(result);
       message = '본인인증에 성공하였습니다';
       icon = Icons.check_circle;
       color = successColor;

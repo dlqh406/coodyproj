@@ -1,12 +1,10 @@
-import 'package:coodyproj/payment.dart';
-import 'package:coodyproj/screens/payment_result.dart';
+import 'package:coodyproj/screens/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'home2.dart';
 import 'login_page.dart';
 import 'home.dart';
 import 'package:flutter/services.dart';
-
 import 'order_page.dart';
 
 class RootPage extends StatelessWidget {
@@ -21,7 +19,7 @@ class RootPage extends StatelessWidget {
           return  LoginPage();
         }
         else{
-           //return Home2();
+          //return Home11();
           //return PaymentResult();
           //return OrderPage(snapshot.data);
           return Home(snapshot.data);

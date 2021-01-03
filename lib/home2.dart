@@ -27,13 +27,13 @@ class _Home2State extends State<Home2> {
         buttonColor: primaryColor,
       ),
       routes: {
-        // '/': (context) => Home(),
-        // '/payment-test': (context) => PaymentTest(),
-        // '/payment': (context) =>PaymentResult(),
-        // '/payment-result': (context) => PaymentResult(),
-        '/certification-test': (context) => CertificationTest(),
-        '/certification': (context) => Certification(),
-        '/certification-result': (context) => CertificationResult(),
+    // //    '/': (context) => Home(),
+    //     '/payment-test': (context) => PaymentTest(),
+    //     // '/payment': (context) =>PaymentResult(),
+    //     // '/payment-result': (context) => PaymentResult(),
+    //     '/certification-test': (context) => CertificationTest(),
+    //     '/certification': (context) => Certification(),
+    //     '/certification-result': (context) => CertificationResult(),
       },
     );
   }
