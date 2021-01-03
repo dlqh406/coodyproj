@@ -1,10 +1,14 @@
+import 'package:coodyproj/user_info_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CertificationResult extends StatelessWidget {
   var result;
+  var userData;
+  final FirebaseUser user;
   static const Color successColor = Color(0xff52c41a);
   static const Color failureColor = Color(0xfff5222d);
-  CertificationResult(this.result);
+  CertificationResult(this.result,this.user,this.userData);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +17,6 @@ class CertificationResult extends StatelessWidget {
     Color color;
     bool isErrorMessageRendering;
     if (result['success'] == 'true') {
-      print(result);
       message = '본인인증에 성공하였습니다';
       icon = Icons.check_circle;
       color = successColor;
@@ -32,10 +35,14 @@ class CertificationResult extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: 200.0,
+          GestureDetector(
+            onTap: (){
+            },
+            child: Icon(
+              icon,
+              color: color,
+              size: 200.0,
+            ),
           ),
           Text(
             message,
@@ -98,4 +105,5 @@ class CertificationResult extends StatelessWidget {
       ),
     );
   }
+
 }

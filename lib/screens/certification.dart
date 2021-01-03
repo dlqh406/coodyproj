@@ -1,5 +1,6 @@
 import 'package:coodyproj/models/Iamport_certification.dart';
 import 'package:coodyproj/screens/certification_result.dart';
+import 'package:coodyproj/user_info_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:coodyproj/models/certification_data.dart';
@@ -13,6 +14,12 @@ class Certification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var userData ={
+      'carrier' : carrier,
+      'name': name,
+      'phone': phone,
+      'YYMMDD' : YYMMDD,
+    };
     return IamportCertification(
       appBar: new AppBar(
         title: new Text('아임포트 본인인증'),
@@ -40,9 +47,17 @@ class Certification extends StatelessWidget {
         'phone': phone,                                         // 전화번호
       }),
       callback: (Map<String, String> result) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) =>
-                CertificationResult(result)));
+        // ignore: unrelated_type_equality_checks
+        if(result['success'] == "true"){
+          Navigator.pushReplacement(context, MaterialPageRoute(
+              builder: (BuildContext context) => UserInfoPage(user,userData)));
+        }
+        else{
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) =>
+                  CertificationResult(result,user,userData)));
+        }
+
       },
     );
   }

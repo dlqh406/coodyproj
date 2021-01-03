@@ -2,18 +2,18 @@ import 'package:coodyproj/screens/certification.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 
-class PhoneCertificationPage extends StatefulWidget {
+class UserInfoPage extends StatefulWidget {
   int paymentValue = 1;
   final FirebaseUser user;
-  PhoneCertificationPage(this.user);
+  var userData;
+  UserInfoPage(this.user,this.userData);
 
   @override
-  _PhoneCertificationPageState createState() => _PhoneCertificationPageState();
+  _UserInfoPageState createState() => _UserInfoPageState();
 }
 
-class _PhoneCertificationPageState extends State<PhoneCertificationPage> {
+class _UserInfoPageState extends State<UserInfoPage> {
   final myControllerName = TextEditingController();
   final myControllerBirth = TextEditingController();
   final myControllerPhone = TextEditingController();
@@ -43,21 +43,15 @@ class _PhoneCertificationPageState extends State<PhoneCertificationPage> {
       body: _buildBody(),
     );
   }
- Widget _buildBody() {
+  Widget _buildBody() {
+    print(widget.userData);
     return Padding(
       padding: const EdgeInsets.only(left:30.0,top: 10,right: 30),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text('본인 인증',style: TextStyle(fontSize: 35),),
-              SizedBox(width: 10,),
-              Text('1/3',style: TextStyle(fontSize: 20,color: Colors.grey),),
-            ],
-          ),
+          Text('유저 정보 분석',style: TextStyle(fontSize: 35),),
           SizedBox(
             height: 20,
           ),
@@ -84,7 +78,7 @@ class _PhoneCertificationPageState extends State<PhoneCertificationPage> {
           SizedBox(
             height: 20,
           ),
-          Text('생년월일 (8자리)'),
+          Text('생년월일 (6자리)'),
           Theme(
             data: new ThemeData(
                 primaryColor: Colors.blueAccent,
@@ -95,7 +89,7 @@ class _PhoneCertificationPageState extends State<PhoneCertificationPage> {
               inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
               controller: myControllerBirth,
               decoration: new InputDecoration(
-                  hintText: "예) 19941031",
+                  hintText: "예) 941031",
                   hintStyle: TextStyle(color: Colors.grey),
                   border: new UnderlineInputBorder(
                       borderSide: new BorderSide(
@@ -179,85 +173,27 @@ class _PhoneCertificationPageState extends State<PhoneCertificationPage> {
                         borderRadius: BorderRadius.circular(10),),
                       color: Colors.blueAccent,
                       onPressed: () {
-
-                        var date = new DateTime.now().toString();
-                        var dateParse = DateTime.parse(date);
-                        var formattedDate = dateParse.year.toString();
-                        var userBirth =  myControllerBirth.text;
-                        var currentY = formattedDate;
-                        var equalY = int.parse(currentY) - int.parse(userBirth[0]+userBirth[1]+userBirth[2]+userBirth[3]);
-                        var currentM = dateParse.month.toString();
-                        var currentD = dateParse.day.toString();
-                        var userMM= userBirth[4]+userBirth[5];
-                        var userDD= userBirth[6]+userBirth[7];
-                        if(int.parse(currentM)-int.parse(userMM) >0 == false){
-                          if(int.parse(currentD)-int.parse(userDD) >0  == false){
-                            equalY=equalY-1;
-                        }}
-
-                        print(equalY);
-                        if( equalY >= 14){
-                          var carrier;
-                          if(widget.paymentValue ==1){
-                            carrier = "SKT";
-                          }
-                          else if(widget.paymentValue ==2){
-                            carrier = "KTF";
-                          }
-                          else if( widget.paymentValue ==3){
-                            carrier = "LGT";
-                          }
-                          else{
-                            carrier = "MVNO";
-                          }
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) =>
-                                  Certification(widget.user,carrier,myControllerName.text,myControllerPhone.text,myControllerBirth.text,)));
+                        var carrier;
+                        if(widget.paymentValue ==1){
+                          carrier = "SKT";
+                        }
+                        else if(widget.paymentValue ==2){
+                          carrier = "KTF";
+                        }
+                        else if( widget.paymentValue ==3){
+                          carrier = "LGT";
                         }
                         else{
-                          alert();
+                          carrier = "MVNO";
                         }
-
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) =>
+                                Certification(widget.user,carrier,myControllerName.text,myControllerPhone.text,myControllerBirth.text,)));
 
                       }))
           ),
         ],
       ),
     );
- }
-  Future<bool> alert() {
-
-      return  showDialog(
-          context: context,
-          builder: (_) => NetworkGiffyDialog(
-            image: Container(
-              decoration: BoxDecoration(
-                color: Colors.pinkAccent.withOpacity(0.7),
-              ),
-              child: Image.asset(
-                "assets/icons/giphy.gif",
-              ),
-            ),
-            entryAnimation: EntryAnimation.TOP_LEFT,
-            title: Text(
-              '만 14세 미만 고객님입니다',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 22.0, fontWeight: FontWeight.w700),
-            ),
-            description: Text(
-              '만 14세 미만 아동의 개인정보를 처리하기 \n 위해서는 법정대리인의 동의서가 필요합니다.\n 자세한 사항은 고객센터 문의 바랍니다.',
-              textAlign: TextAlign.center,
-            ),
-            buttonOkColor: Colors.blue,
-            onOkButtonPressed: (){
-              Navigator.pop(context);
-            },
-            onlyOkButton: true,
-            buttonOkText:Text("네 알겠습니다",style: TextStyle(color: Colors.white),) ,
-
-
-          ));
-    }
   }
-
+}

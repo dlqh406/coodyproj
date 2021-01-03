@@ -42,7 +42,7 @@ class IamportWebView extends StatelessWidget {
                     }),
               ),
             ),
-            title: Text("결제 하기",style: TextStyle(color: Colors.white),),
+            title: Text("",style: TextStyle(color: Colors.white),),
           )),
       hidden: true,
       initialChild: initialChild ??
