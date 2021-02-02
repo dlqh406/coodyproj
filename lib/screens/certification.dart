@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:coodyproj/models/certification_data.dart';
 
+import '../favorite_analysis_page.dart';
+
 
 class Certification extends StatelessWidget {
   final FirebaseUser user;
@@ -49,8 +51,9 @@ class Certification extends StatelessWidget {
       callback: (Map<String, String> result) {
         // ignore: unrelated_type_equality_checks
         if(result['success'] == "true"){
-          Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (BuildContext context) => UserInfoPage(user,userData)));
+          Navigator.push(context,
+             MaterialPageRoute(builder: (BuildContext context) =>
+                 FavoriteAnalysisPage(user,userData)));
         }
         else{
           Navigator.push(context,

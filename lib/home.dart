@@ -4,6 +4,7 @@ import 'package:coodyproj/favorite_analysis_page.dart';
 import 'package:coodyproj/my_page.dart';
 import 'package:coodyproj/phone_certification_page.dart';
 import 'package:coodyproj/search_page.dart';
+import 'package:coodyproj/user_info_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,12 +47,14 @@ class Home extends StatefulWidget {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: StreamBuilder<DocumentSnapshot>(
-        stream:  Firestore.instance.collection("user_data_test").document(
+        stream:  Firestore.instance.collection("user_data").document(
             widget.user.uid).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if(snapshot.data.data == null){
+
               return PhoneCertificationPage(widget.user);
+              // return FavoriteAnalysisPage(widget.user,data);
             }
           }
           return Scaffold(

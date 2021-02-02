@@ -43,10 +43,11 @@ class ProductDetail extends StatefulWidget {
   _ProductDetailState createState() => _ProductDetailState();
 }
 
-class _ProductDetailState extends State<ProductDetail> {
+class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveClientMixin{
   final myController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  @override
+  bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
@@ -61,6 +62,8 @@ class _ProductDetailState extends State<ProductDetail> {
         .add(data);
 
   }
+
+
 
   @override
   Widget build(BuildContext context) {

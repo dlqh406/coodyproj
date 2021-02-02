@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 class UserInfoPage extends StatefulWidget {
   int paymentValue = 1;
+  var checkJob=false;
   final FirebaseUser user;
   var userData;
   UserInfoPage(this.user,this.userData);
@@ -51,115 +52,79 @@ class _UserInfoPageState extends State<UserInfoPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('유저 정보 분석',style: TextStyle(fontSize: 35),),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text('고객님',style: TextStyle(fontSize: 35),),
+              Text(' 정보',style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold),),
+              SizedBox(width: 10,),
+              Text('2/3',style: TextStyle(fontSize: 20,color: Colors.grey),),
+            ],
+          ),
+          SizedBox(
+            height: 13,
+          ),
+          Text('추천알고리즘의 필요한 고객님의 정보를 알려주세요'),
           SizedBox(
             height: 20,
           ),
-          Text('성함'),
-          Theme(
-            data: new ThemeData(
-                primaryColor: Colors.blueAccent,
-                accentColor: Colors.orange,
-                hintColor: Colors.black
-            ),
-            child: new TextField(
-              controller: myControllerName,
-              decoration: new InputDecoration(
-                  hintText: "고객님의 성함을 입력해주세요",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: new UnderlineInputBorder(
-                      borderSide: new BorderSide(
-                          color: Colors.blueAccent
-                      )
-                  )
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text('생년월일 (6자리)'),
-          Theme(
-            data: new ThemeData(
-                primaryColor: Colors.blueAccent,
-                accentColor: Colors.orange,
-                hintColor: Colors.black
-            ),
-            child: new TextField(
-              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              controller: myControllerBirth,
-              decoration: new InputDecoration(
-                  hintText: "예) 941031",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: new UnderlineInputBorder(
-                      borderSide: new BorderSide(
-                          color: Colors.blueAccent
-                      )
-                  )
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
+          Text('체격'),
+
           Row(
             children: [
-              Text('휴대폰 번호'),
-              Padding(
-                padding: const EdgeInsets.only(left:18.0),
-                child: Container(
-                  child: DropdownButton(
-                      value: widget.paymentValue,
-                      items: [
-                        DropdownMenuItem(
-                          child: Text("SKT",style: TextStyle(fontWeight: FontWeight.bold),),
-                          value: 1,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("KT",style: TextStyle(fontWeight: FontWeight.bold),),
-                          value: 2,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("LGU+",style: TextStyle(fontWeight: FontWeight.bold),),
-                          value: 3,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("알뜰폰",style: TextStyle(fontWeight: FontWeight.bold),),
-                          value: 4,
-                        ),
-
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          widget.paymentValue = value;
-                        });
-                      }
+              Theme(
+                data: new ThemeData(
+                    primaryColor: Colors.blueAccent,
+                    accentColor: Colors.orange,
+                    hintColor: Colors.black
+                ),
+                child: SizedBox(
+                  width: 130,
+                  child: new TextField(
+                    controller: myControllerName,
+                    decoration: new InputDecoration(
+                        hintText: "키",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: new UnderlineInputBorder(
+                            borderSide: new BorderSide(
+                                color: Colors.blueAccent
+                            )
+                        )
+                    ),
                   ),
                 ),
               ),
-
+              Text("cm"),
+              Spacer(),
+              Theme(
+                data: new ThemeData(
+                    primaryColor: Colors.blueAccent,
+                    accentColor: Colors.orange,
+                    hintColor: Colors.black
+                ),
+                child: SizedBox(
+                  width: 130,
+                  child: new TextField(
+                    controller: myControllerName,
+                    decoration: new InputDecoration(
+                        hintText: "체중",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: new UnderlineInputBorder(
+                            borderSide: new BorderSide(
+                                color: Colors.blueAccent
+                            )
+                        )
+                    ),
+                  ),
+                ),
+              ),
+              Text("kg"),
             ],
           ),
-          Theme(
-            data: new ThemeData(
-                primaryColor: Colors.blueAccent,
-                accentColor: Colors.orange,
-                hintColor: Colors.black
-            ),
-            child: TextField(
-              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              controller: myControllerPhone,
-              decoration: new InputDecoration(
-                  hintText: "- 없이 번호만 입력해주세요",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: new UnderlineInputBorder(
-                      borderSide: new BorderSide(
-                          color: Colors.blueAccent
-                      )
-                  )
-              ),
-            ),
+          SizedBox(
+            height: 20,
           ),
+
           Padding(
               padding: const EdgeInsets.only(top:20.0),
               child: SizedBox(

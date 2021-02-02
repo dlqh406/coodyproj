@@ -5,11 +5,13 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:coodyproj/bloc/state_bloc.dart';
 import 'package:coodyproj/bloc/state_provider.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:vibration/vibration.dart';
 
 
 class FavoriteAnalysisPage extends StatefulWidget {
   final FirebaseUser user;
-  FavoriteAnalysisPage(this.user);
+  var userData;
+  FavoriteAnalysisPage(this.user,this.userData);
 
   @override
   _FavoriteAnalysisPageState createState() => _FavoriteAnalysisPageState();
@@ -146,7 +148,7 @@ class CarDetails extends StatelessWidget {
                 TextSpan(text: "고객님 취향에 맞는",style: TextStyle(fontSize: 25)),
                 TextSpan(text: "\n"),
                 TextSpan(
-                    text: "스타일을 탭해주세요!!",
+                    text: "스타일을 탭해주세요",
                     style: TextStyle(fontSize: 30,fontWeight: FontWeight.w700)),
               ]),
         ),
@@ -172,8 +174,8 @@ class CustomBottomSheet extends StatefulWidget {
 
 class _CustomBottomSheetState extends State<CustomBottomSheet>
     with SingleTickerProviderStateMixin {
-  double sheetTop = 500;
-  double minSheetTop = 30;
+  double sheetTop = 600;
+  double minSheetTop = 10;
 
   Animation<double> animation;
   AnimationController controller;
@@ -279,7 +281,7 @@ class _SheetContainerState extends State<SheetContainer>{
         children: <Widget>[
           drawerHandle(),
           Padding(
-            padding: const EdgeInsets.only(top:22.0,bottom: 10.0),
+            padding: const EdgeInsets.only(top:18.0,bottom: 10.0),
             child: Center(
               child: Text(
                 widget.final_count==0?"고객님 취향의 옷을 골라주세요 ":"현재까지 ${widget.final_count}/10개 선택하셨습니다",
@@ -399,6 +401,7 @@ class _SheetContainerState extends State<SheetContainer>{
         ):Container(),
       ),
       onTap: (){
+        Vibration.vibrate(duration: 70, amplitude: 45);
         setState(() {
           var count = 0;
           var daily =0;

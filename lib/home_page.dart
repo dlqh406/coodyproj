@@ -418,7 +418,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("7월의 컬러는 보라색", style: TextStyle(fontSize: 20,
+                              Text("7월의 컬러는 보라색", style: TextStyle(fontSize: 14,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,),),
                               SizedBox(height: 10,),

@@ -55,7 +55,8 @@ class _PhoneCertificationPageState extends State<PhoneCertificationPage> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('본인 인증',style: TextStyle(fontSize: 35),),
+              Text('본인',style: TextStyle(fontSize: 35),),
+              Text(' 인증',style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold),),
               SizedBox(width: 10,),
               Text('1/3',style: TextStyle(fontSize: 20,color: Colors.grey),),
             ],
@@ -154,17 +155,20 @@ class _PhoneCertificationPageState extends State<PhoneCertificationPage> {
                 accentColor: Colors.orange,
                 hintColor: Colors.black
             ),
-            child: TextField(
-              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              controller: myControllerPhone,
-              decoration: new InputDecoration(
-                  hintText: "- 없이 번호만 입력해주세요",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: new UnderlineInputBorder(
-                      borderSide: new BorderSide(
-                          color: Colors.blueAccent
-                      )
-                  )
+            child: SizedBox(
+              height: 35,
+              child: TextField(
+                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                controller: myControllerPhone,
+                decoration: new InputDecoration(
+                    hintText: "- 없이 번호만 입력해주세요",
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: new UnderlineInputBorder(
+                        borderSide: new BorderSide(
+                            color: Colors.blueAccent
+                        )
+                    )
+                ),
               ),
             ),
           ),

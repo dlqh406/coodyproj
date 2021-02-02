@@ -41,12 +41,10 @@ class Favorite extends StatefulWidget {
   _FavoriteState createState() => _FavoriteState();
 }
 
-class _FavoriteState extends State<Favorite> with AutomaticKeepAliveClientMixin {
+class _FavoriteState extends State<Favorite>  {
 
   var stopTrigger = 1;
-  @override
-  bool get wantKeepAlive => true;
-
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -286,7 +284,7 @@ class _FavoriteState extends State<Favorite> with AutomaticKeepAliveClientMixin 
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment:MainAxisAlignment.center,
                                 children: [
-                                  Text("₩${numberWithComma(int.parse(document['price']==null?"12000":document['price']))}"
+                                  Text("₩ ${numberWithComma(int.parse(document['price']==null?"12000":document['price']))}"
                                       ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold)),
                                   Spacer(),
                                   // SizedBox(
