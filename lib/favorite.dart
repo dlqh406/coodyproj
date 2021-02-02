@@ -14,7 +14,10 @@ import 'package:vibration/vibration.dart';
 
 class Favorite extends StatefulWidget {
   var bool_list_each_GridSell = [];
+  bool categoryfilter = false;
   bool filter = false;
+
+  bool pricefilter = false;
   bool VisibiltyTriger=false;
   bool top_downbtn = false;
   bool bottom_downbtn = false;
@@ -33,6 +36,7 @@ class Favorite extends StatefulWidget {
 
   int selectedCount =0;
   var selectedCategoryList=[];
+  var selectedPrice=999;
 
   final FirebaseUser user;
   Favorite(this.user);
@@ -52,7 +56,7 @@ class _FavoriteState extends State<Favorite>  {
         backgroundColor: Colors.white,
         appBar:PreferredSize(preferredSize: Size.fromHeight(45.0),
            child: AppBar(
-               titleSpacing: 6.0,
+                titleSpacing:2.0,
                 backgroundColor: Colors.white,
                 elevation: 0,
                 leading: Padding(
@@ -60,10 +64,7 @@ class _FavoriteState extends State<Favorite>  {
                   child: Container(
                     child: GestureDetector(
                         child:
-                        // Platform.isAndroid?
                         Image.asset('assets/logo/P21.png'),
-                        // :Icon(Icons.arrow_back_ios,size: 24,),
-
                         onTap: (){
                           Navigator.pop(context);
 
@@ -71,45 +72,72 @@ class _FavoriteState extends State<Favorite>  {
                   ),
                 ),
                 title: Container(
-                  child: Container(
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10,left: 5),
-                          child: GestureDetector(
-                            onTap: (){
-
-                              Navigator.push(context, MaterialPageRoute(builder: (context){
-                                return SearchPage(widget.user,1);
-                              }));
-
-                              },
-                            child: Image.asset('assets/icons/bar.png',height: 40,),
-                          ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left:27.0),
+                        child: InkWell(
+                          child: new Container(
+                              width: 25,
+                              child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/hanger.png',color: Colors.blue):Image.asset('assets/icons/hanger.png',color: Colors.black,) ),
+                          onTap: () => {
+                            _categoryFilterAlert()
+                          },
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left:11.0),
-                          child: Row(
-                            children: <Widget>[
-
-                            ],
-                          ),
-                        )
-                      ],
-                    ),),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:33.0),
+                        child: InkWell(
+                          child: new Container(
+                              width: 25,
+                              child: (widget.selectedCategoryList.length>0)
+                                  ?Image.asset('assets/icons/tag.png',color: Colors.blue,):Image.asset('assets/icons/tag.png',color: Colors.black,) ),
+                          onTap: () => {
+                            _priceFilterAlert()
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:33.0),
+                        child: InkWell(
+                          child: new Container(
+                              width: 25,
+                              child: (widget.selectedCategoryList.length>0)
+                                  ? Image.asset('assets/icons/painter.png',color: Colors.blue,):Image.asset('assets/icons/painter.png',color: Colors.black) ),
+                          onTap: () => {
+                            _categoryFilterAlert()
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:33.0),
+                        child: InkWell(
+                          child: new Container(
+                              width: 29,
+                              child: (widget.selectedCategoryList.length>0)
+                                  ?Image.asset('assets/icons/FD.png'):Image.asset('assets/icons/FD.png',color: Colors.black,) ),
+                          onTap: () => {
+                            _categoryFilterAlert()
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:33.0),
+                        child: InkWell(
+                          child: new Container(
+                              width: 23,
+                              child: (widget.selectedCategoryList.length>0)
+                                  ?Image.asset('assets/icons/refresh.png'):Image.asset('assets/icons/refresh.png') ),
+                          onTap: () => {
+                            _categoryFilterAlert()
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 actions: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right:32.0),
-                    child: InkWell(
-                      child: new Container(
-                        width: 25,
-                        child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/filter.png') ),
-                        onTap: () => {
-                        _categoryFilterAlert()
-                        },
-                    ),
-                  ),
+
 
                 ],
 
@@ -133,45 +161,49 @@ class _FavoriteState extends State<Favorite>  {
       child: Container(
         child: StreamBuilder (
           stream:Firestore.instance.collection("uploaded_product").snapshots(),
-          //_productStream(),
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if(!snapshot.hasData){
               return Center(child:  CircularProgressIndicator());
             }
-
-            print("111111111");
-// 그리드뷰 개발 끝나고 주석만 풀면됨
-               if(stopTrigger == 1 ){
-                if(widget.filter == false){
+            //if(stopTrigger == 1 ){
+              if(widget.filter == false){
                   widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
                   widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
                   widget.tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
                   widget.fF.addAll(widget.sF);
                   widget.fF.addAll(widget.tF);
-
-                  print("stopTrigger111: ${stopTrigger}");
-                  print('in');
                   widget.fF.shuffle();
                 }
-              stopTrigger+=1;
-              print("stopTrigger222: ${stopTrigger}");
-              print("--------------------------------");
-            }
 
-            else if(widget.filter == true){
-            //if(widget.filter == true){
-              for(var i=0; i<widget.selectedCategoryList.length; i++){
-                if(i==0){
-                  widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
-                }else{
-                  widget.fF.addAll( snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList());
+             if(widget.filter == true){
+                if(widget.categoryfilter == true){
+                 for(var i=0; i<widget.selectedCategoryList.length; i++){
+                   if(i==0){
+                     widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
+                   }else{
+                     widget.fF.addAll( snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList());
+                   }
+                }}
+                if(widget.pricefilter == true) {
+                  var minPriceRange =int.parse(widget.selectedPrice.toString()+"0000");
+                  var maxPriceRange;
+                  if(widget.selectedPrice == 7){
+                    maxPriceRange =int.parse(widget.selectedPrice.toString()+"0000")+999999;
+                  }
+                  else{
+                    maxPriceRange =int.parse(widget.selectedPrice.toString()+"0000")+10000;
+                  }
+                  widget.fF = widget.fF.where((doc)=>  int.parse(doc['price']) >= minPriceRange && int.parse(doc['price']) <= maxPriceRange ).toList();
                 }
 
-              }
-              widget.fF.shuffle();
 
-            }
+             }
+            //}
+            stopTrigger+=1;
+            widget.fF.shuffle();
 
+
+            // 경우에 수 마다 if 중첩
             return Padding(
               padding: const EdgeInsets.only(top:4,left:4,right:4),
               child: StaggeredGridView.countBuilder(
@@ -180,138 +212,140 @@ class _FavoriteState extends State<Favorite>  {
                   mainAxisSpacing: 8.0,
                   crossAxisSpacing: 6.0,
                   itemCount: widget.fF.length,
-                  //1 1.8
-                  //2 : 1.7
-                  //2:2.6  2.2:
-                  //2.2: 2.9
                   staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2: 2.9),
                   itemBuilder: (BuildContext context, int index) {
                     for(var i=0; i<widget.fF.length; i++ ){
-
                         widget.bool_list_each_GridSell.add(false);
-
-
                     }
-                    return _buildListItem(context,widget.fF[index],index);
-                  }
+                    //if(int.parse(widget.fF[index]['price'])>15000){
+                    return
+
+                      _buildListItem(context,widget.fF[index],index);
+                  //}
+            }
+
               ),
             );
-
-
           },
         ),
       ),
     );
   }
   Widget _buildListItem(context,document,index) {
-    
-    return StreamBuilder(
-        stream: Firestore.instance.collection('uploaded_product').document(document.documentID).collection('review').snapshots(),
-        builder: (context, snapshot) {
-          if(!snapshot.hasData){
-            return Center(child:CircularProgressIndicator());
-          }
-          double _total =0.0;
-          var averageRating =0.0;
-          for(var i=0; i<snapshot.data.documents.length; i++ ){
-            _total += double.parse(snapshot.data.documents[i]['rating']);
-          }
-          var _lengthDouble = snapshot.data.documents.length.toDouble();
-          averageRating = _total / _lengthDouble;
+    return
+      Visibility(
+        visible: true,
+        child: StreamBuilder(
+          stream: Firestore.instance.collection('uploaded_product').document(document.documentID).collection('review').snapshots(),
+          builder: (context, snapshot) {
+            if(!snapshot.hasData){
+              return Center(child:CircularProgressIndicator());
+            }
+            double _total =0.0;
+            var averageRating =0.0;
+            for(var i=0; i<snapshot.data.documents.length; i++ ){
+              _total += double.parse(snapshot.data.documents[i]['rating']);
+            }
+            var _lengthDouble = snapshot.data.documents.length.toDouble();
+            averageRating = _total / _lengthDouble;
 
-          return Hero(
-              tag: document['thumbnail_img'],
-              child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onDoubleTap: (){
-                      Vibration.vibrate(duration: 100, amplitude: 58);
-                      // 찜 데이터
-                      setState(() {
-                        widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
-                      });
-                      final data = {
-                        'docID' : document.documentID,
-                        'date' : DateTime.now()};
-                      // 댓글 추가
-                      Firestore.instance
-                          .collection('user_data')
-                          .document(widget.user.uid)
-                          .collection('like')
-                          .add(data);
-                    },
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context){
-                        return ProductDetail(widget.user, document);
-                      }));
-                    },
-                      //https://www.flaticon.com/free-icon/delivery_876079?term=delivery&page=5&position=21&related_item_id=876079/
-                      child:
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: new BorderRadius.circular(8.0),
-                                  child: Container(
-                                      child: Stack(
-                                        fit: StackFit.expand,
-                                        children: [
-                                          Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white70))),
-                                          FadeInImage.assetNetwork(
-                                                placeholder: 'assets/images/loading.png',
-                                                image: document['thumbnail_img'],
-                                                fit : BoxFit.cover),
-                                          Positioned(
-                                              top:4,
-                                              right: 6,
-                                              child: widget.bool_list_each_GridSell[index]?Icon(Icons.favorite,size:25,color: Colors.red,):Container())
-                                        ],
-                                      ),
-                                      ),
+            return Hero(
+                tag: document['thumbnail_img'],
+                child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onDoubleTap: (){
+                        Vibration.vibrate(duration: 100, amplitude: 58);
+                        // 찜 데이터
+                        setState(() {
+                          widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
+                        });
+                        final data = {
+                          'docID' : document.documentID,
+                          'date' : DateTime.now()};
+                        // 댓글 추가
+                        Firestore.instance
+                            .collection('user_data')
+                            .document(widget.user.uid)
+                            .collection('like')
+                            .add(data);
+                      },
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                          return ProductDetail(widget.user, document);
+                        }));
+                      },
+                        //https://www.flaticon.com/free-icon/delivery_876079?term=delivery&page=5&position=21&related_item_id=876079/
+                        child:
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: new BorderRadius.circular(8.0),
+                                    child: Container(
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          children: [
+                                            Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white70))),
+                                            FadeInImage.assetNetwork(
+                                                  placeholder: 'assets/images/loading.png',
+                                                  image: document['thumbnail_img'],
+                                                  fit : BoxFit.cover),
+                                            Positioned(
+                                                top:4,
+                                                right: 6,
+                                                child: widget.bool_list_each_GridSell[index]?Icon(Icons.favorite,size:25,color: Colors.red,):Container())
+                                          ],
+                                        ),
+                                        ),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              Text("${document['productName']}",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,softWrap: false),
-                              SizedBox(
-                                height: 2.3,
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:MainAxisAlignment.center,
-                                children: [
-                                  Text("₩ ${numberWithComma(int.parse(document['price']==null?"12000":document['price']))}"
-                                      ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold)),
-                                  Spacer(),
-                                  // SizedBox(
-                                  //   width: 4,
-                                  // ),
-                                  document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
-                                  SizedBox(
-                                    width: 6,
-                                  ),
-                                  Visibility(
-                                    visible: averageRating.isNaN?false:true,
-                                    child: Row(
-                                      children: [
-                                        Image.asset('assets/star/star11.png', width: 14,),
-                                        Text("$averageRating",style: TextStyle(fontSize: 14),)
-                                      ],
+                                SizedBox(
+                                  height: 4,
+                                ),
+                                Text("${document['productName']}",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,softWrap: false),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text("${numberWithComma(int.parse(document['price']==null?"120000":document['price']))}"
+                                        ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w700,
+                                          fontFamily: 'Pacifico')),
+                                    Spacer(),
+                                    SizedBox(
+                                      width: 4,
                                     ),
-                                  ),
-                                  
-                                ],
-                              ),
-                            ],
-                          )
+                                    Padding(
+                                      padding: const EdgeInsets.only(top:3.0),
+                                      child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
+                                    ),
+                                    SizedBox(
+                                      width: 6,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top:2.7),
+                                      child: Visibility(
+                                        visible: averageRating.isNaN?false:true,
+                                        child: Row(
+                                          children: [
+                                            Image.asset('assets/star/star11.png', width: 14,),
+                                            Text("$averageRating",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),)
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                              ],
+                            )
+                        ),
                       ),
-                    ),
-                  );
-        }
+                    );
+          }
+        ),
       );
   }
   numberWithComma(int param){
@@ -348,7 +382,7 @@ class _FavoriteState extends State<Favorite>  {
   };
 
   _reset(){
-    widget.filter = false;
+    widget.categoryfilter = false;
     widget.VisibiltyTriger=false;
     widget.top_downbtn = false;
     widget.bottom_downbtn = false;
@@ -403,7 +437,7 @@ class _FavoriteState extends State<Favorite>  {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('필터 적용',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
+                    Text('카테고리 필터 적용',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
                     Text("${widget.selectedCategoryList.length}개 선택됨",style:TextStyle(fontWeight:FontWeight.w300,fontSize:15,color: Colors.white))
                   ],
                 ),
@@ -889,7 +923,7 @@ class _FavoriteState extends State<Favorite>  {
                     visible: widget.VisibiltyTriger?true:false,
                     child: FlatButton(
                       onPressed: () {
-                        _getDelayForReset();
+                        _getDelayForReset('category');
                         Navigator.pop(context, null);
                       },
                       child:Text('필터 해제',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
@@ -909,7 +943,7 @@ class _FavoriteState extends State<Favorite>  {
                     onPressed: () {
                       Navigator.pop(context,null);
                       if(widget.selectedCategoryList.length == 0){
-                        _getDelayForReset();
+                        _getDelayForReset('category');
                       }else{
                         _getDelayForFilter();
                       }
@@ -923,6 +957,231 @@ class _FavoriteState extends State<Favorite>  {
         });
   }
 
+  Future<Map<String, bool>> _priceFilterAlert() async {
+
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                backgroundColor: Color(0xff142035),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('가격 필터 적용',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
+                    Text("${widget.selectedCategoryList.length}개 선택됨"
+                        ,style:TextStyle(fontWeight:FontWeight.w300,fontSize:15,color: Colors.white))
+                  ],
+                ),
+                content: SingleChildScrollView(
+                  child: Container(
+                    width: double.minPositive,
+                    height: 2000,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color: widget.selectedPrice ==0 ? Colors.deepOrange:Colors.blue,
+                            onPressed: (){
+                              setState(() {
+                                Navigator.pop(context,null);
+                                _getDelayForPriceFilter(0);
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('0 ~ 9,999원', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:widget.selectedPrice ==1 ? Colors.deepOrange:Colors.blue,
+                            onPressed: (){
+                              setState(() {
+                                Navigator.pop(context,null);
+                                _getDelayForPriceFilter(1);
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('10,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:widget.selectedPrice ==2 ? Colors.deepOrange:Colors.blue,
+                            onPressed: (){
+                              setState(() {
+                                Navigator.pop(context,null);
+                                _getDelayForPriceFilter(2);
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('20,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:widget.selectedPrice ==3 ? Colors.deepOrange:Colors.blue,
+                            onPressed: (){
+                              setState(() {
+                                Navigator.pop(context,null);
+                                _getDelayForPriceFilter(3);
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('30,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:widget.selectedPrice ==4 ? Colors.deepOrange:Colors.blue,
+                            onPressed: (){
+                              setState(() {
+                                Navigator.pop(context,null);
+                                _getDelayForPriceFilter(4);
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('40,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:widget.selectedPrice ==5 ? Colors.deepOrange:Colors.blue,
+                            onPressed: (){
+                              setState(() {
+
+                                Navigator.pop(context,null);
+                                _getDelayForPriceFilter(5);
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('50,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:widget.selectedPrice ==6 ? Colors.deepOrange:Colors.blue,
+                            onPressed: (){
+                              setState(() {
+
+                                Navigator.pop(context,null);
+                                _getDelayForPriceFilter(6);
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('60,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:widget.selectedPrice ==7 ? Colors.deepOrange:Colors.blue,
+                            onPressed: (){
+                              setState(() {
+                                Navigator.pop(context,null);
+                                _getDelayForPriceFilter(7);
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('70,000원 ~', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      _getDelayForReset('price');
+                      Navigator.pop(context,null);
+
+                    },
+                    child: Text('적용 해체',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      setState((){
+                      });
+                      Navigator.pop(context, null);
+                    },
+                    child:Text('닫기',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+                  ),
+                ],
+              );
+            },
+          );
+        });
+  }
+
+
 
   Future _getDelayForFilter() {
     return Future.delayed(Duration(milliseconds: 1))
@@ -931,17 +1190,37 @@ class _FavoriteState extends State<Favorite>  {
         stopTrigger = 1;
         widget.VisibiltyTriger = true;
         widget.filter = true;
+        widget.categoryfilter = true;
         _gridBuilder();
          })
     );
   }
 
-  Future _getDelayForReset() {   
+  Future _getDelayForPriceFilter(int num) {
+    return Future.delayed(Duration(milliseconds: 1))
+        .then((onValue) =>
+        setState((){
+          widget.selectedPrice = num;
+          widget.filter = true;
+          stopTrigger = 1;
+          widget.pricefilter = true;
+          _gridBuilder();
+        })
+    );
+  }
+
+  Future _getDelayForReset(String param) {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
           stopTrigger = 1;
+          if( param == "category"){
           widget.selectedCategoryList=[];
+          }
+          else if(param == "price"){
+            widget.selectedPrice = 999;
+          }
+
           widget.filter = false;
           _reset();
         })
