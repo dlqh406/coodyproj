@@ -16,7 +16,8 @@ class Favorite extends StatefulWidget {
   var bool_list_each_GridSell = [];
   bool categoryfilter = false;
   bool filter = false;
-
+  bool oddfilter =false;
+  bool colorfilter =false;
   bool pricefilter = false;
   bool VisibiltyTriger=false;
   bool top_downbtn = false;
@@ -27,7 +28,7 @@ class Favorite extends StatefulWidget {
   bool innerWear_downbtn = false;
   bool fitnessWear_downbtn = false;
   bool accessory_downbtn = false;
-
+  bool resetData = true;
   var _visible = true;
 
   var fF;
@@ -90,7 +91,8 @@ class _FavoriteState extends State<Favorite>  {
                         child: InkWell(
                           child: new Container(
                               width: 25,
-                              child: (widget.selectedCategoryList.length>0)
+                              // ignore: unrelated_type_equality_checks
+                              child: widget.pricefilter==true
                                   ?Image.asset('assets/icons/tag.png',color: Colors.blue,):Image.asset('assets/icons/tag.png',color: Colors.black,) ),
                           onTap: () => {
                             _priceFilterAlert()
@@ -102,7 +104,7 @@ class _FavoriteState extends State<Favorite>  {
                         child: InkWell(
                           child: new Container(
                               width: 25,
-                              child: (widget.selectedCategoryList.length>0)
+                              child: widget.colorfilter == true
                                   ? Image.asset('assets/icons/painter.png',color: Colors.blue,):Image.asset('assets/icons/painter.png',color: Colors.black) ),
                           onTap: () => {
                             _categoryFilterAlert()
@@ -114,7 +116,7 @@ class _FavoriteState extends State<Favorite>  {
                         child: InkWell(
                           child: new Container(
                               width: 29,
-                              child: (widget.selectedCategoryList.length>0)
+                              child: widget.oddfilter == true
                                   ?Image.asset('assets/icons/FD.png'):Image.asset('assets/icons/FD.png',color: Colors.black,) ),
                           onTap: () => {
                             _categoryFilterAlert()
@@ -174,7 +176,7 @@ class _FavoriteState extends State<Favorite>  {
                   widget.fF.addAll(widget.tF);
                   widget.fF.shuffle();
                 }
-
+             var _data = widget.tF;
              if(widget.filter == true){
                 if(widget.categoryfilter == true){
                  for(var i=0; i<widget.selectedCategoryList.length; i++){
@@ -945,7 +947,7 @@ class _FavoriteState extends State<Favorite>  {
                       if(widget.selectedCategoryList.length == 0){
                         _getDelayForReset('category');
                       }else{
-                        _getDelayForFilter();
+                        _getDelayForCategoryFilter();
                       }
                     },
                     child: Text('적용',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
@@ -987,8 +989,35 @@ class _FavoriteState extends State<Favorite>  {
                             color: widget.selectedPrice ==0 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
-                                Navigator.pop(context,null);
-                                _getDelayForPriceFilter(0);
+                                if(widget.pricefilter == true){
+                                  if( widget.categoryfilter == true){
+                                    var _tem = widget.selectedCategoryList;
+                                    _getDelayForReset('category');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      widget.selectedCategoryList=_tem;
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      _getDelayForCategoryFilter();
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(0));
+                                  }
+                                  else{
+                                    print("11");
+                                    _getDelayForReset('price');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(0));
+                                  }
+                                }
+                                else{
+                                  // pure
+                                  print("22");
+                                  _getDelayForPriceFilter(0);
+
+                                }
+                               Navigator.pop(context,null);
                               });
                             },
                             child: Row(
@@ -1008,8 +1037,34 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==1 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
+                                if(widget.pricefilter == true){
+                                  if( widget.categoryfilter == true){
+                                    var _tem = widget.selectedCategoryList;
+                                    _getDelayForReset('category');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      widget.selectedCategoryList=_tem;
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      _getDelayForCategoryFilter();
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(1));
+                                  }
+                                  else{
+                                    _getDelayForReset('price');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(1));
+                                  }
+                                }
+                                else{
+                                  // pure
+                                  print("22");
+                                  _getDelayForPriceFilter(1);
+
+                                }
                                 Navigator.pop(context,null);
-                                _getDelayForPriceFilter(1);
                               });
                             },
                             child: Row(
@@ -1029,8 +1084,35 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==2 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
+                                if(widget.pricefilter == true){
+                                  if( widget.categoryfilter == true){
+                                    var _tem = widget.selectedCategoryList;
+                                    _getDelayForReset('category');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      widget.selectedCategoryList=_tem;
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      _getDelayForCategoryFilter();
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(2));
+                                  }
+                                  else{
+                                    print("11");
+                                    _getDelayForReset('price');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(2));
+                                  }
+                                }
+                                else{
+                                  // pure
+                                  print("22");
+                                  _getDelayForPriceFilter(2);
+
+                                }
                                 Navigator.pop(context,null);
-                                _getDelayForPriceFilter(2);
                               });
                             },
                             child: Row(
@@ -1050,8 +1132,35 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==3 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
+                                if(widget.pricefilter == true){
+                                  if( widget.categoryfilter == true){
+                                    var _tem = widget.selectedCategoryList;
+                                    _getDelayForReset('category');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      widget.selectedCategoryList=_tem;
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      _getDelayForCategoryFilter();
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(3));
+                                  }
+                                  else{
+                                    print("11");
+                                    _getDelayForReset('price');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(3));
+                                  }
+                                }
+                                else{
+                                  // pure
+                                  print("22");
+                                  _getDelayForPriceFilter(3);
+
+                                }
                                 Navigator.pop(context,null);
-                                _getDelayForPriceFilter(3);
                               });
                             },
                             child: Row(
@@ -1071,8 +1180,35 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==4 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
+                                if(widget.pricefilter == true){
+                                  if( widget.categoryfilter == true){
+                                    var _tem = widget.selectedCategoryList;
+                                    _getDelayForReset('category');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      widget.selectedCategoryList=_tem;
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      _getDelayForCategoryFilter();
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(4));
+                                  }
+                                  else{
+                                    print("11");
+                                    _getDelayForReset('price');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(4));
+                                  }
+                                }
+                                else{
+                                  // pure
+                                  print("22");
+                                  _getDelayForPriceFilter(4);
+
+                                }
                                 Navigator.pop(context,null);
-                                _getDelayForPriceFilter(4);
                               });
                             },
                             child: Row(
@@ -1093,9 +1229,35 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==5 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
+                                if(widget.pricefilter == true){
+                                  if( widget.categoryfilter == true){
+                                    var _tem = widget.selectedCategoryList;
+                                    _getDelayForReset('category');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      widget.selectedCategoryList=_tem;
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      _getDelayForCategoryFilter();
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(5));
+                                  }
+                                  else{
+                                    print("11");
+                                    _getDelayForReset('price');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(5));
+                                  }
+                                }
+                                else{
+                                  // pure
+                                  print("22");
+                                  _getDelayForPriceFilter(5);
 
+                                }
                                 Navigator.pop(context,null);
-                                _getDelayForPriceFilter(5);
                               });
                             },
                             child: Row(
@@ -1115,9 +1277,35 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==6 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
+                                if(widget.pricefilter == true){
+                                  if( widget.categoryfilter == true){
+                                    var _tem = widget.selectedCategoryList;
+                                    _getDelayForReset('category');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      widget.selectedCategoryList=_tem;
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      _getDelayForCategoryFilter();
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(6));
+                                  }
+                                  else{
+                                    print("11");
+                                    _getDelayForReset('price');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(6));
+                                  }
+                                }
+                                else{
+                                  // pure
+                                  print("22");
+                                  _getDelayForPriceFilter(6);
 
+                                }
                                 Navigator.pop(context,null);
-                                _getDelayForPriceFilter(6);
                               });
                             },
                             child: Row(
@@ -1138,8 +1326,35 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==7 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
+                                if(widget.pricefilter == true){
+                                  if( widget.categoryfilter == true){
+                                    var _tem = widget.selectedCategoryList;
+                                    _getDelayForReset('category');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      widget.selectedCategoryList=_tem;
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) {
+                                      _getDelayForCategoryFilter();
+                                    });
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(6));
+                                  }
+                                  else{
+                                    print("11");
+                                    _getDelayForReset('price');
+                                    Future.delayed(Duration(milliseconds: 50))
+                                        .then((onValue) =>_getDelayForPriceFilter(6));
+                                  }
+                                }
+                                else{
+                                  // pure
+                                  print("22");
+                                  _getDelayForPriceFilter(6);
+
+                                }
                                 Navigator.pop(context,null);
-                                _getDelayForPriceFilter(7);
                               });
                             },
                             child: Row(
@@ -1158,13 +1373,15 @@ class _FavoriteState extends State<Favorite>  {
                   ),
                 ),
                 actions: <Widget>[
-                  FlatButton(
-                    onPressed: () {
-                      _getDelayForReset('price');
-                      Navigator.pop(context,null);
-
-                    },
-                    child: Text('적용 해체',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+                  Visibility(
+                    visible: widget.pricefilter?true:false,
+                    child: FlatButton(
+                      onPressed: () {
+                        _getDelayForReset('nothing');
+                        Navigator.pop(context, null);
+                      },
+                      child:Text('필터 해제',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+                    ),
                   ),
                   FlatButton(
                     onPressed: () {
@@ -1183,7 +1400,7 @@ class _FavoriteState extends State<Favorite>  {
 
 
 
-  Future _getDelayForFilter() {
+  Future _getDelayForCategoryFilter() {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
@@ -1195,7 +1412,6 @@ class _FavoriteState extends State<Favorite>  {
          })
     );
   }
-
   Future _getDelayForPriceFilter(int num) {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
@@ -1208,23 +1424,21 @@ class _FavoriteState extends State<Favorite>  {
         })
     );
   }
-
   Future _getDelayForReset(String param) {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
           stopTrigger = 1;
-          if( param == "category"){
-          widget.selectedCategoryList=[];
-          }
-          else if(param == "price"){
+            widget.selectedCategoryList=[];
+            widget.categoryfilter = false;
+            _reset();
             widget.selectedPrice = 999;
-          }
-
+            widget.pricefilter = false;
           widget.filter = false;
-          _reset();
+
         })
     );
   }
+
 }
 
