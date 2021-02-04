@@ -122,7 +122,12 @@ class _FavoriteState extends State<Favorite>  {
                               child: widget.oddfilter == true
                                   ?Image.asset('assets/icons/FD.png'):Image.asset('assets/icons/FD.png',color: Colors.black,) ),
                           onTap: () => {
-                          _getODDFilter(widget.oddfilter)
+                            if( widget.oddfilter ==false){
+                              _getODDFilter(widget.oddfilter)
+                            }
+                            else{
+                              _getDelayForReset('odd')
+                            }
                           },
                         ),
                       ),
@@ -939,8 +944,8 @@ class _FavoriteState extends State<Favorite>  {
                     visible: widget.VisibiltyTriger?true:false,
                     child: FlatButton(
                       onPressed: () {
-                        _getDelayForReset();
-                        Navigator.pop(context, null);
+                        _getDelayForReset('category');
+
                       },
                       child:Text('필터 해제',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
                     ),
@@ -959,7 +964,7 @@ class _FavoriteState extends State<Favorite>  {
                     onPressed: () {
                       Navigator.pop(context,null);
                       if(widget.selectedCategoryList.length == 0){
-                        _getDelayForReset();
+                        _getDelayForReset('category');
                       }else{
                         _getDelayForCategoryFilter();
                       }
@@ -1170,7 +1175,7 @@ class _FavoriteState extends State<Favorite>  {
                     visible: widget.pricefilter?true:false,
                     child: FlatButton(
                       onPressed: () {
-                        _getDelayForReset();
+                        _getDelayForReset('price');
                         Navigator.pop(context, null);
                       },
                       child:Text('필터 해제',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
@@ -1207,9 +1212,10 @@ class _FavoriteState extends State<Favorite>  {
                         child: Image.asset('assets/icons/painter.png',color: Colors.blue,)),
                     SizedBox(width: 10,),
                     Text('컬러 필터',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
+                    Spacer(),
                     Visibility(
                       visible: widget.selectedColor != "999"?true : false,
-                        child: Text('적용 : ${widget.selectedColor}',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),)),
+                        child: Text('적용 : ${widget.selectedColor}',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white,fontSize: 13),)),
                   ],
                 ),
                 content: SingleChildScrollView(
@@ -1505,10 +1511,10 @@ class _FavoriteState extends State<Favorite>  {
                 ),
                 actions: <Widget>[
                   Visibility(
-                    visible: widget.pricefilter?true:false,
+                    visible: widget.colorfilter?true:false,
                     child: FlatButton(
                       onPressed: () {
-                        _getDelayForReset();
+                        _getDelayForReset('color');
                         Navigator.pop(context, null);
                       },
                       child:Text('필터 해제',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
@@ -1573,7 +1579,7 @@ class _FavoriteState extends State<Favorite>  {
 
     if(widget.pricefilter == true){
       if( widget.categoryfilter == true){
-        _getDelayForReset();
+        _getDelayForReset('price');
         Future.delayed(Duration(milliseconds: 50))
             .then((onValue) {
           widget.selectedCategoryList=_temCategory;
@@ -1591,7 +1597,7 @@ class _FavoriteState extends State<Favorite>  {
         }
       }
       else {
-        _getDelayForReset();
+        _getDelayForReset('price');
         Future.delayed(Duration(milliseconds: 50))
             .then((onValue) => _getDelayForPriceFilter(num));
         if(widget.colorfilter == true){
@@ -1613,7 +1619,7 @@ class _FavoriteState extends State<Favorite>  {
     if(widget.colorfilter == true){
       if(widget.categoryfilter == true){
         // 카테고리 true / price true / color true / odd true
-        _getDelayForReset();
+        _getDelayForReset('color');
         Future.delayed(Duration(milliseconds: 50))
             .then((onValue) {
           widget.selectedCategoryList=_temCategory;
@@ -1661,21 +1667,37 @@ class _FavoriteState extends State<Favorite>  {
   }
 
 
-  Future _getDelayForReset() {
-    return Future.delayed(Duration(milliseconds: 1))
+  Future _getDelayForReset(String filter) {
+    Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
-          stopTrigger = 1;
-            widget.selectedCategoryList=[];
-            widget.categoryfilter = false;
-            _reset();
-            widget.selectedPrice = 999;
-            widget.selectedColor = "999";
-            widget.pricefilter = false;
-            widget.colorfilter = false;
-            widget.filter = false;
+            if(filter == 'category'){
+              _reset();
+              stopTrigger = 1;
+              widget.selectedCategoryList=[];
+              widget.categoryfilter = false;
+
+              if( widget.pricefilter == true){
+                _getPriceFilter(widget.selectedPrice);
+              }
+              else if( widget.colorfilter == true){
+                _getDelayForColorFilter(widget.selectedColor);
+              }
+              else if ( widget.oddfilter == true){
+                _getODDFilter(widget.oddfilter);
+              }
+            }
+
+
+            // widget.oddfilter = false;
+            // widget.selectedPrice = 999;
+            // widget.selectedColor = "999";
+            // widget.pricefilter = false;
+            // widget.colorfilter = false;
+            // widget.filter = false;
         })
     );
+    
   }
   Color _getColorFromHex(String hexColor) {
     hexColor = hexColor.replaceAll("#", "");
