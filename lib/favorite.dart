@@ -11,6 +11,8 @@ import 'package:coodyproj/test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:vibration/vibration.dart';
+import 'dart:ui';
+
 
 class Favorite extends StatefulWidget {
   var bool_list_each_GridSell = [];
@@ -38,6 +40,7 @@ class Favorite extends StatefulWidget {
   int selectedCount =0;
   var selectedCategoryList=[];
   var selectedPrice=999;
+  var selectedColor="999";
 
   final FirebaseUser user;
   Favorite(this.user);
@@ -107,7 +110,7 @@ class _FavoriteState extends State<Favorite>  {
                               child: widget.colorfilter == true
                                   ? Image.asset('assets/icons/painter.png',color: Colors.blue,):Image.asset('assets/icons/painter.png',color: Colors.black) ),
                           onTap: () => {
-                            _categoryFilterAlert()
+                            _colorFilterAlert()
                           },
                         ),
                       ),
@@ -119,7 +122,7 @@ class _FavoriteState extends State<Favorite>  {
                               child: widget.oddfilter == true
                                   ?Image.asset('assets/icons/FD.png'):Image.asset('assets/icons/FD.png',color: Colors.black,) ),
                           onTap: () => {
-                            _categoryFilterAlert()
+                          _getODDFilter(widget.oddfilter)
                           },
                         ),
                       ),
@@ -169,12 +172,14 @@ class _FavoriteState extends State<Favorite>  {
             }
             //if(stopTrigger == 1 ){
               if(widget.filter == false){
-                  widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
-                  widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
-                  widget.tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
-                  widget.fF.addAll(widget.sF);
-                  widget.fF.addAll(widget.tF);
-                  widget.fF.shuffle();
+                  //widget.fF = snapshot.data.documents.where((doc)=> doc['blue'] != null).toList();
+                  // widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
+                  // widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
+                  // widget.tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
+                  // widget.fF.addAll(widget.sF);
+                  // widget.fF.addAll(widget.tF);
+                  // widget.fF.shuffle();
+                  widget.fF = snapshot.data.documents.toList();
                 }
              var _data = widget.tF;
              if(widget.filter == true){
@@ -197,8 +202,12 @@ class _FavoriteState extends State<Favorite>  {
                   }
                   widget.fF = widget.fF.where((doc)=>  int.parse(doc['price']) >= minPriceRange && int.parse(doc['price']) <= maxPriceRange ).toList();
                 }
-
-
+                if(widget.colorfilter == true){
+                  widget.fF = widget.fF.where((doc)=> doc['${widget.selectedColor}'] != null).toList();
+                }
+                if(widget.oddfilter  == true){
+                  widget.fF = widget.fF.where((doc)=> doc['ODD_can'] == true).toList();
+                }
              }
             //}
             stopTrigger+=1;
@@ -437,9 +446,14 @@ class _FavoriteState extends State<Favorite>  {
                 backgroundColor: Color(0xff142035),
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                   children: [
-                    Text('카테고리 필터 적용',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
+                    Container(
+                        width: 25,
+                        child: Image.asset('assets/icons/hanger.png',color: Colors.blue,)),
+                    SizedBox(width: 10,),
+                    Text('카테고리 필터',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
+                    Spacer(),
                     Text("${widget.selectedCategoryList.length}개 선택됨",style:TextStyle(fontWeight:FontWeight.w300,fontSize:15,color: Colors.white))
                   ],
                 ),
@@ -925,7 +939,7 @@ class _FavoriteState extends State<Favorite>  {
                     visible: widget.VisibiltyTriger?true:false,
                     child: FlatButton(
                       onPressed: () {
-                        _getDelayForReset('category');
+                        _getDelayForReset();
                         Navigator.pop(context, null);
                       },
                       child:Text('필터 해제',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
@@ -945,7 +959,7 @@ class _FavoriteState extends State<Favorite>  {
                     onPressed: () {
                       Navigator.pop(context,null);
                       if(widget.selectedCategoryList.length == 0){
-                        _getDelayForReset('category');
+                        _getDelayForReset();
                       }else{
                         _getDelayForCategoryFilter();
                       }
@@ -958,7 +972,6 @@ class _FavoriteState extends State<Favorite>  {
           );
         });
   }
-
   Future<Map<String, bool>> _priceFilterAlert() async {
 
     return showDialog(
@@ -970,11 +983,14 @@ class _FavoriteState extends State<Favorite>  {
                 backgroundColor: Color(0xff142035),
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                   children: [
-                    Text('가격 필터 적용',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
-                    Text("${widget.selectedCategoryList.length}개 선택됨"
-                        ,style:TextStyle(fontWeight:FontWeight.w300,fontSize:15,color: Colors.white))
+                    Container(
+                        width: 25,
+                        child: Image.asset('assets/icons/tag.png',color: Colors.blue,)),
+                    SizedBox(width: 10,),
+                    Text('가격 필터',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
+
                   ],
                 ),
                 content: SingleChildScrollView(
@@ -989,35 +1005,7 @@ class _FavoriteState extends State<Favorite>  {
                             color: widget.selectedPrice ==0 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
-                                if(widget.pricefilter == true){
-                                  if( widget.categoryfilter == true){
-                                    var _tem = widget.selectedCategoryList;
-                                    _getDelayForReset('category');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      widget.selectedCategoryList=_tem;
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      _getDelayForCategoryFilter();
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(0));
-                                  }
-                                  else{
-                                    print("11");
-                                    _getDelayForReset('price');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(0));
-                                  }
-                                }
-                                else{
-                                  // pure
-                                  print("22");
-                                  _getDelayForPriceFilter(0);
-
-                                }
-                               Navigator.pop(context,null);
+                                _getPriceFilter(0);
                               });
                             },
                             child: Row(
@@ -1026,7 +1014,7 @@ class _FavoriteState extends State<Favorite>  {
                               children: [
                                 Text('0 ~ 9,999원', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+
                               ],
                             ),
                           ),
@@ -1037,34 +1025,7 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==1 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
-                                if(widget.pricefilter == true){
-                                  if( widget.categoryfilter == true){
-                                    var _tem = widget.selectedCategoryList;
-                                    _getDelayForReset('category');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      widget.selectedCategoryList=_tem;
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      _getDelayForCategoryFilter();
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(1));
-                                  }
-                                  else{
-                                    _getDelayForReset('price');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(1));
-                                  }
-                                }
-                                else{
-                                  // pure
-                                  print("22");
-                                  _getDelayForPriceFilter(1);
-
-                                }
-                                Navigator.pop(context,null);
+                                _getPriceFilter(1);
                               });
                             },
                             child: Row(
@@ -1073,7 +1034,7 @@ class _FavoriteState extends State<Favorite>  {
                               children: [
                                 Text('10,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+
                               ],
                             ),
                           ),
@@ -1084,35 +1045,7 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==2 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
-                                if(widget.pricefilter == true){
-                                  if( widget.categoryfilter == true){
-                                    var _tem = widget.selectedCategoryList;
-                                    _getDelayForReset('category');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      widget.selectedCategoryList=_tem;
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      _getDelayForCategoryFilter();
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(2));
-                                  }
-                                  else{
-                                    print("11");
-                                    _getDelayForReset('price');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(2));
-                                  }
-                                }
-                                else{
-                                  // pure
-                                  print("22");
-                                  _getDelayForPriceFilter(2);
-
-                                }
-                                Navigator.pop(context,null);
+                                _getPriceFilter(2);
                               });
                             },
                             child: Row(
@@ -1121,7 +1054,7 @@ class _FavoriteState extends State<Favorite>  {
                               children: [
                                 Text('20,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+
                               ],
                             ),
                           ),
@@ -1132,35 +1065,7 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==3 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
-                                if(widget.pricefilter == true){
-                                  if( widget.categoryfilter == true){
-                                    var _tem = widget.selectedCategoryList;
-                                    _getDelayForReset('category');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      widget.selectedCategoryList=_tem;
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      _getDelayForCategoryFilter();
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(3));
-                                  }
-                                  else{
-                                    print("11");
-                                    _getDelayForReset('price');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(3));
-                                  }
-                                }
-                                else{
-                                  // pure
-                                  print("22");
-                                  _getDelayForPriceFilter(3);
-
-                                }
-                                Navigator.pop(context,null);
+                                _getPriceFilter(3);
                               });
                             },
                             child: Row(
@@ -1169,7 +1074,7 @@ class _FavoriteState extends State<Favorite>  {
                               children: [
                                 Text('30,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+
                               ],
                             ),
                           ),
@@ -1180,35 +1085,7 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==4 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
-                                if(widget.pricefilter == true){
-                                  if( widget.categoryfilter == true){
-                                    var _tem = widget.selectedCategoryList;
-                                    _getDelayForReset('category');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      widget.selectedCategoryList=_tem;
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      _getDelayForCategoryFilter();
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(4));
-                                  }
-                                  else{
-                                    print("11");
-                                    _getDelayForReset('price');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(4));
-                                  }
-                                }
-                                else{
-                                  // pure
-                                  print("22");
-                                  _getDelayForPriceFilter(4);
-
-                                }
-                                Navigator.pop(context,null);
+                                _getPriceFilter(4);
                               });
                             },
                             child: Row(
@@ -1217,7 +1094,7 @@ class _FavoriteState extends State<Favorite>  {
                               children: [
                                 Text('40,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+
                               ],
                             ),
                           ),
@@ -1229,35 +1106,7 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==5 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
-                                if(widget.pricefilter == true){
-                                  if( widget.categoryfilter == true){
-                                    var _tem = widget.selectedCategoryList;
-                                    _getDelayForReset('category');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      widget.selectedCategoryList=_tem;
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      _getDelayForCategoryFilter();
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(5));
-                                  }
-                                  else{
-                                    print("11");
-                                    _getDelayForReset('price');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(5));
-                                  }
-                                }
-                                else{
-                                  // pure
-                                  print("22");
-                                  _getDelayForPriceFilter(5);
-
-                                }
-                                Navigator.pop(context,null);
+                                _getPriceFilter(5);
                               });
                             },
                             child: Row(
@@ -1266,7 +1115,7 @@ class _FavoriteState extends State<Favorite>  {
                               children: [
                                 Text('50,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+
                               ],
                             ),
                           ),
@@ -1277,35 +1126,7 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==6 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
-                                if(widget.pricefilter == true){
-                                  if( widget.categoryfilter == true){
-                                    var _tem = widget.selectedCategoryList;
-                                    _getDelayForReset('category');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      widget.selectedCategoryList=_tem;
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      _getDelayForCategoryFilter();
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(6));
-                                  }
-                                  else{
-                                    print("11");
-                                    _getDelayForReset('price');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(6));
-                                  }
-                                }
-                                else{
-                                  // pure
-                                  print("22");
-                                  _getDelayForPriceFilter(6);
-
-                                }
-                                Navigator.pop(context,null);
+                                _getPriceFilter(6);
                               });
                             },
                             child: Row(
@@ -1314,7 +1135,7 @@ class _FavoriteState extends State<Favorite>  {
                               children: [
                                 Text('60,000원 대', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+
                               ],
                             ),
                           ),
@@ -1326,35 +1147,7 @@ class _FavoriteState extends State<Favorite>  {
                             color:widget.selectedPrice ==7 ? Colors.deepOrange:Colors.blue,
                             onPressed: (){
                               setState(() {
-                                if(widget.pricefilter == true){
-                                  if( widget.categoryfilter == true){
-                                    var _tem = widget.selectedCategoryList;
-                                    _getDelayForReset('category');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      widget.selectedCategoryList=_tem;
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) {
-                                      _getDelayForCategoryFilter();
-                                    });
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(6));
-                                  }
-                                  else{
-                                    print("11");
-                                    _getDelayForReset('price');
-                                    Future.delayed(Duration(milliseconds: 50))
-                                        .then((onValue) =>_getDelayForPriceFilter(6));
-                                  }
-                                }
-                                else{
-                                  // pure
-                                  print("22");
-                                  _getDelayForPriceFilter(6);
-
-                                }
-                                Navigator.pop(context,null);
+                                _getPriceFilter(7);
                               });
                             },
                             child: Row(
@@ -1363,7 +1156,7 @@ class _FavoriteState extends State<Favorite>  {
                               children: [
                                 Text('70,000원 ~', style: TextStyle(fontSize: 15,color: Colors.white)),
                                 Spacer(),
-                                Icon(Icons.keyboard_arrow_right,color: Colors.white,)
+
                               ],
                             ),
                           ),
@@ -1377,7 +1170,7 @@ class _FavoriteState extends State<Favorite>  {
                     visible: widget.pricefilter?true:false,
                     child: FlatButton(
                       onPressed: () {
-                        _getDelayForReset('nothing');
+                        _getDelayForReset();
                         Navigator.pop(context, null);
                       },
                       child:Text('필터 해제',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
@@ -1397,7 +1190,344 @@ class _FavoriteState extends State<Favorite>  {
           );
         });
   }
+  Future<Map<String, bool>> _colorFilterAlert() async {
 
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                backgroundColor: Color(0xff142035),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        width: 25,
+                        child: Image.asset('assets/icons/painter.png',color: Colors.blue,)),
+                    SizedBox(width: 10,),
+                    Text('컬러 필터',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),),
+                    Visibility(
+                      visible: widget.selectedColor != "999"?true : false,
+                        child: Text('적용 : ${widget.selectedColor}',style:TextStyle(fontWeight:FontWeight.w700,color: Colors.white),)),
+                  ],
+                ),
+                content: SingleChildScrollView(
+                  child: Container(
+                    width: double.minPositive,
+                    height: 700,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color: Colors.red,
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('red');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('레드', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:Colors.pinkAccent,
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('pink');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('핑크', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:_getColorFromHex("800020"),
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('wine');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('버건디 와인', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:Colors.purple,
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('puple');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('퍼플', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:Colors.yellow,
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('yellow');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('옐로우', style: TextStyle(fontSize: 15,color: Colors.black)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:_getColorFromHex("F5F5DC"),
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('beige');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('베이지', style: TextStyle(fontSize: 15,color: Colors.black)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:Colors.green,
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('green');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('그린', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:_getColorFromHex('964B00'),
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('brown');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('브라운', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:_getColorFromHex("000080"),
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('blue');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('블루', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:Colors.lightBlueAccent,
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('sky');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('스카이', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:Colors.white,
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('white');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('화이트', style: TextStyle(fontSize: 15,color: Colors.black)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:Colors.grey,
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('grey');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('그레이', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:Colors.black,
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('black');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('블랙', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 600,
+                          child: RaisedButton(
+                            color:_getColorFromHex('3E5F40'),
+                            onPressed: (){
+                              setState(() {
+                                _getColorFilter('khaki');
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('카키', style: TextStyle(fontSize: 15,color: Colors.white)),
+                                Spacer(),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                actions: <Widget>[
+                  Visibility(
+                    visible: widget.pricefilter?true:false,
+                    child: FlatButton(
+                      onPressed: () {
+                        _getDelayForReset();
+                        Navigator.pop(context, null);
+                      },
+                      child:Text('필터 해제',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      setState((){
+                      });
+                      Navigator.pop(context, null);
+                    },
+                    child:Text('닫기',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+                  ),
+                ],
+              );
+            },
+          );
+        });
+  }
 
 
   Future _getDelayForCategoryFilter() {
@@ -1424,7 +1554,114 @@ class _FavoriteState extends State<Favorite>  {
         })
     );
   }
-  Future _getDelayForReset(String param) {
+  Future _getDelayForColorFilter(String selectedColor) {
+    return Future.delayed(Duration(milliseconds: 1))
+        .then((onValue) =>
+        setState((){
+          widget.selectedColor = selectedColor;
+          widget.filter = true;
+          stopTrigger = 1;
+          widget.colorfilter = true;
+          _gridBuilder();
+        })
+    );
+  }
+
+  Future _getPriceFilter(int num){
+    var _temCategory = widget.selectedCategoryList;
+    var _temColor = widget.selectedColor;
+
+    if(widget.pricefilter == true){
+      if( widget.categoryfilter == true){
+        _getDelayForReset();
+        Future.delayed(Duration(milliseconds: 50))
+            .then((onValue) {
+          widget.selectedCategoryList=_temCategory;
+        });
+        Future.delayed(Duration(milliseconds: 50))
+            .then((onValue) {
+          _getDelayForCategoryFilter();
+        });
+        Future.delayed(Duration(milliseconds: 50))
+            .then((onValue) =>_getDelayForPriceFilter(num));
+
+        if(widget.colorfilter == true){
+          Future.delayed(Duration(milliseconds: 50))
+              .then((onValue) =>_getDelayForColorFilter(_temColor));
+        }
+      }
+      else {
+        _getDelayForReset();
+        Future.delayed(Duration(milliseconds: 50))
+            .then((onValue) => _getDelayForPriceFilter(num));
+        if(widget.colorfilter == true){
+          Future.delayed(Duration(milliseconds: 50))
+              .then((onValue) =>_getDelayForColorFilter(_temColor));
+        }
+      }
+    }
+    else{
+      _getDelayForPriceFilter(num);
+    }
+    Navigator.pop(context,null);
+  }
+
+  Future _getColorFilter(String selectedColor){
+    var _temCategory = widget.selectedCategoryList;
+    var _temPrice = widget.selectedPrice;
+
+    if(widget.colorfilter == true){
+      if(widget.categoryfilter == true){
+        // 카테고리 true / price true / color true / odd true
+        _getDelayForReset();
+        Future.delayed(Duration(milliseconds: 50))
+            .then((onValue) {
+          widget.selectedCategoryList=_temCategory;
+        });
+        Future.delayed(Duration(milliseconds: 50))
+            .then((onValue) {
+          _getDelayForCategoryFilter();
+        });
+        if(widget.pricefilter == true) {
+          Future.delayed(Duration(milliseconds: 50))
+              .then((onValue) => _getDelayForPriceFilter(_temPrice));
+        }
+        Future.delayed(Duration(milliseconds: 50))
+            .then((onValue) =>_getDelayForColorFilter(selectedColor));
+      }
+      else{
+        if(widget.pricefilter == true) {
+          Future.delayed(Duration(milliseconds: 50))
+              .then((onValue) => _getDelayForPriceFilter(_temPrice));
+        }
+        Future.delayed(Duration(milliseconds: 50))
+            .then((onValue) =>_getDelayForColorFilter(selectedColor));
+      }
+    }
+    else{
+      // 카테고리 fasle price false color false odd false
+      _getDelayForColorFilter(selectedColor);
+    }
+    Navigator.pop(context,null);
+  }
+
+  Future _getODDFilter(bool ODD){
+    var _temCategory = widget.selectedCategoryList;
+    var _temPrice = widget.selectedPrice;
+
+      Future.delayed(Duration(milliseconds: 50))
+          .then((onValue) {
+        setState(() {
+        widget.filter = true;
+        widget.oddfilter = ! widget.oddfilter;
+        });
+      });
+
+
+  }
+
+
+  Future _getDelayForReset() {
     return Future.delayed(Duration(milliseconds: 1))
         .then((onValue) =>
         setState((){
@@ -1433,11 +1670,21 @@ class _FavoriteState extends State<Favorite>  {
             widget.categoryfilter = false;
             _reset();
             widget.selectedPrice = 999;
+            widget.selectedColor = "999";
             widget.pricefilter = false;
-          widget.filter = false;
-
+            widget.colorfilter = false;
+            widget.filter = false;
         })
     );
+  }
+  Color _getColorFromHex(String hexColor) {
+    hexColor = hexColor.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
   }
 
 }
