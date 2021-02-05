@@ -68,7 +68,7 @@ class _FavoriteState extends State<Favorite>  {
                   child: Container(
                     child: GestureDetector(
                         child:
-                        Image.asset('assets/logo/P21.png'),
+                            Icon(Icons.arrow_back_ios,size: 20,),
                         onTap: (){
                           Navigator.pop(context);
                         }),
@@ -287,7 +287,6 @@ class _FavoriteState extends State<Favorite>  {
                         return ProductDetail(widget.user, document);
                       }));
                     },
-                      //https://www.flaticon.com/free-icon/delivery_876079?term=delivery&page=5&position=21&related_item_id=876079/
                       child:
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,7 +306,13 @@ class _FavoriteState extends State<Favorite>  {
                                           Positioned(
                                               top:4,
                                               right: 6,
-                                              child: widget.bool_list_each_GridSell[index]?Icon(Icons.favorite,size:25,color: Colors.red,):Container())
+                                              child: widget.bool_list_each_GridSell[index]?Icon(Icons.favorite,size:25,color: Colors.red,):Container()),
+
+                                          Positioned (
+                                            top:4,
+                                            left:6,
+                                            child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
+                                          ),
                                         ],
                                       ),
                                       ),
@@ -316,34 +321,48 @@ class _FavoriteState extends State<Favorite>  {
                               SizedBox(
                                 height: 4,
                               ),
+                              Text("${document['category']}",style: TextStyle(fontSize: 11,),
+                                 ),
+                              SizedBox(
+                                height: 1,
+                              ),
                               Text("${document['productName']}",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,softWrap: false),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
+
+
                                   Text("${numberWithComma(int.parse(document['price']==null?"120000":document['price']))}"
-                                      ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w700,
-                                        fontFamily: 'Pacifico')),
+                                      ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                                        fontFamily: 'metropolis')),
+                                  SizedBox(
+                                    width: 1
+                                  ),
+                                  Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                                     )),
+
                                   Spacer(),
                                   SizedBox(
                                     width: 4,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top:3.0),
-                                    child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
-                                  ),
+
                                   SizedBox(
                                     width: 6,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top:2.7),
+                                    padding: const EdgeInsets.only(top:4.0,left:3),
                                     child: Visibility(
                                       visible: averageRating.isNaN?false:true,
                                       child: Row(
                                         children: [
                                           Image.asset('assets/star/star11.png', width: 14,),
-                                          Text("$averageRating",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),)
+                                          Text("$averageRating",style: TextStyle(fontSize: 14,
+                                              height:1.1,
+                                              fontWeight: FontWeight.w900,
+                                              fontFamily: 'metropolis'),),
+
                                         ],
                                       ),
                                     ),

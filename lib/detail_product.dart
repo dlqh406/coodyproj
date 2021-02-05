@@ -63,8 +63,6 @@ class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveC
 
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,6 +144,7 @@ class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveC
     return Padding(
       padding: const EdgeInsets.only(top: 15, right: 20, left: 20, bottom: 20),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
@@ -162,11 +161,16 @@ class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveC
           Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: Row(
+
               children: [
-                Text('₩ '),
-                Text("${numberWithComma(int.parse(widget.document['price']))}", style: TextStyle(fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 20)),
+                Text("₩",style: TextStyle(height:1.3,fontSize: 25.5,
+                    fontFamily: 'Pacifico')),
+                SizedBox(
+                  width: 3.7,
+                ),
+                Text("${numberWithComma(int.parse(widget.document['price']))}", style: TextStyle(fontWeight: FontWeight.w700,
+                    height:1.3,
+                    fontSize: 30,  fontFamily: 'Pacifico')),
               ],
             ),
           )

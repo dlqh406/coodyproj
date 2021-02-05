@@ -124,9 +124,9 @@ flutter:
       fonts:
         - asset: assets/fonts/Pacifico-Regular.ttf
 
-    - family: LuckiestGuy
+    - family: metropolis
       fonts:
-        - asset: assets/fonts/LuckiestGuy-Regular.ttf
+        - asset: assets/fonts/metropolis.bold.otf
 
     - family: Staatliches
       fonts:
