@@ -58,7 +58,7 @@ class _FavoriteState extends State<Favorite>  {
     return Container(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar:PreferredSize(preferredSize: Size.fromHeight(45.0),
+        appBar:PreferredSize(preferredSize: Size.fromHeight(30.0),
            child: AppBar(
                 titleSpacing:2.0,
                 backgroundColor: Colors.white,
@@ -293,7 +293,7 @@ class _FavoriteState extends State<Favorite>  {
                             children: [
                               Expanded(
                                 child: ClipRRect(
-                                  borderRadius: new BorderRadius.circular(8.0),
+                                  borderRadius: new BorderRadius.circular(12.0),
                                   child: Container(
                                       child: Stack(
                                         fit: StackFit.expand,
@@ -342,15 +342,7 @@ class _FavoriteState extends State<Favorite>  {
                                   ),
                                   Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
                                      )),
-
                                   Spacer(),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-
-                                  SizedBox(
-                                    width: 6,
-                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(top:4.0,left:3),
                                     child: Visibility(
@@ -362,12 +354,10 @@ class _FavoriteState extends State<Favorite>  {
                                               height:1.1,
                                               fontWeight: FontWeight.w900,
                                               fontFamily: 'metropolis'),),
-
                                         ],
                                       ),
                                     ),
                                   ),
-
                                 ],
                               ),
                             ],

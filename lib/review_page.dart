@@ -38,6 +38,7 @@ class ReviewPage extends StatefulWidget {
   int _totalPrice=0;
   bool stopTriger =true;
   int sizing = 3;
+  var orderSize = "";
 
   ReviewPage(this.user,this.data,this.productCode);
   @override
@@ -380,7 +381,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
   Widget _buildListView(doc){
-
+    widget.orderSize = doc['orderSize'];
     return StreamBuilder<DocumentSnapshot>(
         stream: Firestore.instance.collection('uploaded_product').document(doc['productCode']).snapshots(),
         builder: (context, snapshot) {
@@ -913,7 +914,8 @@ class _ReviewPageState extends State<ReviewPage> {
                 'height' :  widget.checkPrivacy?"non-public":replace(heightController.text),
                 'weight' : widget.checkPrivacy?"non-public":replace(weightController.text),
                 'sizing' : _sizing(widget.sizing),
-                'state' : "wrote"
+                'state' : "wrote",
+                'orderSize' : widget.orderSize,
               };
               // 댓글 추가
               final data2 = {

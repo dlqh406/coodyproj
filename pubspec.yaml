@@ -75,35 +75,21 @@ flutter:
     -  assets/icons/coin2.png
     -  assets/icons/discount.png
     -  assets/icons/giphy.gif
-    -  assets/logo/blue.png
-    -  assets/logo/darkblue.png
-    -  assets/logo/blacklogo.png
     -  assets/logo/4444.png
     -  assets/logo/P21.png
     -  assets/logo/WP21.png
-    -  assets/logo/AI.png
-    -  assets/logo/AI2.png
     -  assets/star/star1.png
     -  assets/star/star11.png
     -  assets/star/starhalf.png
     -  assets/images/suc.png
+    -  assets/images/thisYearColor.png
     -  assets/images/fal.png
-    -  assets/images/Item_1.png
     -  assets/images/19.png
     -  assets/images/live.png
     -  assets/images/19.png
     -  assets/images/loading.png
-    -  assets/images/giphy.gif
-    -  assets/images/12.gif
-    -  assets/images/giphy2.gif
-    -  assets/images/cake.gif
-    -  assets/images/office.jpg
     -  assets/splash/loading.gif
     -  assets/splash/Rolling.gif
-    -  assets/splash/1.png
-    -  assets/splash/2.png
-    -  assets/splash/3.png
-    -  assets/splash/4.png
 
 
   fonts:
@@ -115,23 +101,9 @@ flutter:
         - asset: assets/fonts/KoPubDotumBold.ttf
           weight: 700
 
-    - family: Archivo
-      fonts:
-        - asset: assets/fonts/Archivo-SemiBold.ttf
-        - asset: assets/fonts/Archivo-SemiBoldItalic.ttf
-
-    - family: Pacifico
-      fonts:
-        - asset: assets/fonts/Pacifico-Regular.ttf
-
     - family: metropolis
       fonts:
         - asset: assets/fonts/metropolis.bold.otf
-
-    - family: Staatliches
-      fonts:
-        - asset: assets/fonts/Staatliches-Regular.ttf
-
 
     - family: Montserrat
       fonts:

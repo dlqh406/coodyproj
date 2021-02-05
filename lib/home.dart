@@ -132,9 +132,9 @@ class Home extends StatefulWidget {
             decoration: BoxDecoration(
               gradient: currentIndex ==0?LinearGradient(
                 colors: [
-//              Colors.blue,
-                  Colors.deepPurple[700],
-                  Colors.purple[500]
+
+                  _getColorFromHex('3a3985'),
+                  _getColorFromHex('7366FF'),
                 ],
               ):null
             ),
@@ -257,6 +257,15 @@ class Home extends StatefulWidget {
         print(currentIndex);
         _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
       });
+    }
+    Color _getColorFromHex(String hexColor) {
+      hexColor = hexColor.replaceAll("#", "");
+      if (hexColor.length == 6) {
+        hexColor = "FF" + hexColor;
+      }
+      if (hexColor.length == 8) {
+        return Color(int.parse("0x$hexColor"));
+      }
     }
 
 }

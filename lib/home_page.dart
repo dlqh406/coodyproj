@@ -212,24 +212,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     ),
                   ),
                   Spacer(),
-                  IconButton(
-                    icon: Icon(
-                      Icons.search,
-                      size: 25.0,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      void RestApi_Get() async {
-                        http.Response response = await http.post(
-                            Uri.encodeFull("https://apis.aligo.in/send/key=ciitjlh4hgpv9i0miit3ooprd3kx474c/user_id=tjd406/sender=01068276863/receiver=01068276863 /destination=01068276863|홍길동,01111111112|아무개/msg=%고객명%님! 안녕하세요. API TEST SEND /title=API TEST 입니다/rdate=20210101/rtime=2329/testmode_yn=Y"),
-                            headers: {"Accept": "application/json"});
-                        Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
-                        print(responseBodyMap["state"]['text']);
-                      }
-                      RestApi_Get();
-
-                    },
-                  )
                 ],
               ),
             ),
@@ -257,7 +239,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           vertical: kDefaultPadding / 8,
         ),
         // color: Colors.blueAccent,
-        height: 130,
+        height: 120,
         child: InkWell(
           onTap: () {
             Navigator.push(context,
@@ -287,7 +269,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 right: 0,
                 child: Container(
                   height: 160,
-                  // image is square but we add extra 20 + 20 padding thats why width is 200
                   width: 250,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 100.0),
@@ -392,13 +373,30 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     colors: [
-                      _getColorFromHex("#f55555"),
-                      _getColorFromHex("#fccf31"),
+                      _getColorFromHex("#F9d423"),
+                      _getColorFromHex("FC8884"),
+                      // _getColorFromHex("#939597"),
+                       //_getColorFromHex("#F5dF4D"),
                     ],
                   ),
 
                 ),
               ),
+              Positioned(
+                top: 0,
+                right: -9,
+                child: Container(
+                  height: 135,
+                  // image is square but we add extra 20 + 20 padding thats why width is 200
+                  width: 265,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 70.0),
+                    child: Image.asset(
+                      "assets/images/thisYearColor.png", fit: BoxFit.cover,),
+                  ),
+                ),
+              ),
+
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -414,18 +412,18 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                         padding: const EdgeInsets.symmetric(
                             horizontal: kDefaultPadding),
                         child: Padding(
-                          padding: const EdgeInsets.only(top:25.0),
+                          padding: const EdgeInsets.only(top:30.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("7월의 컬러는 보라색", style: TextStyle(fontSize: 14,
+                              Text("올해의 컬러 컬렉션", style: TextStyle(fontSize: 18,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,),),
                               SizedBox(height: 10,),
-                              Text("#운동할때 입기 좋은", style: TextStyle(fontSize: 14,
+                              Text("#얼티메이트 그레이", style: TextStyle(fontSize: 14,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w100),),
-                              Text("#운동은 장비빨 ", style: TextStyle(fontSize: 14,
+                              Text("#일루미네이팅", style: TextStyle(fontSize: 14,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w100),),
                             ],

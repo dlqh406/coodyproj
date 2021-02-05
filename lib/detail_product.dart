@@ -159,18 +159,18 @@ class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveC
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 12.0),
+            padding: const EdgeInsets.only(top: 14.0),
             child: Row(
 
               children: [
-                Text("₩",style: TextStyle(height:1.3,fontSize: 25.5,
-                    fontFamily: 'Pacifico')),
+                Text("${numberWithComma(int.parse(widget.document['price']))}", style: TextStyle(
+                    fontSize: 25,   fontWeight: FontWeight.w900,
+                    fontFamily: 'metropolis')),
                 SizedBox(
                   width: 3.7,
                 ),
-                Text("${numberWithComma(int.parse(widget.document['price']))}", style: TextStyle(fontWeight: FontWeight.w700,
-                    height:1.3,
-                    fontSize: 30,  fontFamily: 'Pacifico')),
+                Text("원",style: TextStyle(height:1.3,fontSize: 14.5,fontWeight: FontWeight.w700,
+                )),
               ],
             ),
           )
@@ -576,7 +576,9 @@ class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveC
                           ),),
                           Text('${doc['weight']} ', style: TextStyle(
                               ),),
-                          Text('${doc['sizing']}]', style: TextStyle(
+                          Text('${doc['orderSize']} ', style: TextStyle(
+                          ),),
+                          Text('${doc['sizing']}', style: TextStyle(
                               fontWeight: FontWeight.bold),),
                           Text(']', style: TextStyle(
                               ),),

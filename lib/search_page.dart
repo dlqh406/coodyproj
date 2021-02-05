@@ -68,9 +68,13 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
     return Container(
         decoration: BoxDecoration(
           gradient:  LinearGradient(
+            // begin: Alignment.topRight,
+            // end: Alignment.bottomLeft,
             colors: [
-              Colors.deepPurple[700],
-              Colors.purple[500]
+              _getColorFromHex('3a3985'),
+              _getColorFromHex('7366FF'),
+
+
             ],
           ),
         ),
@@ -144,7 +148,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
                     fontSize: 40,
                     fontFamily: 'Montserrat',
                     letterSpacing: -1.3,
-                    color: Colors.lightBlueAccent,
+                    color: Colors.white,
                     ),),
                 Text(" Search",
                   style: TextStyle(
@@ -1221,7 +1225,15 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
     );
   }
 
-
+  Color _getColorFromHex(String hexColor) {
+    hexColor = hexColor.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
+  }
 
 
 
