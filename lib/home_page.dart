@@ -264,19 +264,19 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 ),
               ),
               // our product image
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  height: 160,
-                  width: 250,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 100.0),
-                    child: Image.asset(
-                      "assets/logo/AI2.png", fit: BoxFit.cover,),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 0,
+              //   right: 0,
+              //   child: Container(
+              //     height: 160,
+              //     width: 250,
+              //     child: Padding(
+              //       padding: const EdgeInsets.only(left: 100.0),
+              //       child: Image.asset(
+              //         "assets/logo/AI2.png", fit: BoxFit.cover,),
+              //     ),
+              //   ),
+              // ),
 
               // Product title and price
               Positioned(

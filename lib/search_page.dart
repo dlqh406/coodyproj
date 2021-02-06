@@ -10,7 +10,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'dart:io' show Platform;
-
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 
 class SearchPage extends StatefulWidget {
   bool filter = false;
@@ -294,7 +295,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
             padding: const EdgeInsets.only(left:25.0,top:5,bottom: 11),
             child: Row(
               children: [
-                Text('추천 트렌드 키워드',style: TextStyle(
+                Text('빅데이터 트렌드 키워드',style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15, color: Colors.white,
                     ),
@@ -432,79 +433,123 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
           return ProductDetail(widget.user, doc);
         }));
       },
-      child: Padding(
-        padding: const EdgeInsets.only(left:18.0,top:15,right:18),
-        child: Container(
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right:8.0),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(18.0),
-                    child: FadeInImage.assetNetwork(
-                      placeholder:'assets/images/19.png',
-                      image: doc['thumbnail_img'],
-                        fit: BoxFit.cover,width: 85,height: 85,),
-                    )),
-              Expanded(
-                child: Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
-                      color: Colors.white
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left:8.0, right: 10.0),
-                        child: Container(
-                            width:45,
-                            child: Center(child: Text("${index+1}",style: TextStyle(fontWeight: FontWeight.w100 ,fontSize: 35,fontStyle: FontStyle.italic),))),
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('uploaded_product').document(doc.documentID).collection('review').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData){
+            return Center(child:CircularProgressIndicator());
+          }
+          double _total =0.0;
+          var averageRating =0.0;
+          for(var i=0; i<snapshot.data.documents.length; i++ ){
+            _total += double.parse(snapshot.data.documents[i]['rating']);
+          }
+          var _lengthDouble = snapshot.data.documents.length.toDouble();
+          averageRating = _total / _lengthDouble;
+
+
+          return Padding(
+            padding: const EdgeInsets.only(left:18.0,top:15,right:18),
+            child: Container(
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right:8.0),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(18.0),
+                        child: FadeInImage.assetNetwork(
+                          placeholder:'assets/images/19.png',
+                          image: doc['thumbnail_img'],
+                            fit: BoxFit.cover,width: 85,height: 85,),
+                        )),
+                  Expanded(
+                    child: Container(
+                      height: 80,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.white
                       ),
-                      Container(
-                        width: 135,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("캐주얼 노멀 하이퀄 니트",style: TextStyle(fontSize: 13),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis),
-                            Padding(
-                              padding: const EdgeInsets.only(top:2.0),
-                              child: Text(doc['category'],style: TextStyle(fontWeight: FontWeight.w700,color: Colors.blue),),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left:10.0, right: 10.0),
+                            child: Container(
+                                width:45,
+                                child: Center(child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("${index+1}",
+                                      style: TextStyle(fontWeight: FontWeight.w100 ,fontSize: 25,fontStyle: FontStyle.italic),),
+                                    SizedBox(width: 3,),
+                                    Text("위",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                                    )),
+                                  ],
+                                ))),
+                          ),
+                          Container(
+                            width: 145,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset('assets/star/star1.png', width:70,),
+                                Text("${doc['productName']}",style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis),
                                 Padding(
-                                  padding: const EdgeInsets.only(top:3.0,left: 10),
-                                  child: Text("₩12,900",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                  padding: const EdgeInsets.only(top:2.0),
+                                  child: Text(doc['category'],style: TextStyle(fontSize: 10,fontWeight: FontWeight.w700,color: Colors.blue),),
+                                ),
+                                Row(
+                                  children: [
+                                    Text("${numberWithComma(int.parse(doc['price']==null?"120000":doc['price']))}"
+                                        ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                                            fontFamily: 'metropolis')),
+                                    Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                                    )),
+                                    Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top:3.0),
+                                      child: Visibility(
+                                        visible: averageRating.isNaN?false:true,
+                                        child: Row(
+                                          children: [
+                                            Image.asset('assets/star/star11.png', width:15,),
+                                            Text("$averageRating",style: TextStyle(fontSize: 14,
+                                                height:1.1,
+                                                fontWeight: FontWeight.w900,
+                                                fontFamily: 'metropolis'),),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                          Spacer(),
+                          IconButton(
+                              icon: Icon(Icons.arrow_forward_ios,color: Colors.grey,size: 12,),
+                              onPressed: (){
+                              }
+                          )
+                        ],
                       ),
-                      Spacer(),
-                      IconButton(
-                          icon: Icon(Icons.arrow_forward_ios,color: Colors.grey,size: 12,),
-                          onPressed: (){
-                          }
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        }
       ),
     );
 
   }
-
+  numberWithComma(int param){
+    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
+  }
   Map<String, bool> top = {
     '니트&스웨터': false, '긴팔': false, '카디건': false, '후드&맨투맨': false,
     '브라우스': false, '셔츠': false,'반팔': false,

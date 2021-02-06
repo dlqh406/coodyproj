@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'detail_product.dart';
 import 'dart:io' show Platform;
-
 import 'package:coodyproj/test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -321,14 +320,12 @@ class _FavoriteState extends State<Favorite>  {
                               SizedBox(
                                 height: 4,
                               ),
-                              Text("${document['category']}",style: TextStyle(fontSize: 11,),
-                                 ),
-                              SizedBox(
-                                height: 1,
-                              ),
-                              Text("${document['productName']}",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                              // Text("${document['category']}",style: TextStyle(fontSize: 11,),
+                              //    ),
+
+                              Text("${document['productName']}",style: TextStyle(letterSpacing:-0.9,fontSize: 12,fontWeight: FontWeight.bold),
                                   maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,softWrap: false),
+                                  overflow: TextOverflow.ellipsis,softWrap: true),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
