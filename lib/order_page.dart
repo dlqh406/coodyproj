@@ -997,8 +997,11 @@ class _OrderPageState extends State<OrderPage> {
                             doc['ODD_can'] == true?Text("${cal_data()} 발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),)
                                 :Text("판매자 확인 후 발송 예정 ",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                             Spacer(),
-                            Text("₩ ${ numberWithComma(
-                                int.parse(doc['price'])*int.parse(widget.orderList[index][2]))}",style: TextStyle(fontWeight: FontWeight.bold),),
+                            Text("${ numberWithComma(
+                                int.parse(doc['price'])*int.parse(widget.orderList[index][2]))}",style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                                fontFamily: 'metropolis'),),
+                            Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                            )),
                             SizedBox(width: 30,)
                           ],
                         ),
@@ -1168,17 +1171,22 @@ class _OrderPageState extends State<OrderPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('합계',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold),),
-                        Text('₩ ${ numberWithComma(widget._totalPrice)}', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
+                        Text('${ numberWithComma(widget._totalPrice)}',style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                            fontFamily: 'metropolis'),)
                       ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top:6.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('할인 합계',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold,color:Colors.redAccent),),
-                        Text('- ₩ ${ numberWithComma(widget._totalDiscount)}', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color:Colors.redAccent),)
+                        Spacer(),
+                        Text('- ${ numberWithComma(widget._totalDiscount)}',style: TextStyle(color:Colors.redAccent,height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+
+                        fontFamily: 'metropolis'),),
+                        Text("원",style: TextStyle(color:Colors.redAccent,height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                        )),
                       ],
                     ),
                   ),
@@ -1186,10 +1194,14 @@ class _OrderPageState extends State<OrderPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(top:5.0,bottom: 5.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                         children: [
                           Text('최종 합계',style: TextStyle(fontSize:19,fontWeight: FontWeight.bold,color: Colors.blueAccent),),
-                          Text('₩ ${final_price()}', style: TextStyle(fontSize:19, fontWeight: FontWeight.w900,color:Colors.blueAccent),)
+                          Spacer(),
+                          Text(' ${final_price()}',style: TextStyle(height:1.3,fontSize: 19.5,fontWeight: FontWeight.w900,
+                          fontFamily: 'metropolis')),
+                          Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                          )),
                         ],
                       ),
                     ),
@@ -1576,7 +1588,8 @@ class _OrderPageState extends State<OrderPage> {
                 Row(
                   children: [
                     Text("나의 적립금 : ",style: TextStyle(fontSize: 16),),
-                        Text("${rewardOutput(snapshot.data.data)} p",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                        Text("${rewardOutput(snapshot.data.data)} p" ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                            fontFamily: 'metropolis')),
                     Spacer(),
                     Container(
                       width: 130,

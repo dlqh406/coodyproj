@@ -295,8 +295,17 @@ class _CartPageState extends State<CartPage> {
                                       child: CircularProgressIndicator(),
                                     );
                                   }
-                                  return Text("₩ ${numberWithComma(int.parse(snapshot.data['price']))}",
-                                      style:TextStyle(fontWeight: FontWeight.bold)
+                                  return Row(
+                                    children: [
+                                      Text("${numberWithComma(int.parse(snapshot.data['price']==null?"정보 없음":snapshot.data['price']))}"
+                                          ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                                              fontFamily: 'metropolis')),
+                                      Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                                      )),
+                                      // Text("₩ ${numberWithComma(int.parse(snapshot.data['price']))}",
+                                      //     style:TextStyle(fontWeight: FontWeight.bold)
+                                      // ),
+                                    ],
                                   );
                                 },
                               ),
@@ -353,7 +362,7 @@ class _CartPageState extends State<CartPage> {
               ],
             ),
             SizedBox(
-              height: 8,
+              height: 11,
             ),
             StreamBuilder(
               stream: Firestore.instance.collection("user_data").document(widget.user.uid).snapshots(),
@@ -428,7 +437,9 @@ class _CartPageState extends State<CartPage> {
 
 
                     Spacer(),
-                    Text('${numberWithComma(widget.discount2-widget.discount3) } p', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
+                    Text('${numberWithComma(widget.discount2-widget.discount3)} p',style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                        fontFamily: 'metropolis'),),
+
                   ],
                 );
               }
@@ -436,20 +447,24 @@ class _CartPageState extends State<CartPage> {
             Padding(
               padding: const EdgeInsets.only(top:8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('총 합계',style: TextStyle(fontSize:25,fontWeight: FontWeight.bold),),
-                  Text('₩ ${_calculatePrice()}', style: TextStyle(fontSize:23, fontWeight: FontWeight.bold),)
+                  Spacer(),
+                  Text('${_calculatePrice()}',style: TextStyle(height:1.3,fontSize: 23.5,fontWeight: FontWeight.w900,
+                  fontFamily: 'metropolis'),),
+                  Text("원",style: TextStyle(height:3.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                  )),
                 ],
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top:15.0),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -480,7 +495,7 @@ class _CartPageState extends State<CartPage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left:2.0,top:3),
-                            child: Text('구매적립 1% + 포토 리뷰 1%',style: TextStyle(fontSize:10,fontWeight: FontWeight.bold,color:Colors.grey),),
+                            child: Text('구매적립 2% + 포토 리뷰 2%',style: TextStyle(fontSize:10,fontWeight: FontWeight.bold,color:Colors.grey),),
                           ),
                         ],
                       ),
@@ -488,7 +503,8 @@ class _CartPageState extends State<CartPage> {
 
                     ],
                   ),
-                  Text('${_calculatePrice2()} p', style: TextStyle(fontSize:18, fontWeight: FontWeight.bold,color:Colors.redAccent),)
+                  Text('${_calculatePrice2()} p',style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                      fontFamily: 'metropolis',color: Colors.redAccent),)
                 ],
               ),
             ),
@@ -629,7 +645,7 @@ class _CartPageState extends State<CartPage> {
       }
     }
 
-   var aa =  _totalPrice.toDouble()*0.02;
+   var aa =  _totalPrice.toDouble()*0.04;
     return numberWithComma(aa.ceil());
   }
   Widget line(){

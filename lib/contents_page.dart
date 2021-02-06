@@ -76,7 +76,16 @@ class _ContentsPageState extends State<ContentsPage> {
                   }
               ),
               actions: [
-
+                Padding(
+                  padding: const EdgeInsets.only(right:10.0),
+                  child: new IconButton( icon: new Icon(Icons.home,size: 23,color: Colors.white,),
+                    onPressed: () => {
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return Home(widget.user);
+                      }))
+                    },
+                  ),
+                ),
               ],
             ),
             backgroundColor: Colors.transparent,

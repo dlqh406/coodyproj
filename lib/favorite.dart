@@ -221,7 +221,6 @@ class _FavoriteState extends State<Favorite>  {
               padding: const EdgeInsets.only(top:4,left:4,right:4),
               child: StaggeredGridView.countBuilder(
                   crossAxisCount: 3,
-                  // 아래 여백
                   mainAxisSpacing: 8.0,
                   crossAxisSpacing: 6.0,
                   itemCount: widget.fF.length,

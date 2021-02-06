@@ -253,10 +253,11 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
       child: Expanded(
         child: StaggeredGridView.countBuilder(
             crossAxisCount: 3,
-            mainAxisSpacing: 6.0,
+            // 아래 여백
+            mainAxisSpacing: 8.0,
             crossAxisSpacing: 6.0,
             itemCount: searchResults.length,
-            staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?1.2 : 1.8),
+            staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2 : 2.9),
             itemBuilder: (BuildContext context, int index) {
               return _buildListItem(context,searchResults[index]);
             }
@@ -295,7 +296,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
             padding: const EdgeInsets.only(left:25.0,top:5,bottom: 11),
             child: Row(
               children: [
-                Text('빅데이터 트렌드 키워드',style: TextStyle(
+                Text('빅데이터 기반 추천 키워드',style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15, color: Colors.white,
                     ),
@@ -358,8 +359,9 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left:25.0,top:20,bottom: 0),
+            padding: const EdgeInsets.only(left:25.0,top:20,bottom: 5),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
                   onTap: (){
@@ -372,10 +374,10 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
                 ),
                 Spacer(),
                 Padding(
-                  padding: const EdgeInsets.only(top:5,right:36.0),
+                  padding: const EdgeInsets.only(top:5,right:30.0),
                   child: InkWell(
                     child: new Container(
-                        width: 18,
+                        width: 23,
                         child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/active_filter.png'):Image.asset('assets/icons/Wfilter.png') ),
                     onTap: () => {
                       _categoryFilterAlert()
@@ -501,7 +503,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
                                 ),
                                 Row(
                                   children: [
-                                    Text("${numberWithComma(int.parse(doc['price']==null?"120000":doc['price']))}"
+                                    Text("${numberWithComma(int.parse(doc['price']==null?"정보 없음":doc['price']))}"
                                         ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
                                             fontFamily: 'metropolis')),
                                     Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
