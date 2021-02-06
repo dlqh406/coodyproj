@@ -30,11 +30,12 @@ class _DetailTrackingState extends State<DetailTracking> {
     super.initState();
     setState(() {
       widget.trackingNum = widget.data['trackingNumber'];
+
     });
 
     void RestApi_Get() async {
       http.Response response = await http.get(
-          Uri.encodeFull('https://apis.tracker.delivery/carriers/kr.cjlogistics/tracks/${widget.trackingNum}'),
+          Uri.encodeFull('https://apis.tracker.delivery/carriers/${shippingCompany(widget.data['shippingCompany'])}/tracks/${widget.trackingNum}'),
           headers: {"Accept": "application/json"});
       Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
       print(responseBodyMap["state"]['text']);
@@ -321,7 +322,7 @@ class _DetailTrackingState extends State<DetailTracking> {
                 Row(
                   children: [
                     Text("배송 회사:",style: TextStyle(fontSize: 18)),
-                    Text("       ${widget.data['shippingCompany']}",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold)),
+                    Text("       ${shippingCompany2(widget.data['shippingCompany'])}",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold)),
                   ],
                 ),
                 SizedBox(
@@ -576,5 +577,141 @@ class _DetailTrackingState extends State<DetailTracking> {
   // // RestApi_Get();
   numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
+  }
+  shippingCompany(_shippingCompanyNumber) {
+    switch (_shippingCompanyNumber) {
+      case "1":
+      //cj
+        return "kr.cjlogistics";
+
+      case "2":
+      // 우체국 택배
+        return "kr.epost";
+
+      case "3":
+      // 롯데 택배
+        return "kr.lotte";
+
+      case "4":
+      // 한진 택배
+        return "kr.hanjin";
+
+      case "5":
+      //cu 편의점 택배
+        return "kr.cupost";
+
+      case "6":
+      // 로젠
+        return "kr.logen";
+
+      case "7":
+      //대신택배
+        return "kr.daesin";
+
+      case "8":
+      //경동택배
+        return "kr.kdexp";
+
+      case "9":
+      //GS Postbox 택배
+        return "kr.cvsnet";
+
+      case "10":
+      //천일택배
+        return "kr.chunilps";
+
+      case "11":
+      //합동택배
+        return "kr.hdexp";
+
+      case "12":
+      //DHL
+        return "de.dhl";
+
+      case "13":
+      //홈픽택배
+        return "kr.homepick";
+
+      case "14":
+      //ems
+        return "un.upu.ems";
+      case "15":
+      //SLX택배
+        return "kr.slx";
+
+      case "16":
+      //건영택배
+        return "kr.kunyoung";
+      case "17":
+      //한서호남택배
+        return "kr.honamlogis";
+    }
+  }
+  shippingCompany2(_shippingCompanyNumber) {
+    switch (_shippingCompanyNumber) {
+      case "1":
+      return "CJ대한통운";
+      case "2":
+      // 우체국 택배
+        return "우체국 택배";
+
+      case "3":
+      // 롯데 택배
+        return "롯데 택배";
+
+      case "4":
+      // 한진 택배
+        return "한진 택배";
+
+      case "5":
+      //cu 편의점 택배
+        return "cu 편의점 택배";
+
+      case "6":
+      // 로젠
+        return "로젠";
+
+      case "7":
+      //대신택배
+        return "대신 택배";
+
+      case "8":
+      //경동택배
+        return "경동 택배";
+
+      case "9":
+      //GS Postbox 택배
+        return "GS Postbox 택배";
+
+      case "10":
+      //천일택배
+        return "천일 택배";
+
+      case "11":
+      //합동택배
+        return "합동 택배";
+
+      case "12":
+      //DHL
+        return "DHL";
+
+      case "13":
+      //홈픽택배
+        return "홈픽 택배";
+
+      case "14":
+      //ems
+        return "ems";
+      case "15":
+      //SLX 택배
+        return "SLX 택배";
+
+      case "16":
+      //건영택배
+        return "건영 택배";
+      case "17":
+      //한서호남택배
+        return "한서호남택배";
+    }
   }
 }
