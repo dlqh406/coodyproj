@@ -83,11 +83,14 @@ class Payment extends StatelessWidget {
         /* [필수입력] 결제 데이터 */
         data: data,
         callback: (Map<String, String> result) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //return PaymentResult();
-            return PaymentResult(result,user,payData);
-          },
-         ));
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  PaymentResult(result,user,payData)), (route) => false);
+         //  Navigator.push(context, MaterialPageRoute(builder: (context) {
+         //    //return PaymentResult();
+         //    return PaymentResult(result,user,payData);
+         //  },
+         // ));
         });
   }
 }

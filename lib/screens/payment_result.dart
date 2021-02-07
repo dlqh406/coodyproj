@@ -135,10 +135,9 @@ class PaymentResult extends StatelessWidget {
           isSuccessed?RaisedButton(
             onPressed: () {
               print("suc");
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return Home(user);
-              },
-              ));
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      Home(user)), (route) => false);
               print(payData['merchantUid']);
             },
             child: Text('확인', style: TextStyle(fontSize: 16.0)),
@@ -146,9 +145,9 @@ class PaymentResult extends StatelessWidget {
             textColor: Colors.white,
           ):RaisedButton(
             onPressed: () {
-              print("fal");
-              Navigator.pop(context);
-              Navigator.pop(context);
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      Home(user)), (route) => false);
             },
             child: Text('확인', style: TextStyle(fontSize: 16.0)),
             color: Colors.redAccent,

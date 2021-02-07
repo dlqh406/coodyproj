@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'ApplyForExchageAndRefund.dart';
 import 'detail_product.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -266,20 +267,33 @@ class _DetailOrderState extends State<DetailOrder> {
                 Padding(
                   padding: const EdgeInsets.only(top:6.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                     children: [
                       Text('합계',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold),),
-                      Text('₩ ${ numberWithComma( widget.totalPrice)}', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),)
+                      Spacer(),
+                      Text('${ numberWithComma( widget.totalPrice)}' ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                          fontFamily: 'metropolis')),
+                      SizedBox(
+                          width: 1
+                      ),
+                      Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                      )),
                     ],
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top:6.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('적립금 사용 합계',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold,color:Colors.redAccent),),
-                      Text('- ₩ ${ numberWithComma( widget.totalDiscount)}', style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color:Colors.redAccent),)
+                      Spacer(),
+                      Text('-${ numberWithComma( widget.totalDiscount)}',style: TextStyle(color: Colors.redAccent,height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                      fontFamily: 'metropolis')),
+                SizedBox(
+                    width: 1
+                ),
+                Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,color: Colors.redAccent
+                )),
                     ],
                   ),
                 ),
@@ -287,10 +301,13 @@ class _DetailOrderState extends State<DetailOrder> {
                   child: Padding(
                     padding: const EdgeInsets.only(top:5.0,bottom: 5.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                       children: [
                         Text('최종 합계',style: TextStyle(fontSize:19,fontWeight: FontWeight.bold,color: Colors.blueAccent),),
-                        Text('₩ ${numberWithComma(widget.totalPrice-widget.totalDiscount)}', style: TextStyle(fontSize:19, fontWeight: FontWeight.w900,color:Colors.blueAccent),)
+                        Spacer(),
+                        Text('${numberWithComma(widget.totalPrice-widget.totalDiscount)}',style: TextStyle(color: Colors.blueAccent,height:1.3,fontSize: 20.5,fontWeight: FontWeight.w900,
+                            fontFamily: 'metropolis')),
+                    Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,color: Colors.blueAccent))
                       ],
                     ),
                   ),
@@ -328,7 +345,7 @@ class _DetailOrderState extends State<DetailOrder> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ClipRRect(
                           borderRadius: BorderRadius.circular(12.0),
@@ -366,7 +383,13 @@ class _DetailOrderState extends State<DetailOrder> {
                               SizedBox(height: 6,),
                               Row(
                                 children: [
-                                  Text('₩ ${numberWithComma(int.parse(doc['totalPrice']))}',style: TextStyle(fontSize: 16),),
+                                  Text('${numberWithComma(int.parse(doc['totalPrice']))}'    ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                                      fontFamily: 'metropolis')),
+                                  SizedBox(
+                                      width: 1
+                                  ),
+                                  Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
+                                  )),
                                 ],
                               )
                             ],
@@ -431,9 +454,16 @@ class _DetailOrderState extends State<DetailOrder> {
                 SizedBox(
                   height: 20,
                 ),
-                Row(
-                  children: [
-                  ],
+                Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      state(doc['state']),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left:0),
@@ -443,80 +473,7 @@ class _DetailOrderState extends State<DetailOrder> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Visibility(
-                              visible: doc['state'] == "reviewEnd" ?false:true,
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width*0.25,
-                                child: RaisedButton(
-                                  color: Colors.transparent,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(8),),
-                                  child: Text("교환 신청",style: TextStyle(color: Colors.black,),),
-                                  onPressed:(){
-                                  },
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: doc['state'] == "reviewEnd" ?false:true,
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width*0.25,
-                                child: RaisedButton(
-                                  color: Colors.transparent,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(8),),
-                                  child: Text("반품 신청",style: TextStyle(color: Colors.black),),
-                                  onPressed:(){
-                                  },
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width*0.25,
-                              child: RaisedButton(
-                                color: Colors.blue,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),),
-                                child: Text("배송 조회",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                                onPressed:(){
-                                  if(doc['state'] != "standby" && doc['state'] != "ongoing"){
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) =>
-                                            DetailTracking(widget.user,doc)));
-                                  }
-                                  else{
-
-                                    scaffoldKey.currentState
-                                        .showSnackBar(SnackBar(duration: const Duration(seconds: 2),content:
-                                    Padding(
-                                      padding: const EdgeInsets.only(top:8.0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.check_circle,color: Colors.blueAccent,),
-                                          SizedBox(width: 14,),
-                                          Text("배송 중 상태가 아니라 조회가 불가합니다",
-                                            style: TextStyle(fontWeight: FontWeight.bold,fontSize:16),),
-                                        ],
-                                      ),
-                                    )));
-                                  }
-
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-
-
+                        firstLineOrderStateBtn(doc),
                         GestureDetector(
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width*1,
@@ -543,32 +500,7 @@ class _DetailOrderState extends State<DetailOrder> {
                             ),
                           ),
                         ),
-                        Visibility(
-                          visible: doc['state'] == "reviewEnd" ?false:true,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width*1,
-                            child: RaisedButton(
-                              color: Colors.lightBlueAccent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("상품 후기 작성",style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),),
-                                  SizedBox(width: 5,),
-                                  Icon(Icons.brightness_1,color: Colors.red,size:7),
-                                ],
-                              ),
-                              onPressed:(){
-                                Navigator.push(context, MaterialPageRoute(builder: (context){
-                                  return ReviewPage(widget.user,doc,doc['productCode']);
-                                }));
-                              },
-                            ),
-                          ),
-                        ),
+                        thirdLineReviewWriteBtn(doc),
                         // 내용
                       ],
                     ),
@@ -584,7 +516,78 @@ class _DetailOrderState extends State<DetailOrder> {
       ),
     );
   }
+  Widget state(data) {
+    if(data == "standby"){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child: Image.asset('assets/icons/list.png',width: 30,)
+          ),
+          Text('주문 확인 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.black),),
+        ],
+      );
+    }
 
+    else if(data == "ongoing"){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child: Image.asset('assets/icons/box.png',width: 30,)
+          ),
+          Text('발송 준비 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+
+    else if(data== "shipping"){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child: Image.asset('assets/icons/truck.png',width: 30,)
+          ),
+          Text('배송 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+
+    else if (data == "completion"){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.green,)
+          ),
+          Text('배송 완료' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'reviewEnd'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text('후기 작성완료(구매 확정)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else{
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+          ),
+          Text('@@@@@' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+
+    }
+  }
   Widget _showAlert() {
 
     AlertDialog dialog = new AlertDialog(
@@ -722,7 +725,136 @@ class _DetailOrderState extends State<DetailOrder> {
     );
     showDialog(context: context, child: dialog);
   }
+  Widget firstLineOrderStateBtn(doc){
+    return   Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // 교환 버튼
+        Visibility(
+          visible: doc['state'] == 'shipping'  || doc['state'] == 'completion'
+              || doc['state'] == 'shippingEx' || doc['state'] == 'completionEx'
+              || doc['state'] == 'shippingNoEx' || doc['state'] == 'completionNoEx' ,
+          child: Expanded(
+            child: RaisedButton(
+              color: Colors.transparent,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),),
+              child: Text("교환 신청",style: TextStyle(color: Colors.black,),),
+              onPressed:(){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return ApplyForExchangeAndRefund(widget.user,"exchange",doc);
+                }));
+              },
+            ),
+          ),
+        ),
+        Visibility(
+            visible: doc['state'] == 'standby' || doc['state'] == 'shippingNoCancel'||doc['state'] == 'completionNoCancel'?false:true,
+            child: SizedBox(width: 10,)),
+        // 반품 버튼
+        Visibility(
+          visible: doc['state'] == 'standby' ||doc['state'] == 'shipping'  || doc['state'] == 'completion'
+              || doc['state'] == 'shippingEx' || doc['state'] == 'completionEx'
+              || doc['state'] == 'shippingNoEx' || doc['state'] == 'completionNoEx' ,
+          child: Expanded(
+            child: RaisedButton(
+              color: Colors.transparent,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),),
+              child:
+              doc['state'] == 'standby' ? Text("주문 취소",style: TextStyle(color: Colors.black)):Text("반품 신청",style: TextStyle(color: Colors.black)),
+              onPressed:(){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return ApplyForExchangeAndRefund(widget.user,"refund",doc);
+                }));
+              },
+            ),
+          ),
+        ),
+        Visibility(
+            visible: doc['state'] == 'standby'  || doc['state'] == 'shippingNoCancel' || doc['state'] == 'completionNoCancel'?false:true,
+            child: SizedBox(width: 10,)),
+        // 배송 조회
+        Visibility(
+          visible: doc['state'] == 'shipping'  || doc['state'] == 'completion'
+              || doc['state'] == 'shippingNoCancel' || doc['state'] == 'completionNoCancel'
+              || doc['state'] == 'shippingEx' || doc['state'] == 'completionEx'
+              || doc['state'] == 'shippingNoEx' || doc['state'] == 'completionNoEx' ,
+          child: Expanded(
+            child: RaisedButton(
+              color: Colors.blue,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),),
+              child: Text("배송 조회",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+              onPressed:(){
+                if(doc['state'] != "standby" && doc['state'] != "ongoing"){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) =>
+                          DetailTracking(widget.user,doc)));
+                }
+                else{
+                  scaffoldKey.currentState
+                      .showSnackBar(SnackBar(duration: const Duration(seconds: 2),content:
+                  Padding(
+                    padding: const EdgeInsets.only(top:8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.check_circle,color: Colors.blueAccent,),
+                        SizedBox(width: 14,),
+                        Text("배송 중 상태가 아니라 조회가 불가합니다",
+                          style: TextStyle(fontWeight: FontWeight.bold,fontSize:16),),
+                      ],
+                    ),
+                  )));
+                }
 
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget thirdLineReviewWriteBtn(doc){
+    return  Visibility(
+      visible:
+      doc['state'] == 'standby'  || doc['state'] == 'ongoing'
+          || doc['state'] == 'shipping'  || doc['state'] == 'completion'
+          || doc['state'] == 'shippingNoCancel' || doc['state'] == 'completionNoCancel'
+          || doc['state'] == 'shippingEx' || doc['state'] == 'completionEx'
+          || doc['state'] == 'shippingNoEx' || doc['state'] == 'completionNoEx' ,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width*1,
+        child: RaisedButton(
+          color: Colors.lightBlueAccent,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("상품 후기 작성",style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),),
+              SizedBox(width: 5,),
+              Icon(Icons.brightness_1,color: Colors.red,size:7),
+            ],
+          ),
+          onPressed:(){
+            Navigator.push(context, MaterialPageRoute(builder: (context){
+              return ReviewPage(widget.user,doc,doc['productCode']);
+            }));
+          },
+        ),
+      ),
+    );
+  }
   numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }

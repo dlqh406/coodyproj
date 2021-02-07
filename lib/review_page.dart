@@ -51,7 +51,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
 
   final myController_Receiver = TextEditingController();
-  final TextEditingController textEditingConteroller = TextEditingController();
+  final TextEditingController textEditingController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
   FocusNode focusNode = FocusNode();
@@ -88,7 +88,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 children: [
                   Text('잠시만 기다려주세요',style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold),),
                   SizedBox(height: 7),
-                  Text('후기정보를 저장하고 있습니다',style: TextStyle(fontSize: 15),),
+                  Text('리뷰 정보를 저장하고 있습니다',style: TextStyle(fontSize: 15),),
                   SizedBox(height: 30),
                   CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),),
                 ],
@@ -103,7 +103,7 @@ class _ReviewPageState extends State<ReviewPage> {
             child:
             AppBar(
               centerTitle: true,
-              title: Text('후기 작성'),
+              title: Text('리뷰 작성'),
               titleSpacing: 6.0,
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -323,7 +323,7 @@ class _ReviewPageState extends State<ReviewPage> {
               child:
               Row(
                 children: [
-                  Text('상품에 대한 솔직한 후기를 남겨주세요',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text('상품에 대한 솔직한 리뷰를 남겨주세요',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   Spacer(),
                   SizedBox(
                     width: 15,
@@ -345,13 +345,13 @@ class _ReviewPageState extends State<ReviewPage> {
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey.withOpacity(0.3)),
                         borderRadius: BorderRadius.all(
-                            Radius.circular(20.0) //                 <--- border radius here
+                            Radius.circular(10.0) //                 <--- border radius here
                         ),
                       ),
                         width: 320,
                         height: 180,
                         child: new TextField(
-                          controller: textEditingConteroller,
+                          controller: textEditingController,
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
                           // controller: myController,
@@ -833,7 +833,7 @@ class _ReviewPageState extends State<ReviewPage> {
             borderRadius: BorderRadius.circular(10),),
           color: Colors.blueAccent,
           onPressed: () async {
-            if( textEditingConteroller.text != "")  {
+            if( textEditingController.text != "")  {
 
               setState(() {
                 widget.isProgressing = true;
@@ -909,7 +909,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 'userID' : widget.user.uid,
                 'date' : DateTime.now(),
                 'imgList' :imgList,
-                'review' : textEditingConteroller.text,
+                'review' : textEditingController.text,
                 'writer' : widget.nickName,
                 'height' :  widget.checkPrivacy?"non-public":replace(heightController.text),
                 'weight' : widget.checkPrivacy?"non-public":replace(weightController.text),
@@ -967,7 +967,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   children: [
                     Icon(Icons.check_circle,color: Colors.blueAccent,),
                     SizedBox(width: 13,),
-                    Text("후기를 입력해주세요.",
+                    Text("리뷰를 입력해주세요.",
                       style: TextStyle(fontWeight: FontWeight.bold,fontSize:16),),
                   ],
                 ),

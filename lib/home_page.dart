@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
   var productStream = [];
 
   @override
-  HomePage(this.user,);
+  HomePage(this.user);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -615,12 +615,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             )
         );
     }
-    String _timeStampToString(date) {
-      Timestamp t = date;
-      DateTime d = t.toDate();
-      var list = d.toString().replaceAll('-', '.').split(" ");
-      return list[0];
-    }
+
     Color _getColorFromHex(String hexColor) {
       hexColor = hexColor.replaceAll("#", "");
       if (hexColor.length == 6) {

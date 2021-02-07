@@ -1,12 +1,10 @@
-import 'package:coodyproj/home.dart';
-import 'package:coodyproj/search_page.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'detail_product.dart';
 import 'dart:io' show Platform;
-import 'package:coodyproj/test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:vibration/vibration.dart';
@@ -155,6 +153,7 @@ class _FavoriteState extends State<Favorite>  {
       ),
     );
   }
+
   Widget _bodyBuilder() {
     return Column(
         children: [
@@ -164,6 +163,7 @@ class _FavoriteState extends State<Favorite>  {
         ],
       );
   }
+
   Widget _gridBuilder() {
     return Expanded(
       child: Container(
@@ -243,6 +243,7 @@ class _FavoriteState extends State<Favorite>  {
       ),
     );
   }
+
   Widget _buildListItem(context,document,index) {
     return
       StreamBuilder(
@@ -322,7 +323,9 @@ class _FavoriteState extends State<Favorite>  {
                               // Text("${document['category']}",style: TextStyle(fontSize: 11,),
                               //    ),
 
-                              Text("${document['productName']}",style: TextStyle(letterSpacing:-0.9,fontSize: 12,fontWeight: FontWeight.bold),
+                              Text("${document['productName']}"
+                                  ,style: TextStyle(letterSpacing:-0.9,fontSize: 12,
+                                      fontWeight: FontWeight.bold),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,softWrap: true),
                               Row(
@@ -363,9 +366,6 @@ class _FavoriteState extends State<Favorite>  {
                   );
         }
       );
-  }
-  numberWithComma(int param){
-    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
 
   Map<String, bool> top = {
@@ -977,6 +977,7 @@ class _FavoriteState extends State<Favorite>  {
           );
         });
   }
+
   Future<Map<String, bool>> _priceFilterAlert() async {
 
     return showDialog(
@@ -1213,6 +1214,7 @@ class _FavoriteState extends State<Favorite>  {
           );
         });
   }
+
   Future<Map<String, bool>> _colorFilterAlert() async {
 
     return showDialog(
@@ -1778,6 +1780,10 @@ class _FavoriteState extends State<Favorite>  {
     if (hexColor.length == 8) {
       return Color(int.parse("0x$hexColor"));
     }
+  }
+
+  numberWithComma(int param){
+    return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
 
 }

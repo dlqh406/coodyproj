@@ -808,6 +808,19 @@ class _MyPageState extends State<MyPage> {
              ],
            );
          }
+     else{
+       return Row(
+           children: [
+           Padding(
+           padding: const EdgeInsets.only(left: 1,right: 7),
+    child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+    ),
+    Text('@@@@@' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+    ],
+    );
+
+     }
+
        }
 
   Widget opacityLine (){

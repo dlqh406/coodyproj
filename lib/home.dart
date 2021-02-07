@@ -209,6 +209,7 @@ class Home extends StatefulWidget {
           )
       );
   }
+
    Widget get bottomNavigationBar {
       return StreamBuilder(
         stream: Firestore.instance.collection('inquiry_data').snapshots(),
@@ -250,6 +251,7 @@ class Home extends StatefulWidget {
         }
       );
     }
+
     void changePage(int index) {
       setState(() {
 
@@ -258,6 +260,7 @@ class Home extends StatefulWidget {
         _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
       });
     }
+
     Color _getColorFromHex(String hexColor) {
       hexColor = hexColor.replaceAll("#", "");
       if (hexColor.length == 6) {
