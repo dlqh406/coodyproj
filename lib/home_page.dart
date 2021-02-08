@@ -72,13 +72,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         body:bodyBuild(),
     );
   }
-    // Widget homeBuild(){
-    //   return Scaffold(
-    //     body: ,
-    //   );
-    // }
     Widget bodyBuild() {
       return ListView(
+        cacheExtent: 9999,
         children: [
           magazineView(),
           divideTag(),

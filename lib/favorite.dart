@@ -28,7 +28,6 @@ class Favorite extends StatefulWidget {
   bool fitnessWear_downbtn = false;
   bool accessory_downbtn = false;
   bool resetData = true;
-  var _visible = true;
 
   var fF;
   var sF;
@@ -46,10 +45,8 @@ class Favorite extends StatefulWidget {
   _FavoriteState createState() => _FavoriteState();
 }
 
-class _FavoriteState extends State<Favorite>  {
-
+class _FavoriteState extends State<Favorite>{
   var stopTrigger = 1;
-  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -156,90 +153,87 @@ class _FavoriteState extends State<Favorite>  {
 
   Widget _bodyBuilder() {
     return Column(
-        children: [
-          SizedBox(height:10,
-          child: Container(color: Colors.white)),
-          _gridBuilder()
-        ],
-      );
+      children: [
+            SizedBox(height:10,
+            child: Container(color: Colors.white)),
+            _gridBuilder()
+          ],
+    );
   }
 
   Widget _gridBuilder() {
     return Expanded(
-      child: Container(
-        child: StreamBuilder (
-          stream:Firestore.instance.collection("uploaded_product").snapshots(),
-          builder: (BuildContext context, AsyncSnapshot snapshot){
-            if(!snapshot.hasData){
-              return Center(child:  CircularProgressIndicator());
-            }
-            //if(stopTrigger == 1 ){
-              if(widget.filter == false){
+      child: StreamBuilder (
+        stream:Firestore.instance.collection("uploaded_product").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          if(!snapshot.hasData){
+            return Center(child:  CircularProgressIndicator());
+          }
+          //if(stopTrigger == 1 ){
+            if(widget.filter == false){
 
-                  // widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
-                  // widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
-                  // widget.tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
-                  // widget.fF.addAll(widget.sF);
-                  // widget.fF.addAll(widget.tF);
-                  // widget.fF.shuffle();
-                  widget.fF = snapshot.data.documents.toList();
+                // widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
+                // widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
+                // widget.tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
+                // widget.fF.addAll(widget.sF);
+                // widget.fF.addAll(widget.tF);
+                // widget.fF.shuffle();
+                widget.fF = snapshot.data.documents.toList();
+              }
+           if(widget.filter == true){
+              if(widget.categoryfilter == true){
+               for(var i=0; i<widget.selectedCategoryList.length; i++){
+                 if(i==0){
+                   widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
+                 }else{
+                   widget.fF.addAll( snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList());
+                 }
+              }}
+              if(widget.pricefilter == true) {
+                var minPriceRange =int.parse(widget.selectedPrice.toString()+"0000");
+                var maxPriceRange;
+                if(widget.selectedPrice == 7){
+                  maxPriceRange =int.parse(widget.selectedPrice.toString()+"0000")+999999;
                 }
-             if(widget.filter == true){
-                if(widget.categoryfilter == true){
-                 for(var i=0; i<widget.selectedCategoryList.length; i++){
-                   if(i==0){
-                     widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
-                   }else{
-                     widget.fF.addAll( snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList());
-                   }
-                }}
-                if(widget.pricefilter == true) {
-                  var minPriceRange =int.parse(widget.selectedPrice.toString()+"0000");
-                  var maxPriceRange;
-                  if(widget.selectedPrice == 7){
-                    maxPriceRange =int.parse(widget.selectedPrice.toString()+"0000")+999999;
+                else{
+                  maxPriceRange =int.parse(widget.selectedPrice.toString()+"0000")+10000;
+                }
+                widget.fF = widget.fF.where((doc)=>  int.parse(doc['price']) >= minPriceRange && int.parse(doc['price']) <= maxPriceRange ).toList();
+              }
+              if(widget.colorfilter == true){
+                widget.fF = widget.fF.where((doc)=> doc['${widget.selectedColor}'] != null).toList();
+              }
+              if(widget.oddfilter  == true){
+                widget.fF = widget.fF.where((doc)=> doc['ODD_can'] == true).toList();
+              }
+           }
+          //}
+          stopTrigger+=1;
+          widget.fF.shuffle();
+
+
+          // 경우에 수 마다 if 중첩
+          return Padding(
+            padding: const EdgeInsets.only(top:4,left:4,right:4),
+            child: StaggeredGridView.countBuilder(
+                addAutomaticKeepAlives: true,
+                crossAxisCount: 3,
+                mainAxisSpacing: 8.0,
+                crossAxisSpacing: 6.0,
+                itemCount: widget.fF.length,
+                staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2: 2.9),
+                itemBuilder: (BuildContext context, int index) {
+                  for(var i=0; i<widget.fF.length; i++ ){
+                      widget.bool_list_each_GridSell.add(false);
                   }
-                  else{
-                    maxPriceRange =int.parse(widget.selectedPrice.toString()+"0000")+10000;
-                  }
-                  widget.fF = widget.fF.where((doc)=>  int.parse(doc['price']) >= minPriceRange && int.parse(doc['price']) <= maxPriceRange ).toList();
-                }
-                if(widget.colorfilter == true){
-                  widget.fF = widget.fF.where((doc)=> doc['${widget.selectedColor}'] != null).toList();
-                }
-                if(widget.oddfilter  == true){
-                  widget.fF = widget.fF.where((doc)=> doc['ODD_can'] == true).toList();
-                }
-             }
-            //}
-            stopTrigger+=1;
-            widget.fF.shuffle();
+                  //if(int.parse(widget.fF[index]['price'])>15000){
+                  return _buildListItem(context,widget.fF[index],index);
+                //}
+          }
 
-
-            // 경우에 수 마다 if 중첩
-            return Padding(
-              padding: const EdgeInsets.only(top:4,left:4,right:4),
-              child: StaggeredGridView.countBuilder(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 8.0,
-                  crossAxisSpacing: 6.0,
-                  itemCount: widget.fF.length,
-                  staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2: 2.9),
-                  itemBuilder: (BuildContext context, int index) {
-                    for(var i=0; i<widget.fF.length; i++ ){
-                        widget.bool_list_each_GridSell.add(false);
-                    }
-                    //if(int.parse(widget.fF[index]['price'])>15000){
-                    return
-
-                      _buildListItem(context,widget.fF[index],index);
-                  //}
-            }
-
-              ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -259,7 +253,6 @@ class _FavoriteState extends State<Favorite>  {
           }
           var _lengthDouble = snapshot.data.documents.length.toDouble();
           averageRating = _total / _lengthDouble;
-
           return Hero(
               tag: document['thumbnail_img'],
               child: Material(

@@ -84,6 +84,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
               appBar: Platform.isIOS && widget.from == 1?_appBar():null,
               backgroundColor: Colors.transparent,
               body: ListView(
+                cacheExtent: 9999,
               children: [
                 _buildTitleBar(),
                 _buildSearchBar(),

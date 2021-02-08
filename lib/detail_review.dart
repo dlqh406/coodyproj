@@ -20,7 +20,9 @@ class DetailReview extends StatefulWidget {
   _DetailReviewState createState() => _DetailReviewState();
 }
 
-class _DetailReviewState extends State<DetailReview>  {
+class _DetailReviewState extends State<DetailReview>  with AutomaticKeepAliveClientMixin  {
+  @override
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +45,7 @@ class _DetailReviewState extends State<DetailReview>  {
               ),
             ),
             actions: <Widget>[
+
               Padding(
                 padding: const EdgeInsets.only(right:10.0),
                 child: new IconButton( icon: new Icon(Icons.home,size: 23,),
@@ -56,7 +59,12 @@ class _DetailReviewState extends State<DetailReview>  {
             ],
 
           )),
-      body: _buildHasReview(context, widget.length),
+      body: ListView(
+        cacheExtent: 9999,
+        children: [
+          _buildHasReview(context, widget.length),
+        ],
+      ),
     );
   }
 
@@ -213,6 +221,7 @@ class _DetailReviewState extends State<DetailReview>  {
           child: Container(
               width: size.width*1,
               child: GridView.builder(
+                cacheExtent: 9999,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
