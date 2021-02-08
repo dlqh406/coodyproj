@@ -10,12 +10,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl/intl.dart';
+import 'package:vibration/vibration.dart';
 import 'dart:io' show Platform;
 import 'detail_seller.dart';
 import 'package:iamport_flutter/iamport_payment.dart';
 import 'package:iamport_flutter/model/payment_data.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
+import 'package:flutter/src/widgets/scroll_controller.dart';
 class ProductDetail extends StatefulWidget {
 
 
@@ -25,7 +26,7 @@ class ProductDetail extends StatefulWidget {
   bool sellerInfoTerm_downbtn = false;
   bool productInfoTerm_downbtn = false;
   bool useTerm_downbtn = false;
-
+  bool like= false;
   var selectedList =[];
   var temSelectedList = ["","",""];
 
@@ -45,9 +46,12 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveClientMixin{
   final myController = TextEditingController();
+  final _controller = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -66,7 +70,6 @@ class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveC
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         key: _scaffoldKey,
         appBar:PreferredSize(preferredSize: Size.fromHeight(40.0),
             child:
@@ -79,36 +82,72 @@ class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveC
                 child: Container(
                   child: GestureDetector(
                       child: Icon(Icons.arrow_back_ios,size: 18,),
-
                       onTap: (){
                         Navigator.pop(context);
-
                       }),
                 ),
               ),
               actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right:10.0),
-                  child: new IconButton( icon: new Icon(Icons.home,size: 23,),
-                    onPressed: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context){
-                        return Home(widget.user);
-                      }))
-                    },
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right:30.0),
+                      child: new IconButton( icon: new Icon(Icons.keyboard_capslock,size: 23,),
+                        onPressed: () => {
+                        _controller.animateTo(
+                        _controller.position.minScrollExtent,
+                        duration: Duration(seconds: 1),
+                        curve: Curves.fastOutSlowIn,
+                        )
+                        },
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right:30.0),
+                      child: IconButton(
+                          icon: widget.like?Icon(Icons.favorite,size: 23,color: Colors.redAccent)
+                              :Icon(Icons.favorite,size: 23,color: Colors.grey.withOpacity(0.5),),
+                        onPressed: (){
+
+                        Vibration.vibrate(duration: 100, amplitude: 58);
+                        setState(() {
+                          widget.like = true;
+                        });
+                          var data = {
+                          'docID' : widget.document.documentID,
+                          'date' : DateTime.now()
+                           };
+                        // 댓글 추가
+                        Firestore.instance
+                            .collection('user_data')
+                            .document(widget.user.uid)
+                            .collection('like')
+                            .add(data);
+
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right:10.0),
+                      child: new IconButton( icon: new Icon(Icons.home,size: 23,),
+                        onPressed: () => {
+                          Navigator.push(context, MaterialPageRoute(builder: (context){
+                            return Home(widget.user);
+                          }))
+                        },
+                          ),
+                    ),
+                  ],
                 ),
               ],
 
             )),
-      body: _buildBody(context),
+        body: _buildBody(context),
         floatingActionButton: SizedBox(
-          width: 65,
-          height: 65,
           child: RaisedButton(
-            color: Colors.blueAccent,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50)
-            ),
+
+            color: Colors.transparent,
+            elevation: 0,
             onPressed: () {
               showModalBottomSheet(
                   isScrollControlled: true,
@@ -116,9 +155,25 @@ class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveC
                   builder: buildBottomSheet
               );
             },
-            child: Padding(
-              padding: const EdgeInsets.only(right : 2.0),
-              child: Image.asset('assets/icons/cart.png',width: 34),
+            textColor: Colors.white,
+            padding: const EdgeInsets.only(left:30),
+            shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+            child: Container(
+              height: 65,
+              width: 65,
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: <Color>[
+                      Color(0xFF0D47A1),
+                      Color(0xFF1976D2),
+                      Color(0xFF42A5F5),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(80.0))
+              ),
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+              child: Image.asset('assets/icons/cart.png',width: 30),
+
             ),
           ),
         )
@@ -128,7 +183,9 @@ class _ProductDetailState extends State<ProductDetail>  with AutomaticKeepAliveC
 
   Widget _buildBody(BuildContext context) {
     return ListView(
-      children: [
+        cacheExtent: 9999,
+        controller: _controller,
+        children: [
         _buildPriceInfoBody(context),
         _buildFirstBody(context),
         _buildRelatedBody(context),
@@ -1648,19 +1705,22 @@ class ReleatedCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 //$category $price
                                 Text('$category',style: TextStyle(fontSize: 11, color:Colors.blue, fontWeight: FontWeight.bold)),
-                                Text('￦${numberWithComma(int.parse(price==null?"120000":price))}',
-                                    style: TextStyle(fontWeight:FontWeight.bold,fontSize: 12,color: Colors.black)),
+                                Spacer(),
+                                Text('${numberWithComma(int.parse(price==null?"가격 정보 없음":price))}'
+                                    ,style: TextStyle(height:1.3,fontSize: 15.5,fontWeight: FontWeight.w900,
+                                    fontFamily: 'metropolis')),
+                                Text("원",style: TextStyle(height:1.7,fontSize: 11.5,fontWeight: FontWeight.w700,
+                                )),
                               ],
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top:3.0),
                               child: Container(
                                 child: Text('$productName',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300, color: Colors.black,),
+                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.black,),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: false,
