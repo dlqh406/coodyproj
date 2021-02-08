@@ -473,27 +473,30 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [
-                    _getColorFromHex("#f55555"),
-                    Colors.pinkAccent,
-                    //_getColorFromHex("#ce9ddc"),
+                    _getColorFromHex("#F9d423"),
+                    _getColorFromHex("FC8884"),
+                    // _getColorFromHex("#939597"),
+                    //_getColorFromHex("#F5dF4D"),
                   ],
                 ),
 
               ),
             ),
-            // our product image
-            // Positioned(
-            //   top: 1,
-            //   right: 25,
-            //   child: Container(
-            //     height: 110,
-            //     // image is square but we add extra 20 + 20 padding thats why width is 200
-            //     width: 130,
-            //     child: Image.asset(
-            //       "assets/images/cake.gif",fit: BoxFit.cover,),
-            //   ),
-            // ),
-            // Product title and price
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                height: 175,
+                // image is square but we add extra 20 + 20 padding thats why width is 200
+                width: 185,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Image.asset(
+                    "assets/images/activity.png", fit: BoxFit.cover,),
+                ),
+              ),
+            ),
+
             Positioned(
               bottom: 0,
               left: 0,
@@ -509,18 +512,18 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                       padding: const EdgeInsets.symmetric(
                           horizontal: kDefaultPadding),
                       child: Padding(
-                        padding: const EdgeInsets.only(top:25.0),
+                        padding: const EdgeInsets.only(top:30.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("역 시즌 할인 중 ", style: TextStyle(fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),),
+                            Text("올해의 컬러 컬렉션", style: TextStyle(fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,),),
                             SizedBox(height: 10,),
-                            Text("#Text를 입력?", style: TextStyle(fontSize: 14,
+                            Text("#얼티메이트 그레이", style: TextStyle(fontSize: 14,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w100),),
-                            Text("#주인공은 나야나", style: TextStyle(fontSize: 14,
+                            Text("#일루미네이팅", style: TextStyle(fontSize: 14,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w100),),
                           ],
@@ -538,6 +541,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       ),
     );
   }
+
     Widget appBarBuild() {
       return
         PreferredSize(preferredSize: Size.fromHeight(40.0),
