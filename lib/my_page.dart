@@ -75,27 +75,27 @@ class _MyPageState extends State<MyPage> {
    ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
               height: 20,
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 26.0),
                   child: SizedBox(
-                    width: 60,
-                    height: 60,
+                    width: 45,
+                    height: 45,
                     child: CircleAvatar(
                       backgroundImage: NetworkImage("${widget.user.photoUrl}"),
                     ),
                   ),
                 ),
                 SizedBox(
-                  width: 20,
+                  width: 30,
                 ),
                 Row(
                   children: [
@@ -108,82 +108,6 @@ class _MyPageState extends State<MyPage> {
                             Text('님 반가워요!',style: TextStyle(fontSize: 25, fontWeight: FontWeight.w100),),
                           ],
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Color(0xFFff6e6e),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8.0, vertical: 2.0),
-                                  child: Text("이벤트 1",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            Text("포토리뷰 작성 시 1% 구매 적립",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.redAccent),),
-                          ],
-                        ),
-                        SizedBox(height: 6,),
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8.0, vertical: 2.0),
-                                  child: Text("이벤트 2",
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            Text("구매만 해도 1% 바로 적립",
-                              style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.blue),),
-                          ],
-                        ),
-                        SizedBox(height: 6,),
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8.0, vertical: 2.0),
-                                  child: Text("이벤트 3",
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            Text("가입 환영 웰컴 쿠폰 2,000원 적립",
-                              style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.orange),),
-                          ],
-                        ),
                       ],
                     ),
 
@@ -191,6 +115,10 @@ class _MyPageState extends State<MyPage> {
                 )
               ],
             ),
+            SizedBox(
+              height: 20,
+            ),
+            _eventElement(),
             SizedBox(
               height: 20,
             ),
@@ -211,8 +139,8 @@ class _MyPageState extends State<MyPage> {
                         ),
                         Text('나의 포인트',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
                         Spacer(),
-                        Text('${numberWithComma(int.parse(doc['reward']))}',style:TextStyle(fontWeight: FontWeight.bold),),
-                        Text('p'),
+                        Text('${numberWithComma(int.parse(doc['reward']))} p',style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
+                            fontFamily: 'metropolis')),
                         SizedBox(
                           width: 20,
                         )
@@ -272,7 +200,88 @@ class _MyPageState extends State<MyPage> {
       ),
     );
  }
-
+  Widget _eventElement(){
+    return Padding(
+      padding: const EdgeInsets.only(left:26.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFff6e6e),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 2.0),
+                    child: Text("이벤트 1",
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
+              SizedBox(width: 5),
+              Text("포토 리뷰 작성 시 결제 금액의 2% 적립",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.redAccent),),
+            ],
+          ),
+          SizedBox(height: 6,),
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 2.0),
+                    child: Text("이벤트 2",
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
+              SizedBox(width: 5),
+              Text("구매만 해도 결제 금액의 2% 적립 (구매 확정 시)",
+                style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.blue),),
+            ],
+          ),
+          SizedBox(height: 6,),
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 2.0),
+                    child: Text("이벤트 3",
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
+              SizedBox(width: 5),
+              Text("신규 가입만 해도 5,000 p 적립",
+                style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.orange),),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildOrderList() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -808,6 +817,221 @@ class _MyPageState extends State<MyPage> {
              ],
            );
          }
+
+     else if(data == 'completionEnd'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+           Text('자동 구매 확정' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+
+     // 반품
+     else if(data == 'standbyCancel'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.green,)
+           ),
+           Text('주문 취소 완료' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'wishToCancel'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.orangeAccent,)
+           ),
+           Text('반품 요청' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'ApprovalToCancel'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.orangeAccent,)
+           ),
+           Text('반품 승인' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'completionCancel'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.orangeAccent,)
+           ),
+           Text('반품 완료' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'shippingNoCancel'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child: Image.asset('assets/icons/truck.png',width: 25,)
+           ),
+           Text('배송 중(반품 불가)' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'completionNoCancel'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.green,)
+           ),
+           Text('배송 완료' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'reviewEndNoCancel'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+           Text('리뷰 작성 완료(구매확정)' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'completionEndNoCancel'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+           Text('자동 구매 확정' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+
+     // 교환
+     else if(data == 'wishToEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.orangeAccent,)
+           ),
+           Text('교환 요청' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'approvalToEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.orangeAccent,)
+           ),
+           Text('교환 승인' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'shippingEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child: Image.asset('assets/icons/truck.png',width: 25,)
+           ),
+           Text('배송 중(교환 상품)' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'completionEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+           Text('배송 완료' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'reviewEndEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+           Text('리뷰 작성 완료(구매 확정)' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'completionEndEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+           Text('자동 구매 확' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'shippingNoEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child: Image.asset('assets/icons/truck.png',width: 25,)
+           ),
+           Text('배송 중(교환 불가)' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'completionNoEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+           Text('배송 완료' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'reviewEndNoEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+           Text('리뷰 작성 완료(구매 확정)' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     else if(data == 'completionEndNoEx'){
+       return Row(
+         children: [
+           Padding(
+               padding: const EdgeInsets.only(left: 1,right: 7),
+               child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+           ),
+           Text('자동 구매 확정' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+         ],
+       );
+     }
+     // repeat
      else{
        return Row(
            children: [
@@ -815,7 +1039,7 @@ class _MyPageState extends State<MyPage> {
            padding: const EdgeInsets.only(left: 1,right: 7),
     child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
     ),
-    Text('@@@@@' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+    Text('주문데이터 확인 중' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
     ],
     );
 
@@ -839,5 +1063,6 @@ class _MyPageState extends State<MyPage> {
   numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }
+
 }
 

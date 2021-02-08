@@ -307,7 +307,7 @@ class _DetailOrderState extends State<DetailOrder> {
                         Spacer(),
                         Text('${numberWithComma(widget.totalPrice-widget.totalDiscount)}',style: TextStyle(color: Colors.blueAccent,height:1.3,fontSize: 20.5,fontWeight: FontWeight.w900,
                             fontFamily: 'metropolis')),
-                    Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,color: Colors.blueAccent))
+                    Text("원",style: TextStyle(height:2.0,fontSize: 11.5,fontWeight: FontWeight.w700,color: Colors.blueAccent))
                       ],
                     ),
                   ),
@@ -524,7 +524,7 @@ class _DetailOrderState extends State<DetailOrder> {
               padding: const EdgeInsets.only(left: 1,right: 7),
               child: Image.asset('assets/icons/list.png',width: 30,)
           ),
-          Text('주문 확인 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.black),),
+          Text('주문 확인 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
         ],
       );
     }
@@ -536,7 +536,7 @@ class _DetailOrderState extends State<DetailOrder> {
               padding: const EdgeInsets.only(left: 1,right: 7),
               child: Image.asset('assets/icons/box.png',width: 30,)
           ),
-          Text('발송 준비 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+          Text(' 발송 준비 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
         ],
       );
     }
@@ -546,9 +546,9 @@ class _DetailOrderState extends State<DetailOrder> {
         children: [
           Padding(
               padding: const EdgeInsets.only(left: 1,right: 7),
-              child: Image.asset('assets/icons/truck.png',width: 30,)
+              child: Image.asset('assets/icons/truck.png',width: 35,)
           ),
-          Text('배송 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+          Text(' 배송 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
         ],
       );
     }
@@ -560,10 +560,11 @@ class _DetailOrderState extends State<DetailOrder> {
               padding: const EdgeInsets.only(left: 1,right: 7),
               child:Icon(Icons.check_circle,size: 30,color: Colors.green,)
           ),
-          Text('배송 완료' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+          Text(' 배송 완료' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
         ],
       );
     }
+
     else if(data == 'reviewEnd'){
       return Row(
         children: [
@@ -571,22 +572,238 @@ class _DetailOrderState extends State<DetailOrder> {
               padding: const EdgeInsets.only(left: 1,right: 7),
               child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
           ),
-          Text('후기 작성완료(구매 확정)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+          Text('후기 작성 완료(구매확정)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
         ],
       );
     }
+
+    else if(data == 'completionEnd'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 8),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text('자동 구매 확정' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+
+    // 반품
+    else if(data == 'standbyCancel'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.green,)
+          ),
+          Text(' 주문 취소 완료' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'wishToCancel'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.orangeAccent,)
+          ),
+          Text('반품 요청' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'ApprovalToCancel'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.orangeAccent,)
+          ),
+          Text(' 반품 승인' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'completionCancel'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.orangeAccent,)
+          ),
+          Text(' 반품 완료' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'shippingNoCancel'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child: Image.asset('assets/icons/truck.png',width: 35,)
+          ),
+          Text(' 배송 중(반품 불가)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'completionNoCancel'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.green,)
+          ),
+          Text(' 배송 완료' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'reviewEndNoCancel'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 8),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text('리뷰 작성 완료(구매확정)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'completionEndNoCancel'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text(' 자동 구매 확정' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+
+    // 교환
+    else if(data == 'wishToEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.orangeAccent,)
+          ),
+          Text(' 교환 요청' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'approvalToEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.orangeAccent,)
+          ),
+          Text(' 교환 승인' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'shippingEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child: Image.asset('assets/icons/truck.png',width: 30,)
+          ),
+          Text(' 배송 중 (교환 상품)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'completionEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text(' 배송 완료' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'reviewEndEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text(' 리뷰 작성 완료(구매 확정)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'completionEndEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 8),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text('자동 구매 확정' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'shippingNoEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 7),
+              child: Image.asset('assets/icons/truck.png',width: 35,)
+          ),
+          Text(' 배송 중(교환 불가)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'completionNoEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 8),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text('배송 완료' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'reviewEndNoEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 8),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text('리뷰 작성 완료(구매 확정)' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    else if(data == 'completionEndNoEx'){
+      return Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 1,right: 8),
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
+          ),
+          Text('자동 구매 확정' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+        ],
+      );
+    }
+    // repeat
     else{
       return Row(
         children: [
           Padding(
               padding: const EdgeInsets.only(left: 1,right: 7),
-              child:Icon(Icons.check_circle,size: 19,color: Colors.blue,)
+              child:Icon(Icons.check_circle,size: 30,color: Colors.blue,)
           ),
-          Text('@@@@@' ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
+          Text(' 주문데이터 확인 중' ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.blueAccent),),
         ],
       );
 
     }
+
   }
   Widget _showAlert() {
 
