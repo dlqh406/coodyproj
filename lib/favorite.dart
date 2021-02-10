@@ -216,6 +216,7 @@ class _FavoriteState extends State<Favorite>{
           return Padding(
             padding: const EdgeInsets.only(top:4,left:4,right:4),
             child: StaggeredGridView.countBuilder(
+                shrinkWrap: true,
                 addAutomaticKeepAlives: true,
                 crossAxisCount: 3,
                 mainAxisSpacing: 8.0,
@@ -293,6 +294,7 @@ class _FavoriteState extends State<Favorite>{
                                         children: [
                                           Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white70))),
                                           FadeInImage.assetNetwork(
+                                                fadeInDuration: Duration(milliseconds: 700),
                                                 placeholder: 'assets/images/loading.png',
                                                 image: widget.colorfilter == true?document['${widget.selectedColor}']:document['thumbnail_img'],
                                                 fit : BoxFit.cover),
