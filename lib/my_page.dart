@@ -853,7 +853,7 @@ class _MyPageState extends State<MyPage> {
          ],
        );
      }
-     else if(data == 'ApprovalToCancel'){
+     else if(data == 'approvalToCancel'){
        return Row(
          children: [
            Padding(

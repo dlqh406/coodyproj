@@ -221,7 +221,8 @@ class _FavoriteState extends State<Favorite>{
                 mainAxisSpacing: 8.0,
                 crossAxisSpacing: 6.0,
                 itemCount: widget.fF.length,
-                staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2: 2.9),
+                //staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2: 2.9),
+                staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.4: 2.9),
                 itemBuilder: (BuildContext context, int index) {
                   for(var i=0; i<widget.fF.length; i++ ){
                       widget.bool_list_each_GridSell.add(false);
@@ -304,6 +305,28 @@ class _FavoriteState extends State<Favorite>{
                                             top:4,
                                             left:6,
                                             child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
+                                          ),
+
+                                          Positioned (
+                                            bottom:4,
+                                            left:6,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFFff6e6e),
+                                                borderRadius: BorderRadius.circular(20.0),
+                                              ),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 7.0, vertical: 2.0),
+                                                  child: Text("자체 제작",
+                                                      style: TextStyle(
+                                                          fontSize: 10,
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.bold)),
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),

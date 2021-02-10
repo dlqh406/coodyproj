@@ -612,7 +612,7 @@ class _DetailOrderState extends State<DetailOrder> {
         ],
       );
     }
-    else if(data == 'ApprovalToCancel'){
+    else if(data == 'approvalToCancel'){
       return Row(
         children: [
           Padding(

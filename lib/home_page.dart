@@ -81,6 +81,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           recommendationView_1(),
           recommendationView_2(),
           recommendationView_3(),
+          recommendationView_4(),
           SizedBox(height: 70),
         ],
       );
@@ -369,10 +370,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     colors: [
-                      _getColorFromHex("#F9d423"),
-                      _getColorFromHex("FC8884"),
-                      // _getColorFromHex("#939597"),
-                       //_getColorFromHex("#F5dF4D"),
+                      _getColorFromHex("#FF6792"),
+                      _getColorFromHex("#fec163"),
+
                     ],
                   ),
 
@@ -473,10 +473,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [
-                    _getColorFromHex("#F9d423"),
-                    _getColorFromHex("FC8884"),
-                    // _getColorFromHex("#939597"),
-                    //_getColorFromHex("#F5dF4D"),
+                    _getColorFromHex("#FF6792"),
+                    _getColorFromHex("#fec163"),
                   ],
                 ),
 
@@ -493,6 +491,108 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   padding: const EdgeInsets.only(left: 10.0),
                   child: Image.asset(
                     "assets/images/activity.png", fit: BoxFit.cover,),
+                ),
+              ),
+            ),
+
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: SizedBox(
+                height: 136,
+                // our image take 200 width, thats why we set out total width - 200
+                width: size.width - 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top:30.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("올해의 컬러 컬렉션", style: TextStyle(fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,),),
+                            SizedBox(height: 10,),
+                            Text("#얼티메이트 그레이", style: TextStyle(fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w100),),
+                            Text("#일루미네이팅", style: TextStyle(fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w100),),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // it use the available space
+                    Spacer(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+    Widget recommendationView_4() {
+    Size size = MediaQuery
+        .of(context)
+        .size;
+
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: kDefaultPadding,
+        vertical: kDefaultPadding / 6,
+      ),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              offset: Offset(10, 23),
+              blurRadius: 28,
+              color: Colors.black12
+          ),
+        ],
+      ),
+      // color: Colors.blueAccent,
+      height: 110,
+      child: InkWell(
+        onTap: () {},
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            // Those are our background
+            Container(
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                color: Colors.lightBlueAccent,
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    _getColorFromHex("#FF6792"),
+                    _getColorFromHex("#fec163"),
+                  ],
+                ),
+
+              ),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                height: 175,
+                // image is square but we add extra 20 + 20 padding thats why width is 200
+                width: 185,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Image.asset(
+                    "assets/images/romance.png", fit: BoxFit.cover,),
                 ),
               ),
             ),
