@@ -164,7 +164,7 @@ class _FavoriteState extends State<Favorite>{
   Widget _gridBuilder() {
     return Expanded(
       child: ListView(
-        physics: NeverScrollableScrollPhysics(),
+        cacheExtent: 9999,
         shrinkWrap: true,
         children: [
           StreamBuilder (
@@ -220,8 +220,9 @@ class _FavoriteState extends State<Favorite>{
               return Padding(
                 padding: const EdgeInsets.only(top:4,left:4,right:4),
                 child: StaggeredGridView.countBuilder(
+                    physics: new NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    addAutomaticKeepAlives: true,
+                    primary: true,
                     crossAxisCount: 3,
                     mainAxisSpacing: 8.0,
                     crossAxisSpacing: 6.0,
