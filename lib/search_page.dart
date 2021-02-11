@@ -74,8 +74,6 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
             colors: [
               _getColorFromHex('3a3985'),
               _getColorFromHex('7366FF'),
-
-
             ],
           ),
         ),
@@ -84,7 +82,6 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
               appBar: Platform.isIOS && widget.from == 1?_appBar():null,
               backgroundColor: Colors.transparent,
               body: ListView(
-                cacheExtent: 9999,
               children: [
                 _buildTitleBar(),
                 _buildSearchBar(),
@@ -132,6 +129,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
       ],
     );
   }
+
   Widget _buildTitleBar() {
     return Column(
       children: [
@@ -234,7 +232,9 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
         child: StreamBuilder<QuerySnapshot>(
           stream: Firestore.instance.collection('uploaded_product').snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) {return CircularProgressIndicator();}
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange.withOpacity(1))));
+            }
             return _buildGridViewElement(context, snapshot.data.documents);
           },
         ),
@@ -310,7 +310,9 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
                 stream: Firestore.instance.collection('keyword').snapshots(),
                 builder: (context, snapshot) {
                   if(!snapshot.hasData){
-                    return Center(child:  CircularProgressIndicator());
+                    return
+
+                    Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange.withOpacity(1))));
                   }
 
                   return CarouselSlider.builder(
@@ -393,7 +395,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
                 stream: _productStream(),
                 builder: (context, snapshot) {
                   if(!snapshot.hasData){
-                    return Center(child:  CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange.withOpacity(1))));
                   }
 
                   return ListView.builder(
@@ -440,7 +442,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
         stream: Firestore.instance.collection('uploaded_product').document(doc.documentID).collection('review').snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData){
-            return Center(child:CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange.withOpacity(1))));
           }
           double _total =0.0;
           var averageRating =0.0;
@@ -550,6 +552,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
     );
 
   }
+
   numberWithComma(int param){
     return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
   }

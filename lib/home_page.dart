@@ -74,7 +74,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   }
     Widget bodyBuild() {
       return ListView(
-        cacheExtent: 9999,
         children: [
           magazineView(),
           divideTag(),
