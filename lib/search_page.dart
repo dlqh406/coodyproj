@@ -82,6 +82,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
               appBar: Platform.isIOS && widget.from == 1?_appBar():null,
               backgroundColor: Colors.transparent,
               body: ListView(
+                shrinkWrap: true,
               children: [
                 _buildTitleBar(),
                 _buildSearchBar(),
@@ -230,10 +231,10 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
       child: Container(
         height: 750,
         child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('uploaded_product').snapshots(),
+          stream: Firestore.instance.collection('uploaded_product').where('state',isEqualTo: true).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange.withOpacity(1))));
+              return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.indigoAccent)));
             }
             return _buildGridViewElement(context, snapshot.data.documents);
           },
@@ -310,11 +311,8 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
                 stream: Firestore.instance.collection('keyword').snapshots(),
                 builder: (context, snapshot) {
                   if(!snapshot.hasData){
-                    return
-
-                    Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange.withOpacity(1))));
+                    return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.indigoAccent)));
                   }
-
                   return CarouselSlider.builder(
                       height: 160,
                       enlargeCenterPage: true,
@@ -395,13 +393,13 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
                 stream: _productStream(),
                 builder: (context, snapshot) {
                   if(!snapshot.hasData){
-                    return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange.withOpacity(1))));
+                    return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.indigoAccent.withOpacity(0))));
                   }
 
                   return ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: 25,
+                      itemCount:19,
                       itemBuilder: (BuildContext context, int index){
                         if(stopTrigger == 1 ){
                           if(widget.filter == false){
@@ -427,7 +425,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
   }
 
   Stream<QuerySnapshot> _productStream() {
-    return Firestore.instance.collection("uploaded_product").orderBy('soldCount', descending: true).snapshots();
+    return Firestore.instance.collection("uploaded_product").where('state',isEqualTo: true).orderBy('soldCount', descending: true).snapshots();
   }
 
   Widget _buildBestSelling(context,doc,index){
@@ -442,7 +440,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
         stream: Firestore.instance.collection('uploaded_product').document(doc.documentID).collection('review').snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData){
-            return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange.withOpacity(1))));
+            return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.indigoAccent.withOpacity(0))));
           }
           double _total =0.0;
           var averageRating =0.0;
@@ -463,7 +461,7 @@ class _SearchPageState extends State<SearchPage>  with AutomaticKeepAliveClientM
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(18.0),
                         child: FadeInImage.assetNetwork(
-                          placeholder:'assets/images/19.png',
+                          placeholder:'assets/images/loading.png',
                           image: doc['thumbnail_img'],
                             fit: BoxFit.cover,width: 85,height: 85,),
                         )),

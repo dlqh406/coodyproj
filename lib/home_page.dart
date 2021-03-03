@@ -253,26 +253,29 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     colors: [
-                      Color(0xff00ffa9),
+                      _getColorFromHex('00cec9'),
+                      //_getColorFromHex('81ecec'),
+                      // _getColorFromHex('30e584'),
+                      // _getColorFromHex('55efc4'),
                       Color(0xff0d4dff),
                     ],
                   ),
                 ),
               ),
               // our product image
-              // Positioned(
-              //   top: 0,
-              //   right: 0,
-              //   child: Container(
-              //     height: 160,
-              //     width: 250,
-              //     child: Padding(
-              //       padding: const EdgeInsets.only(left: 100.0),
-              //       child: Image.asset(
-              //         "assets/logo/AI2.png", fit: BoxFit.cover,),
-              //     ),
-              //   ),
-              // ),
+              Positioned(
+                top: -9,
+                right: 0,
+                child: Container(
+                  height: 160,
+                  width: 259,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:100.0,bottom: 17),
+                    child: Image.asset(
+                      "assets/images/cube.gif",),
+                  ),
+                ),
+              ),
 
               // Product title and price
               Positioned(
@@ -299,7 +302,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                                 fontSize: 26,
                                 color: Colors.redAccent,
                                 fontWeight: FontWeight.bold),),
-                            Text(" 맞춤 스타일 추천", style: TextStyle(fontSize: 20,
+                            Text(" 스타일 매칭", style: TextStyle(fontSize: 20,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),),
                           ],

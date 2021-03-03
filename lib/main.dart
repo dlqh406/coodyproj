@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: RootPage(),
-      //home: SplashPage(),
+      //home: RootPage(),
+      home: SplashPage(),
     );
   }
 }

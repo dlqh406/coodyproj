@@ -78,6 +78,7 @@ flutter:
     -  assets/logo/4444.png
     -  assets/logo/P21.png
     -  assets/logo/WP21.png
+    -  assets/logo/whitehor.png
     -  assets/star/star1.png
     -  assets/star/star11.png
     -  assets/star/starhalf.png
@@ -85,6 +86,7 @@ flutter:
     -  assets/images/DNA.gif
     -  assets/images/activity.png
     -  assets/images/romance.png
+    -  assets/images/cube.gif
     -  assets/images/thisYearColor.png
     -  assets/images/fal.png
     -  assets/images/19.png
