@@ -6,8 +6,6 @@ import 'package:coodyproj/splash_page/splash_page.dart';
 void main() {
   runApp(MyApp());
 }
-
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override

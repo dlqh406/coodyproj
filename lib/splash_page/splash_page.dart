@@ -28,7 +28,6 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-
     startTime();
   }
 
@@ -38,18 +37,22 @@ class _SplashPageState extends State<SplashPage> {
     return new Timer(_duration, navigationPage);
   }
   void navigationPage() {
-    if(widget.isLogged = false){
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context){
-            return LoginPage();
-          }));
-    }
-    else{
+    // if(widget.isLogged == false){
+    //   print("false123");
+    //   print('123:s ${widget.isLogged}');
+    //   Navigator.push(context,
+    //       MaterialPageRoute(builder: (context){
+    //         return LoginPage();
+    //       }));
+    // }
+    // else{
+      print("true123");
+      print('456:s ${widget.isLogged}');
       Navigator.push(context,
           MaterialPageRoute(builder: (context){
             return RootPage();
           }));
-    }
+    //}
 
   }
 
@@ -65,28 +68,27 @@ class _SplashPageState extends State<SplashPage> {
       debugShowCheckedModeBanner: false,
       home: Stack(
         children: [
-      StreamBuilder <FirebaseUser>(
-      stream : FirebaseAuth.instance.onAuthStateChanged,
-        builder: (BuildContext context, AsyncSnapshot snapshot){
-          if(!snapshot.hasData){
-            setState(() {
-              widget.isLogged = false;
-            });
-            return  LoginPage();
-          }
-          else{
-            setState(() {
-              widget.isLogged = false;
-            });
-            return Stack(
-                  children:[
-                    SearchPage(snapshot.data,0),
-                    HomePage(snapshot.data),
-                  ]
-                  );
-              }
-            },
-          ),
+      // StreamBuilder <FirebaseUser>(
+      // stream : FirebaseAuth.instance.onAuthStateChanged,
+      //   builder: (BuildContext context, AsyncSnapshot snapshot){
+      //     if(!snapshot.hasData){
+      //           widget.isLogged = false;
+      //         print('aaa');
+      //         print('cccc:s ${widget.isLogged}');
+      //       return LoginPage();
+      //     }
+      //    else{
+      //       print('vvv');
+      //        widget.isLogged = true;
+      //       return Stack(
+      //             children:[
+      //               SearchPage(snapshot.data,0),
+      //               HomePage(snapshot.data),
+      //             ]
+      //             );
+      //         }
+      //       },
+      //     ),
           Container(
             child: Scaffold(
               backgroundColor: Colors.indigoAccent,

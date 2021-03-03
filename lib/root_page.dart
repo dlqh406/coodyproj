@@ -1,4 +1,5 @@
 
+import 'package:coodyproj/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
@@ -13,7 +14,7 @@ class RootPage extends StatelessWidget {
       stream : FirebaseAuth.instance.onAuthStateChanged,
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(!snapshot.hasData){
-          return  Center(child: CircularProgressIndicator());
+          return  LoginPage();
         }
         else{
           //return Home11();
