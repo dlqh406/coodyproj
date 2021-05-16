@@ -341,11 +341,11 @@ class _SheetContainerState extends State<SheetContainer>{
           return Center(child:  CircularProgressIndicator());
         }
         var items =  snapshot.data?.documents ??[];
-        var fF = items.where((doc)=> doc['style'] == "오피스룩").toList();
-        var sF = items.where((doc)=> doc['style'] == "로맨틱").toList();
-        var tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
-        fF.addAll(sF);
-        fF.addAll(tF);
+        var fF = items.toList();
+        // var sF = items.where((doc)=> doc['style'] == "로맨틱").toList();
+        // var tF = items.where((doc)=> doc['style'] == "캐주얼").toList();
+        // fF.addAll(sF);
+        // fF.addAll(tF);
         widget.tf_copy.addAll(fF);
         if(widget.stopTrigger == 2 ){
           fF.shuffle();

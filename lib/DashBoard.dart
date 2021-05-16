@@ -11,7 +11,7 @@ import 'package:vibration/vibration.dart';
 import 'dart:ui';
 
 
-class Favorite extends StatefulWidget {
+class DashBoard extends StatefulWidget {
   var bool_list_each_GridSell = [];
   bool categoryfilter = false;
   bool filter = false;
@@ -39,13 +39,13 @@ class Favorite extends StatefulWidget {
   var selectedColor="999";
 
   final FirebaseUser user;
-  Favorite(this.user);
+  DashBoard(this.user);
 
   @override
-  _FavoriteState createState() => _FavoriteState();
+  _DashBoardState createState() => _DashBoardState();
 }
 
-class _FavoriteState extends State<Favorite>{
+class _DashBoardState extends State<DashBoard>{
 
   var stopTrigger = 1;
   @override
@@ -58,56 +58,25 @@ class _FavoriteState extends State<Favorite>{
                 titleSpacing:2.0,
                 backgroundColor: Colors.white,
                 elevation: 0,
-                leading: Padding(
+                leading:
+
+                Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: Container(
                     child: GestureDetector(
                         child:
-                            Icon(Icons.arrow_back_ios,size: 20,),
+                            Image.asset('assets/logo/FULLBB.png'),
                         onTap: (){
                           Navigator.pop(context);
                         }),
                   ),
                 ),
-                title: Container(
+                title:
+
+                Container(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left:27.0),
-                        child: InkWell(
-                          child: new Container(
-                              width: 25,
-                              child: (widget.selectedCategoryList.length>0)?Image.asset('assets/icons/hanger.png',color: Colors.blue):Image.asset('assets/icons/hanger.png',color: Colors.black,) ),
-                          onTap: () => {
-                            _categoryFilterAlert()
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left:33.0),
-                        child: InkWell(
-                          child: new Container(
-                              width: 25,
-                              // ignore: unrelated_type_equality_checks
-                              child: widget.pricefilter==true
-                                  ?Image.asset('assets/icons/tag.png',color: Colors.blue,):Image.asset('assets/icons/tag.png',color: Colors.black,) ),
-                          onTap: () => {
-                            _priceFilterAlert()
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left:33.0),
-                        child: InkWell(
-                          child: new Container(
-                              width: 25,
-                              child: widget.colorfilter == true
-                                  ? Image.asset('assets/icons/painter.png',color: Colors.blue,):Image.asset('assets/icons/painter.png',color: Colors.black) ),
-                          onTap: () => {
-                            _colorFilterAlert()
-                          },
-                        ),
-                      ),
                       Padding(
                         padding: const EdgeInsets.only(left:33.0),
                         child: InkWell(
@@ -116,17 +85,12 @@ class _FavoriteState extends State<Favorite>{
                               child: widget.oddfilter == true
                                   ?Image.asset('assets/icons/FD.png'):Image.asset('assets/icons/FD.png',color: Colors.black,) ),
                           onTap: () => {
-                            if( widget.oddfilter ==false){
-                              _getODDFilter(widget.oddfilter)
-                            }
-                            else{
-                              _getDelayForReset('odd')
-                            }
+                          FirebaseAuth.instance.signOut()
                           },
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left:33.0),
+                        padding: const EdgeInsets.only(left:50.0,right:25),
                         child: InkWell(
                           child: new Container(
                               width: 23,
@@ -159,49 +123,15 @@ class _FavoriteState extends State<Favorite>{
 
         Expanded(
           child: StreamBuilder (
-            stream:Firestore.instance.collection("uploaded_product").where('state',isEqualTo: true).snapshots(),
+            // .where('state',isEqualTo: true)
+            stream:Firestore.instance.collection("uploaded_product").snapshots(),
             builder: (BuildContext context, AsyncSnapshot snapshot){
               if(!snapshot.hasData){
                 return Center(child:  CircularProgressIndicator());
               }
               //if(stopTrigger == 1 ){
-              if(widget.filter == false){
+              widget.fF = snapshot.data.documents.toList();
 
-                // widget.fF = snapshot.data.documents.where((doc)=> doc['style'] == "오피스룩").toList();
-                // widget.sF = snapshot.data.documents.where((doc)=> doc['style'] == "로맨틱").toList();
-                // widget.tF = snapshot.data.documents.where((doc)=> doc['style'] == "캐주얼").toList();
-                // widget.fF.addAll(widget.sF);
-                // widget.fF.addAll(widget.tF);
-                // widget.fF.shuffle();
-                widget.fF = snapshot.data.documents.toList();
-              }
-              if(widget.filter == true){
-                if(widget.categoryfilter == true){
-                  for(var i=0; i<widget.selectedCategoryList.length; i++){
-                    if(i==0){
-                      widget.fF= snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList();
-                    }else{
-                      widget.fF.addAll( snapshot.data.documents.where((doc)=> doc['category'] == widget.selectedCategoryList[i]).toList());
-                    }
-                  }}
-                if(widget.pricefilter == true) {
-                  var minPriceRange =int.parse(widget.selectedPrice.toString()+"0000");
-                  var maxPriceRange;
-                  if(widget.selectedPrice == 7){
-                    maxPriceRange =int.parse(widget.selectedPrice.toString()+"0000")+999999;
-                  }
-                  else{
-                    maxPriceRange =int.parse(widget.selectedPrice.toString()+"0000")+10000;
-                  }
-                  widget.fF = widget.fF.where((doc)=>  int.parse(doc['price']) >= minPriceRange && int.parse(doc['price']) <= maxPriceRange ).toList();
-                }
-                if(widget.colorfilter == true){
-                  widget.fF = widget.fF.where((doc)=> doc['${widget.selectedColor}'] != null).toList();
-                }
-                if(widget.oddfilter  == true){
-                  widget.fF = widget.fF.where((doc)=> doc['ODD_can'] == true).toList();
-                }
-              }
               //}
               stopTrigger+=1;
               widget.fF.shuffle();
@@ -211,9 +141,6 @@ class _FavoriteState extends State<Favorite>{
               return Padding(
                 padding: const EdgeInsets.only(top:4,left:4,right:4),
                 child: StaggeredGridView.countBuilder(
-                  // physics: ScrollPhysics(),
-                  // shrinkWrap: true,
-                  // primary: true,
                     crossAxisCount: 3,
                     mainAxisSpacing: 8.0,
                     crossAxisSpacing: 6.0,
@@ -246,13 +173,7 @@ class _FavoriteState extends State<Favorite>{
           if(!snapshot.hasData){
             return Center(child:CircularProgressIndicator());
           }
-          double _total =0.0;
-          var averageRating =0.0;
-          for(var i=0; i<snapshot.data.documents.length; i++ ){
-            _total += double.parse(snapshot.data.documents[i]['rating']);
-          }
-          var _lengthDouble = snapshot.data.documents.length.toDouble();
-          averageRating = _total / _lengthDouble;
+
           return Hero(
               tag: document['thumbnail_img'],
               child: Material(
@@ -264,17 +185,9 @@ class _FavoriteState extends State<Favorite>{
                       setState(() {
                         widget.bool_list_each_GridSell[index] = !widget.bool_list_each_GridSell[index];
                       });
-                      final data = {
-                        'docID' : document.documentID,
-                        'date' : DateTime.now()};
-                      // 댓글 추가
-                      Firestore.instance
-                          .collection('user_data')
-                          .document(widget.user.uid)
-                          .collection('like')
-                          .add(data);
                     },
                     onTap: (){
+
                       Navigator.push(context, MaterialPageRoute(builder: (context){
                         return ProductDetail(widget.user, document);
                       }));
@@ -304,79 +217,38 @@ class _FavoriteState extends State<Favorite>{
                                               right: 6,
                                               child: widget.bool_list_each_GridSell[index]?Icon(Icons.favorite,size:25,color: Colors.red,):Container()),
 
-                                          Positioned (
-                                            top:4,
-                                            left:6,
-                                            child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
-                                          ),
-
-                                          Positioned (
-                                            bottom:4,
-                                            left:6,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFFff6e6e),
-                                                borderRadius: BorderRadius.circular(20.0),
-                                              ),
-                                              child: Center(
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 7.0, vertical: 2.0),
-                                                  child: Text("자체 제작",
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          color: Colors.white,
-                                                          fontWeight: FontWeight.bold)),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                          // Positioned (
+                                          //   top:4,
+                                          //   left:6,
+                                          //   child: document['ODD_can']?Image.asset('assets/icons/FD.png',width:20,):Container(),
+                                          // ),
+                                          //
+                                          // Positioned (
+                                          //   bottom:4,
+                                          //   left:6,
+                                          //   child: Container(
+                                          //     decoration: BoxDecoration(
+                                          //       color: Color(0xFFff6e6e),
+                                          //       borderRadius: BorderRadius.circular(20.0),
+                                          //     ),
+                                          //     child: Center(
+                                          //       child: Padding(
+                                          //         padding: EdgeInsets.symmetric(
+                                          //             horizontal: 7.0, vertical: 2.0),
+                                          //         child: Text("자체 제작",
+                                          //             style: TextStyle(
+                                          //                 fontSize: 10,
+                                          //                 color: Colors.white,
+                                          //                 fontWeight: FontWeight.bold)),
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
+
                                       ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              // Text("${document['category']}",style: TextStyle(fontSize: 11,),
-                              //    ),
-
-                              Text("${document['productName']}"
-                                  ,style: TextStyle(letterSpacing:-0.9,fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,softWrap: true),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-
-
-                                  Text("${numberWithComma(int.parse(document['price']==null?"120000":document['price']))}"
-                                      ,style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
-                                        fontFamily: 'metropolis')),
-                                  SizedBox(
-                                    width: 1
-                                  ),
-                                  Text("원",style: TextStyle(height:2.0,fontSize: 10.5,fontWeight: FontWeight.w700,
-                                     )),
-                                  Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top:4.0,left:3),
-                                    child: Visibility(
-                                      visible: averageRating.isNaN?false:true,
-                                      child: Row(
-                                        children: [
-                                          Image.asset('assets/star/star11.png', width: 14,),
-                                          Text("$averageRating",style: TextStyle(fontSize: 14,
-                                              height:1.1,
-                                              fontWeight: FontWeight.w900,
-                                              fontFamily: 'metropolis'),),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
                               ),
                             ],
                           )
