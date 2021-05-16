@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'favorite_analysis_page.dart';
 import 'loading_page.dart';
-import 'DashBoard.dart';
+import 'dashboard.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

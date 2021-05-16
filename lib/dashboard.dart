@@ -1,4 +1,5 @@
 
+import 'package:coodyproj/my_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -53,51 +54,54 @@ class _DashBoardState extends State<DashBoard>{
     return Container(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar:PreferredSize(preferredSize: Size.fromHeight(45.0),
+        appBar:PreferredSize(preferredSize: Size.fromHeight(37.0),
            child: AppBar(
                 titleSpacing:2.0,
                 backgroundColor: Colors.white,
                 elevation: 0,
                 leading:
-
                 Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Container(
-                    child: GestureDetector(
-                        child:
-                            Image.asset('assets/logo/FULLBB.png'),
-                        onTap: (){
-                          Navigator.pop(context);
-                        }),
+                  padding: const EdgeInsets.only(left:20.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Container(
+                      child: GestureDetector(
+                          child:
+                              Image.asset('assets/logo/logo.png'),
+                          onTap: (){
+                            _getDelayForReset('refresh');
+                          }),
+                    ),
                   ),
                 ),
                 title:
-
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+
                       Padding(
                         padding: const EdgeInsets.only(left:33.0),
                         child: InkWell(
                           child: new Container(
-                              width: 29,
-                              child: widget.oddfilter == true
-                                  ?Image.asset('assets/icons/FD.png'):Image.asset('assets/icons/FD.png',color: Colors.black,) ),
+                              child:
+                              Icon(Icons.add,size: 30,) ),
                           onTap: () => {
                           FirebaseAuth.instance.signOut()
                           },
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left:50.0,right:25),
+                        padding: const EdgeInsets.only(left:30.0,right:25),
                         child: InkWell(
                           child: new Container(
-                              width: 23,
-                              child: (widget.selectedCategoryList.length>0)
-                                  ?Image.asset('assets/icons/refresh.png'):Image.asset('assets/icons/refresh.png') ),
+                              child: Icon(Icons.account_circle,size:30) ),
                           onTap: () => {
-                            _getDelayForReset('refresh')
+
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return MyPage(widget.user);
+                            }))
+
                           },
                         ),
                       ),

@@ -1,9 +1,8 @@
 
-import 'package:coodyproj/DashBoard.dart';
+import 'package:coodyproj/dashboard.dart';
 import 'package:coodyproj/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
 import 'package:flutter/services.dart';
 
 class RootPage extends StatelessWidget {
@@ -16,6 +15,7 @@ class RootPage extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(!snapshot.hasData){
           return  LoginPage();
+
         }
         else{
           return DashBoard(snapshot.data);

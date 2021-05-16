@@ -984,12 +984,11 @@ class _ReviewPageState extends State<ReviewPage> {
 
 
   }
-
+  
   getImage() async {
     List<Asset> resultList = List<Asset>();
     resultList =
     await MultiImagePicker.pickImages(
-
       maxImages: 10,
       enableCamera: true, );
     setState(() {

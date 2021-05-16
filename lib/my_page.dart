@@ -26,6 +26,48 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar:  AppBar(
+        titleSpacing:2.0,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading:
+        Padding(
+          padding: const EdgeInsets.only(left:20.0),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              child: GestureDetector(
+                  child:Icon(Icons.arrow_back_ios,size: 20,),
+                  onTap: (){
+                    Navigator.pop(context);
+                  }),
+            ),
+          ),
+        ),
+        title:
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+
+              Padding(
+                padding: const EdgeInsets.only(left:30.0,right:25),
+                child: InkWell(
+                  child: new Container(
+                      child: Icon(Icons.settings,size:25) ),
+                  onTap: () => {
+
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return MyPage(widget.user);
+                    }))
+
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: _bodyBuilder(),
     );
   }

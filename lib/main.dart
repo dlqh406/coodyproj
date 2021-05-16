@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Coody',
       theme: ThemeData(
         fontFamily: 'Kopup',
         primarySwatch: Colors.blue,
