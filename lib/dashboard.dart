@@ -60,17 +60,20 @@ class _DashBoardState extends State<DashBoard>{
                 backgroundColor: Colors.white,
                 elevation: 0,
                 leading:
-                Padding(
-                  padding: const EdgeInsets.only(left:20.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Container(
-                      child: GestureDetector(
-                          child:
-                              Image.asset('assets/logo/logo.png'),
-                          onTap: (){
-                            _getDelayForReset('refresh');
-                          }),
+                GestureDetector(
+                    onTap: (){
+                      _getDelayForReset('refresh');
+                    },
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:20.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Container(
+                          child: Image.asset('assets/logo/FULLBB.png')
+                        ),
+                      ),
                     ),
                   ),
                 ),

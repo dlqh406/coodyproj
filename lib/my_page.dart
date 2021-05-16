@@ -1,5 +1,6 @@
 import 'package:coodyproj/detail_order.dart';
 import 'package:coodyproj/detail_orderList.dart';
+import 'package:coodyproj/detail_product.dart';
 import 'package:coodyproj/heart_page.dart';
 import 'package:coodyproj/letter_page.dart';
 import 'package:coodyproj/myInfo_page.dart';
@@ -7,6 +8,7 @@ import 'package:coodyproj/resent_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'dart:io' show Platform;import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 class MyPage extends StatefulWidget {
   bool more_Btn = true;
   bool cancel_Btn = false;
+  var fF;
   final FirebaseUser user;
   MyPage(this.user);
 
@@ -22,6 +25,7 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  var stopTrigger = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +35,20 @@ class _MyPageState extends State<MyPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading:
-        Padding(
-          padding: const EdgeInsets.only(left:20.0),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              child: GestureDetector(
-                  child:Icon(Icons.arrow_back_ios,size: 20,),
-                  onTap: (){
-                    Navigator.pop(context);
-                  }),
+        GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Container(
+            color: Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.only(left:20.0),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  child: Icon(Icons.arrow_back_ios,size: 20,),
+                ),
+              ),
             ),
           ),
         ),
@@ -68,91 +76,60 @@ class _MyPageState extends State<MyPage> {
           ),
         ),
       ),
-      body: _bodyBuilder(),
-    );
-  }
-
-  Widget _bodyBuilder() {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: Firestore.instance.collection('user_data').document(widget.user.uid).snapshots(),
-      builder: (context, snapshot) {
-        if(!snapshot.hasData){
-          return Container();
-        }
-        return ListView(
-          children: [
-            SizedBox(height: 15),
-            _buildHeader(snapshot.data.data),
-            SizedBox(height: 15),
-            _buildOrderList(),
-            SizedBox(height: 15),
-            customerCenter(),
-            SizedBox(height: 15),
-            like(),
-            SizedBox(height: 15),
-            recent(),
-            SizedBox(height: 15),
-            myInfo(),
-            SizedBox(height: 80),
-
-          ],
-        );
-      }
+      body: _gridBuilder(),
     );
   }
 
   Widget _buildHeader(Map<String, dynamic> doc) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
             offset: Offset(10,23),
-        blurRadius: 40,
+        blurRadius: 100,
         color: Colors.black12,
       ),
    ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               height: 20,
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 26.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: SizedBox(
-                    width: 45,
-                    height: 45,
+                    width: 85,
+                    height: 85,
                     child: CircleAvatar(
                       backgroundImage: NetworkImage("${widget.user.photoUrl}"),
                     ),
                   ),
                 ),
                 SizedBox(
-                  width: 30,
+                  width: 8,
                 ),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                    Text('green_tea_2',style: TextStyle(fontSize: 25),),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Text('${widget.user.displayName}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
-                            Text('님 반가워요!',style: TextStyle(fontSize: 25, fontWeight: FontWeight.w100),),
-                          ],
-                        ),
+                        Image.asset('assets/logo/logo.png',width: 30,),
+                        SizedBox(width: 20),
+                        Text('asdas',style: TextStyle(fontSize: 20),)
                       ],
                     ),
-
                   ],
                 )
               ],
@@ -160,80 +137,16 @@ class _MyPageState extends State<MyPage> {
             SizedBox(
               height: 20,
             ),
-            _eventElement(),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Container(
-                child: Column(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
                   children: [
-                    SizedBox(
-                      height: 7,
-                    ),
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Image.asset('assets/icons/coin2.png',width: 20,),
-                        SizedBox(
-                          width: 7,
-                        ),
-                        Text('나의 포인트',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
-                        Spacer(),
-                        Text('${numberWithComma(int.parse(doc['reward']))} p',style: TextStyle(height:1.3,fontSize: 16.5,fontWeight: FontWeight.w900,
-                            fontFamily: 'metropolis')),
-                        SizedBox(
-                          width: 20,
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 7,
-                    ),
-                     InkWell(
-                          onTap: () async{
-                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                              return  LetterPage(widget.user);}));
-                          },
-                          child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Image.asset('assets/icons/paper-plane.png',width: 20,),
-                              SizedBox(
-                                width: 7,
-                              ),
-                              StreamBuilder(
-                                  stream: Firestore.instance.collection('inquiry_data').snapshots(),
-                                  builder: (context, snapshot) {
-                                    if(!snapshot.hasData){
-                                      return Center(child: CircularProgressIndicator(),);
-                                    }
-                                    var _list = snapshot.data.documents.where((doc) => doc['userID'] == widget.user.uid && doc['state'] == 'completion').toList();
-
-
-                                    return Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('나의 쪽지함',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
-                                      SizedBox(width: 5,),
-                                      _list.length==0?Container():Icon(Icons.brightness_1,size:6,color: Colors.red)
-                                    ],
-                                  );
-                                }
-                              ),
-                              Spacer(),
-                              Icon(Icons.arrow_forward_ios,size: 15,),
-                              SizedBox(
-                                width: 20,
-                              )
-                            ],
-                          ),
-                        ),
+                    Container(
+                        width: 300,
+                        child: Text('Lorem Ipsum is simply dummy text of the printing and typesetting industry.',maxLines: 2,style: TextStyle(fontSize: 15),))
                   ],
                 ),
               ),
-            ),
               SizedBox(
                 height: 20,
               )
@@ -242,88 +155,118 @@ class _MyPageState extends State<MyPage> {
       ),
     );
  }
-  Widget _eventElement(){
-    return Padding(
-      padding: const EdgeInsets.only(left:26.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFff6e6e),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 2.0),
-                    child: Text("이벤트 1",
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                ),
+
+  Widget _gridBuilder() {
+    return ListView(
+      children: [
+        StreamBuilder<DocumentSnapshot>(
+        stream: Firestore.instance.collection('user_data').document(widget.user.uid).snapshots(),
+        builder: (context, snapshot) {
+        if(!snapshot.hasData){
+            return Container();
+        }
+        return _buildHeader(snapshot.data.data);
+        }
+        ),
+        SizedBox(height: 15),
+        StreamBuilder (
+          // .where('state',isEqualTo: true)
+          stream:Firestore.instance.collection("uploaded_product").snapshots(),
+          builder: (BuildContext context, AsyncSnapshot snapshot){
+            if(!snapshot.hasData){
+              return Center(child:  CircularProgressIndicator());
+            }
+            //if(stopTrigger == 1 ){
+            widget.fF = snapshot.data.documents.toList();
+
+            //}
+            stopTrigger+=1;
+            widget.fF.shuffle();
+
+
+            // 경우에 수 마다 if 중첩
+            return Padding(
+              padding: const EdgeInsets.only(top:10,left:4,right:4),
+              child: StaggeredGridView.countBuilder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 8.0,
+                  crossAxisSpacing: 6.0,
+                  itemCount: widget.fF.length,
+                  //staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.2: 2.9),
+                  staggeredTileBuilder: (index) => StaggeredTile.count(1,index.isEven?2.4: 2.9),
+                  itemBuilder: (BuildContext context, int index) {
+
+                    //if(int.parse(widget.fF[index]['price'])>15000){
+                    return _buildListItem(context,widget.fF[index],index);
+                    //}
+                  }
+
               ),
-              SizedBox(width: 5),
-              Text("포토 리뷰 작성 시 결제 금액의 2% 적립",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.redAccent),),
-            ],
-          ),
-          SizedBox(height: 6,),
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 2.0),
-                    child: Text("이벤트 2",
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                ),
-              ),
-              SizedBox(width: 5),
-              Text("구매만 해도 결제 금액의 2% 적립 (구매 확정 시)",
-                style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.blue),),
-            ],
-          ),
-          SizedBox(height: 6,),
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 2.0),
-                    child: Text("이벤트 3",
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                ),
-              ),
-              SizedBox(width: 5),
-              Text("신규 가입만 해도 5,000 p 적립",
-                style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.orange),),
-            ],
-          ),
-        ],
-      ),
+            );
+          },
+        )
+      ],
     );
   }
+
+  Widget _buildListItem(context,document,index) {
+    return
+      StreamBuilder(
+          stream: Firestore.instance.collection('uploaded_product').document(document.documentID).collection('review').snapshots(),
+          builder: (context, snapshot) {
+            if(!snapshot.hasData){
+              return Center(child:CircularProgressIndicator());
+            }
+
+            return Hero(
+              tag: document['thumbnail_img'],
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                    onTap: (){
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return ProductDetail(widget.user, document);
+                      }));
+                    },
+                    child:
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: new BorderRadius.circular(12.0),
+                            child: Container(
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Center(child: RotationTransition(
+                                      turns: new AlwaysStoppedAnimation(45/ 360),
+                                      child: Image.asset('assets/images/DNA.gif',width: 60))),
+                                  //Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange.withOpacity(0.5)))),
+                                  FadeInImage.assetNetwork(
+                                      fadeInDuration: Duration(milliseconds: 650),
+                                      placeholder: 'assets/images/loading.png',
+                                      image:document['thumbnail_img'],
+                                      fit : BoxFit.cover),
+
+                                ],
+                              ),
+
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                ),
+              ),
+            );
+          }
+      );
+  }
+
   Widget _buildOrderList() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
