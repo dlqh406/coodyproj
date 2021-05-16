@@ -1,4 +1,5 @@
 
+import 'package:coodyproj/DashBoard.dart';
 import 'package:coodyproj/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,7 @@ class RootPage extends StatelessWidget {
           return  LoginPage();
         }
         else{
-          //return Home11();
-          //return PaymentResult();
-          //return OrderPage(snapshot.data);
-          return Home(snapshot.data);
+          return DashBoard(snapshot.data);
         }
       },
     );

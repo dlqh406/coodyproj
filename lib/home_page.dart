@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'favorite_analysis_page.dart';
 import 'loading_page.dart';
-import 'favorite.dart';
+import 'DashBoard.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -239,7 +239,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         child: InkWell(
           onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Favorite(widget.user)));
+                MaterialPageRoute(builder: (context) => DashBoard(widget.user)));
           },
           child: Stack(
             alignment: Alignment.bottomCenter,

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:flutter/services.dart';
 
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,26 +32,16 @@ class _SplashPageState extends State<SplashPage> {
 
 
   startTime() async {
-    var _duration = new Duration(seconds: 4);
+    var _duration = new Duration(seconds: 1);
     return new Timer(_duration, navigationPage);
   }
   void navigationPage() {
-    // if(widget.isLogged == false){
-    //   print("false123");
-    //   print('123:s ${widget.isLogged}');
-    //   Navigator.push(context,
-    //       MaterialPageRoute(builder: (context){
-    //         return LoginPage();
-    //       }));
-    // }
-    // else{
-      print("true123");
-      print('456:s ${widget.isLogged}');
+      // print("true123");
+      // print('456:s ${widget.isLogged}');
       Navigator.push(context,
           MaterialPageRoute(builder: (context){
             return RootPage();
           }));
-    //}
 
   }
 
@@ -60,63 +49,24 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
-    Random random = new Random();
-    int randomNumber = random.nextInt(4);
-    print(randomNumber);
+
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Stack(
         children: [
-      // StreamBuilder <FirebaseUser>(
-      // stream : FirebaseAuth.instance.onAuthStateChanged,
-      //   builder: (BuildContext context, AsyncSnapshot snapshot){
-      //     if(!snapshot.hasData){
-      //           widget.isLogged = false;
-      //         print('aaa');
-      //         print('cccc:s ${widget.isLogged}');
-      //       return LoginPage();
-      //     }
-      //    else{
-      //       print('vvv');
-      //        widget.isLogged = true;
-      //       return Stack(
-      //             children:[
-      //               SearchPage(snapshot.data,0),
-      //               HomePage(snapshot.data),
-      //             ]
-      //             );
-      //         }
-      //       },
-      //     ),
+
           Container(
             child: Scaffold(
-              backgroundColor: Colors.indigoAccent,
+              backgroundColor: Colors.white,
               body: Container(
-                decoration: BoxDecoration(
-                  gradient:  LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      _getColorFromHex('00e5ff'),
-                      _getColorFromHex('1200ff'),
-                    ],
-                  ),
-                ),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Spacer(),
-                      Image.asset('assets/logo/whitehor.png',width: 250,),
-                      SizedBox(height: 30,),
 
-                      Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                        ],
-                      ),
+                      Center(child: Image.asset('assets/logo/logo.png',width: 150,)),
+
                     ],
                   ),
                 ),
