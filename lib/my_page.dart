@@ -30,9 +30,10 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar:  AppBar(
         titleSpacing:2.0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading:
         GestureDetector(
@@ -40,7 +41,7 @@ class _MyPageState extends State<MyPage> {
             Navigator.pop(context);
           },
           child: Container(
-            color: Colors.transparent,
+            color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.only(left:20.0),
               child: Padding(
@@ -86,13 +87,7 @@ class _MyPageState extends State<MyPage> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-            offset: Offset(10,23),
-        blurRadius: 100,
-        color: Colors.black12,
-      ),
-   ],
+
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,15 +114,15 @@ class _MyPageState extends State<MyPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    Text('green_tea_2',style: TextStyle(fontSize: 25),),
+                    Text('@green_tea_2',style: TextStyle(fontSize: 25,fontFamily: 'metropolis'),),
                     SizedBox(
                       height: 16,
                     ),
                     Row(
                       children: [
-                        Image.asset('assets/logo/logo.png',width: 30,),
-                        SizedBox(width: 20),
-                        Text('asdas',style: TextStyle(fontSize: 20),)
+                        Image.asset('assets/logo/logo.png',width: 20,),
+                        SizedBox(width: 10),
+                        Text('49.1M',style: TextStyle(fontSize: 20, fontFamily: 'Montserrat'),)
                       ],
                     ),
                   ],
